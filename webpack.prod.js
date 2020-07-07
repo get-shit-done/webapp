@@ -1,12 +1,12 @@
 // https://gist.github.com/vincentbollaert/e90def9b351d8d97c90ef7cfd887685e
 
-import merge from 'webpack-merge'
-import common from './webpack.common'
-import MiniCssExtractPlugin from 'mini-css-extract-plugin'
-import TerserPlugin from 'terser-webpack-plugin'
-import OptimizeCssnanoPlugin from '@intervolga/optimize-cssnano-plugin'
-import CompressionPlugin from 'compression-webpack-plugin'
-import { GenerateSW } from 'workbox-webpack-plugin'
+const merge = require('webpack-merge')
+const common = require('./webpack.common')
+const MiniCssExtractPlugin = require('mini-css-extract-plugin')
+const TerserPlugin = require('terser-webpack-plugin')
+const OptimizeCssnanoPlugin = require('@intervolga/optimize-cssnano-plugin')
+const CompressionPlugin = require('compression-webpack-plugin')
+const GenerateSW = require('workbox-webpack-plugin').GenerateSW
 
 module.exports = merge(common, {
   mode: 'production',
