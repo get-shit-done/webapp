@@ -2034,6 +2034,88 @@ const initialState: IInitialState = {
         },
       ]
     }
+  
+    if (index === 5) {
+      tasks = [
+        {
+          id: nanoid(),
+          time: [0, 9.5],
+          name: 'sleep',
+          group: 'essentials',
+        },
+        {
+          id: nanoid(),
+          time: [9.5, 9.75],
+          name: 'lie in bed',
+          group: 'laze',
+        },
+        {
+          id: nanoid(),
+          time: [9.75, 10.75],
+          name: 'morning routine',
+          group: 'essentials',
+        },
+        {
+          id: nanoid(),
+          time: [10.75, 11],
+          name: 'get to work',
+          group: 'essentials',
+        },
+        {
+          id: nanoid(),
+          time: [11, 12],
+          name: 'laze',
+          group: 'essentials',
+        },
+        {
+          id: nanoid(),
+          time: [12, 17.5],
+          name: 'frontend upskill',
+          group: 'improvement',
+        },
+      ]
+    }
+  
+    if (index === 6) {
+      tasks = [
+        {
+          id: nanoid(),
+          time: [0, 6.5],
+          name: 'sleep',
+          group: 'essentials',
+        },
+        {
+          id: nanoid(),
+          time: [6.5, 7],
+          name: 'lie in bed',
+          group: 'laze',
+        },
+        {
+          id: nanoid(),
+          time: [7, 8.25],
+          name: 'morning routine',
+          group: 'essentials',
+        },
+        {
+          id: nanoid(),
+          time: [8.25, 8.75],
+          name: 'breakfast - pho',
+          group: 'essentials',
+        },
+        {
+          id: nanoid(),
+          time: [8.75, 11],
+          name: 'frontend youtube',
+          group: 'improvement',
+        },
+        {
+          id: nanoid(),
+          time: [11, 16],
+          name: 'get-shit-done',
+          group: 'improvement',
+        },
+      ]
+    }
 
     return {
       tasks,
