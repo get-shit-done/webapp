@@ -1,9 +1,9 @@
 // https://gist.github.com/vincentbollaert/e90def9b351d8d97c90ef7cfd887685e
 
-import webpack from 'webpack'
-import HtmlWebPackPlugin from 'html-webpack-plugin'
-import path from 'path'
-import MiniCssExtractPlugin from 'mini-css-extract-plugin'
+const webpack = require('webpack')
+const HtmlWebPackPlugin = require('html-webpack-plugin')
+const path = require('path')
+const MiniCssExtractPlugin = require('mini-css-extract-plugin')
 
 const entryPath = './src/index.tsx'
 const outputPath = './public'

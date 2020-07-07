@@ -1,6 +1,5 @@
 import { useState } from 'react'
 import { useDispatch } from 'react-redux'
-import { number } from 'prop-types'
 
 interface IProps {
   from: number,
