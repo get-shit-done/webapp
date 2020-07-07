@@ -59,7 +59,7 @@ const Todos = () => {
   const { add, remove, toggleIsDone } = todoActions
   const { todos } = useSelector((state: RootState) => state.todos.present)
   const dispatch = useDispatch()
-  const onAddNewTodo = ({ todo }: { todo: any }) => { dispatch(add(todo)) }
+  const onAddNewTodo = ({ todo }: { todo: Todo }) => { dispatch(add(todo)) }
   const onRemoveTodo = (id: string, name: string) => {
     dispatch(remove(id))
     dispatch(toastActions.addToast({ prefix: 'task removed', message: name }))

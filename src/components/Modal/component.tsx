@@ -79,7 +79,7 @@ const Icon = styled(Svg)`
 interface Props {
   title: string,
   width: number,
-  children: any,
+  children: React.ReactNode,
   onOverlayToggle(event: React.MouseEvent<HTMLSpanElement, MouseEvent>): void,
 }
 

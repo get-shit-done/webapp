@@ -4,13 +4,17 @@ import { useDispatch } from 'react-redux'
 interface IProps {
   from: number,
   to: number,
-  cb: any,
+  cb: ({}: { from: number, to: number }) => void,
+}
+interface Filters {
+  fromCustom?: number,
+  toCustom?: number,
 }
 
 const UseRangeFilter = ({ from, to, cb }: IProps) => {
   const dispatch = useDispatch()
   const [{ fromDefault, toDefault }] = useState({ fromDefault: from, toDefault: to })
-  const [{ fromCustom, toCustom }, applyFilters] = useState<any>({}) // TODO: fix this
+  const [{ fromCustom, toCustom }, applyFilters] = useState<Filters>({})
 
   const onFilter = (hour: number) => {
     if (!fromCustom) {

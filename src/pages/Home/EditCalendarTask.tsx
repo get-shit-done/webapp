@@ -5,14 +5,14 @@ import styled from 'styled-components'
 import TextField from '../../components/form/Field/component'
 import Button from '../../components/Button/component'
 import Dropdown from '../../components/form/Dropdown'
-import { actions } from '../../reducers/calendar'
+import { actions, Task, TaskWithMeta } from '../../reducers/calendar'
 import { RootState } from '../../Application/Root/reducers'
 
 const Form = styled.form``
 
 interface Props {
   dateString: string,
-  taskBeingEdited: any,
+  taskBeingEdited: TaskWithMeta,
 }
 type FormValues = {
   to: string
@@ -52,7 +52,7 @@ const AddNewCalendarTask: FC<Props> = ({ dateString, taskBeingEdited }) => {
         errorMessage={errors.name?.type}
         inputRef={register({ required: true, maxLength: 80 })}
       />
-      <Dropdown
+      {/* <Dropdown
         isInForm
         theme="light"
         label="select group"
@@ -61,7 +61,7 @@ const AddNewCalendarTask: FC<Props> = ({ dateString, taskBeingEdited }) => {
         activeItem={groups.find(x => x.name === group)}
         onSelect={group => setSelectedGroup(group.name)}
         inputRef={register({ required: true, maxLength: 80 })}
-      />
+      /> */}
       <TextField
         isInForm
         defaultValue={time[0]}
@@ -80,14 +80,14 @@ const AddNewCalendarTask: FC<Props> = ({ dateString, taskBeingEdited }) => {
         errorMessage={errors.to?.type}
         inputRef={register({ required: true, maxLength: 80 })}
       />
-      <Button
+      {/* <Button
         isDisabled={Object.entries(errors).length > 0}
         isInForm
         accentColor={selectedGroup?.group?.color.value}
         type="submit"
       >
         Save task
-      </Button>
+      </Button> */}
     </Form>
   )
 }

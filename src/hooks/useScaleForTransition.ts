@@ -2,7 +2,7 @@ import { useState } from 'react'
 
 interface IParams {
   ref: React.MutableRefObject<any>,
-  inPixels: any,
+  inPixels: number,
   isReset?: boolean,
   axis: string,
 }
