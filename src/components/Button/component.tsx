@@ -47,7 +47,7 @@ interface Props {
   isInForm?: boolean,
   accentColor?: string,
   type: 'submit' | 'button' | 'reset',
-  children: any,
+  children: React.ReactNode,
   onClick?: (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => void
 }
 

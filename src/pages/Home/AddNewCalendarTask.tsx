@@ -16,9 +16,23 @@ interface Props {
   onModalClose(): void,
 }
 
+interface ISelectedGroup {
+  name: string,
+  from: string,
+  to: string,
+  group: {
+    id: string,
+    name: string,
+    color: {
+      name: string,
+      value: string,
+    },
+  },
+}
+
 const AddNewCalendarTask: FC<Props> = ({ dateString, timeFrom, onModalClose }) => {
   const dispatch = useDispatch()
-  const [selectedGroup, setSelectedGroup] = useState<any>()
+  const [selectedGroup, setSelectedGroup] = useState<ISelectedGroup>()
   const { groups } = useSelector((state: RootState) => state.settings)
   const { register, handleSubmit, errors, watch } = useForm({ defaultValues: { from: timeFrom, to: '', name: '' } }) // fix this. is not correct shape
   const onSubmit = (data: any) => {
@@ -44,7 +58,7 @@ const AddNewCalendarTask: FC<Props> = ({ dateString, timeFrom, onModalClose }) =
         errorMessage={errors.name?.type}
         inputRef={register({ required: true, maxLength: 80 })}
       />
-      <Dropdown
+      {/* <Dropdown
         isInForm
         theme="light"
         label="select group"
@@ -52,7 +66,7 @@ const AddNewCalendarTask: FC<Props> = ({ dateString, timeFrom, onModalClose }) =
         listKey="name"
         onSelect={group => setSelectedGroup(group)}
         inputRef={register({ required: true, maxLength: 80 })}
-      />
+      /> */}
       <TextField
         isInForm
         defaultValue={timeFrom}

@@ -5,7 +5,7 @@ import { rgbAdjust, ellipsis } from '../../styles'
 import CurrentTime from './CurrentTime'
 import { useSelector, useDispatch } from 'react-redux'
 import PlaceholderTask from './PlaceholderTask'
-import { actions } from '../../reducers/calendar'
+import { actions, Task, TaskWithMeta } from '../../reducers/calendar'
 import Modal from '../../components/Modal/component'
 import EditCalendarTask from './EditCalendarTask'
 import { RootState } from '../../Application/Root/reducers'
@@ -77,18 +77,10 @@ const Cell = styled.div<{ isGap?: boolean, flex: number, accentColor?: string, i
   `};
 `
 
-interface Task {
-  id: string,
-  heightInFlex: number,
-  name: string,
-  group: string,
-  gapBefore: number,
-  gapAfter: number,
-}
 interface Props {
   dateString: string,
   isCurrentDay: boolean,
-  tasksFiltered: Task[],
+  tasksFiltered: TaskWithMeta[],
 }
 
 const CalendarColumn: FC<Props> = ({ dateString, isCurrentDay, tasksFiltered }) => {

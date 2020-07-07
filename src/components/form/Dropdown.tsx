@@ -44,8 +44,9 @@ const After = styled.div`
   position: absolute;
   right: 0;
 `
+
 interface IItem {
-  id: number,
+  id: string,
   color?: { value: string },
   [key: string]: any,
 }
@@ -55,9 +56,9 @@ interface IProps {
   activeItem?: any,
   label: string,
   name?: string,
-  list: any,
+  list: IItem[],
   listKey: string,
-  onSelect({ id, color }: IItem): void,
+  onSelect<T>(arg: T): void,
   inputRef(instance: HTMLInputElement): void,
 }
 
@@ -65,7 +66,7 @@ const Dropdown: FC<IProps> = ({ theme, isInForm, activeItem = {}, label, name, l
   const [isOpen, setIsOpen] = useState(false)
   const [activeItemUpdated, setActiveItem] = useState(activeItem)
 
-  function onItemSelect(item: IItem): void {
+  function onItemSelect<T>(item: T): void {
     setActiveItem(item)
     onSelect(item)
     setIsOpen(false)

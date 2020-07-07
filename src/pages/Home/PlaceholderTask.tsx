@@ -34,7 +34,7 @@ interface Props {
 }
 
 const PlaceholderTask: FC<Props> = ({ dateString, hourSlotsRef, y }) => {
-  const { taskBeingPrepared = {} } = useSelector((state: RootState) => state.calendar)
+  const { taskBeingPrepared = { group: '', name: '' } } = useSelector((state: RootState) => state.calendar)
   const { groups } = useSelector((state: RootState) => state.settings)
   const [{ isModalOpen, timeFrom }, setState] = useState({ isModalOpen: false, timeFrom: undefined })
   const dispatch = useDispatch()

@@ -9,7 +9,7 @@ interface Props {
   theme?: string,
   name: string,
   type?: string,
-  defaultValue?: string,
+  defaultValue?: string | number,
   placeholder: string,
   svg?: string,
   errorMessage?: string,

@@ -2,15 +2,20 @@ import { createSlice, nanoid } from '@reduxjs/toolkit'
 import format from 'date-fns/format'
 import { MONTH_DAYS, MONTH_DAYS_STRING, HOURS_IN_DAY } from '../constants'
 
-interface Task {
-  id: string,
-  time: number[],
+export interface Task {
+  id?: string,
+  time?: number[],
   name: string,
   group: string
 }
+export interface TaskWithMeta extends Task {
+  heightInFlex?: number,
+  gapBefore?: number,
+  gapAfter?: number,
+}
 interface IInitialState {
-  taskBeingPrepared: any,
-  taskBeingEdited: any,
+  taskBeingPrepared: Task | null,
+  taskBeingEdited: TaskWithMeta | null,
   allTasksByDay: { tasks: Task[],
   dateString: string }[],
   hoursAxis: number[],
@@ -18,7 +23,7 @@ interface IInitialState {
 }
 const initialState: IInitialState = {
   taskBeingPrepared: undefined,
-  taskBeingEdited: {},
+  taskBeingEdited: null,
   allTasksByDay: MONTH_DAYS_STRING.map((dateString, index) => {
     let tasks: Task[] = []
     // if (index === 0) {
@@ -2110,7 +2115,19 @@ const initialState: IInitialState = {
         },
         {
           id: nanoid(),
-          time: [11, 16],
+          time: [11, 12.5],
+          name: 'get-shit-done',
+          group: 'improvement',
+        },
+        {
+          id: nanoid(),
+          time: [12.5, 12.75],
+          name: 'break',
+          group: 'laze',
+        },
+        {
+          id: nanoid(),
+          time: [12.75, 16],
           name: 'get-shit-done',
           group: 'improvement',
         },
@@ -2179,7 +2196,7 @@ export const { reducer, actions } = createSlice({
       console.log(name, dateString, group, from, to)
       const dayToUpdate = state.allTasksByDay.find(tasksByDay => tasksByDay.dateString === dateString)
 
-      state.taskBeingEdited = {}
+      state.taskBeingEdited = null
       dayToUpdate.tasks.push({
         id: nanoid(),
         time: [from, to],
