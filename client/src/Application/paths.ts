@@ -1,0 +1,2 @@
+// home
+export const homePath = () => '/'

@@ -1,0 +1,31 @@
+// https://gist.github.com/vincentbollaert/e90def9b351d8d97c90ef7cfd887685e
+
+{
+  "presets": [
+    "@babel/preset-env",
+    "@babel/preset-react"
+  ],
+  "plugins": [
+    "react-hot-loader/babel",
+    "@babel/plugin-syntax-dynamic-import",
+    "@babel/plugin-proposal-class-properties"
+  ],
+  "env": {
+    "production": {
+      "plugins": [
+        "@babel/plugin-transform-react-inline-elements",
+        "@babel/plugin-transform-react-constant-elements",
+        ["babel-plugin-styled-components", {
+          "pure": true
+        }]
+      ]
+    },
+    "test": {
+      "plugins": [
+        "transform-es2015-modules-commonjs",
+        "dynamic-import-node",
+        "@babel/transform-runtime"
+      ]
+    }
+  }
+}
