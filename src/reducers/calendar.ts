@@ -314,7 +314,13 @@ const initialState: IInitialState = {
         },
         {
           id: nanoid(),
-          time: [10.75, 15],
+          time: [10.75, 17],
+          name: 'express-mongo',
+          group: 'improvement',
+        },
+        {
+          id: nanoid(),
+          time: [19.5, 21],
           name: 'express-mongo',
           group: 'improvement',
         },
@@ -344,9 +350,6 @@ const initialState: IInitialState = {
   daysAxis: MONTH_DAYS_STRING,
 }
 
-interface Test {
-  dateString: string
-}
 export const { reducer, actions } = createSlice({
   name: 'calendar',
   initialState,
@@ -374,7 +377,7 @@ export const { reducer, actions } = createSlice({
     editTask(state, { payload: { id, dateString } }: PayloadAction<{ id: string, dateString: string }>) {
       state.taskBeingEdited = state.allTasksByDay[dateString].tasks.find(x => x.id === id)
     },
-    saveTask(state, { payload: { id, name, group, time, dateString }}: PayloadAction<any>) {
+    saveTask(state, { payload: { id, name, group, time, dateString }}: PayloadAction<any>) { // TODO: need to extend Task
       state.allTasksByDay[dateString].tasks.map((task: Task) => {
         if (task.id !== id) return task
         return {
@@ -385,7 +388,7 @@ export const { reducer, actions } = createSlice({
         }
       })
     },
-    addTask(state, { payload: { name, dateString, group, from, to }}) {
+    addTask(state, { payload: { name, dateString, group, from, to }}: PayloadAction<any>) { // Todo: need to extend taskbeingprepared
       console.log(name, dateString, group, from, to)
 
       state.taskBeingEdited = null

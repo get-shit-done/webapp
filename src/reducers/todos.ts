@@ -79,16 +79,16 @@ export const { reducer, actions } = createSlice({
   name: 'todos',
   initialState: initialState,
   reducers: {
-    add({ todos }, action: PayloadAction<Todo>) { todos.push({
+    add({ todos }, { payload: { todoName }}: PayloadAction<Todo>) { todos.push({
       id: nanoid(),
       isDone: false,
-      todoName: action.payload.todoName,
+      todoName,
     }) },
-    remove(state, action: PayloadAction<string>) {
-      state.todos = state.todos.filter(x => x.id !== action.payload)
+    remove(state, { payload }: PayloadAction<string>) {
+      state.todos = state.todos.filter(x => x.id !== payload)
     },
-    toggleIsDone: ({ todos }, action: PayloadAction<string>) => {
-      const todo = todos.find(x => x.id === action.payload)
+    toggleIsDone: ({ todos }, { payload }: PayloadAction<string>) => {
+      const todo = todos.find(x => x.id === payload)
       todo.isDone = !todo.isDone
     },
     apiGet() {
