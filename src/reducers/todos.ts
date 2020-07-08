@@ -1,4 +1,10 @@
-import { createSlice, nanoid } from '@reduxjs/toolkit'
+import { createSlice, nanoid, PayloadAction } from '@reduxjs/toolkit'
+
+export interface Todo {
+  id: string,
+  todoName: string,
+  isDone: boolean
+}
 
 const initialState = {
   groups: [
@@ -73,25 +79,26 @@ export const { reducer, actions } = createSlice({
   name: 'todos',
   initialState: initialState,
   reducers: {
-    add({ todos }, { payload }) { todos.push({
+    add({ todos }, { payload: { todoName }}: PayloadAction<Todo>) { todos.push({
       id: nanoid(),
       isDone: false,
-      todoName: payload,
+      todoName,
     }) },
-    remove(state, { payload }) {
+    remove(state, { payload }: PayloadAction<string>) {
       state.todos = state.todos.filter(x => x.id !== payload)
     },
-    update: ({ todos }, { payload }) => {
-      const todo = todos.find(x => x.id === payload)
-      return todo.todoName = payload.todoName
-    },
-    toggleIsDone: ({ todos }, { payload }) => {
+    toggleIsDone: ({ todos }, { payload }: PayloadAction<string>) => {
       const todo = todos.find(x => x.id === payload)
       todo.isDone = !todo.isDone
     },
     apiGet() {
       //
+    },
+    apiSuccess(state, action) {
+      console.log(action)
+    },
+    apiFail(state, action) {
+      console.log(action)
     }
-  }
+  },
 })
-

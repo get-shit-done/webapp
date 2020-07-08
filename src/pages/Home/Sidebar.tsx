@@ -6,7 +6,7 @@ import fullscreenSvg from '../../assets/svg/fullscreen.svg'
 import Svg from '../../components/Svg/component'
 import UseFullscreenToggle from '../../hooks/useFullscreenToggle'
 import { actions as todoActions } from '../../reducers/todos'
-import { useDispatch } from 'react-redux'
+import { useAppDispatch } from '../../Application/Root'
 
 const Wrap = styled.div`
   z-index: 2;
@@ -96,7 +96,7 @@ interface Props {
 
 const Sidebar: FC<Props> = ({ isOpen, setIsOpen, children }) => {
   const [isFullscreen, setIsFullscreen] = UseFullscreenToggle(false)
-  const dispatch = useDispatch()
+  const dispatch = useAppDispatch()
 
   return (
     <Wrap>

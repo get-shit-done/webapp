@@ -3,12 +3,12 @@ import styled from 'styled-components'
 
 import { rgbAdjust, ellipsis } from '../../styles'
 import CurrentTime from './CurrentTime'
-import { useSelector, useDispatch } from 'react-redux'
+import { useSelector } from 'react-redux'
 import PlaceholderTask from './PlaceholderTask'
 import { actions, Task, TaskWithMeta } from '../../reducers/calendar'
 import Modal from '../../components/Modal/component'
 import EditCalendarTask from './EditCalendarTask'
-import { RootState } from '../../Application/Root/reducers'
+import { AppState, useAppDispatch } from '../../Application/Root'
 
 const CN_HOUR_SLOTS = 'hour-slots'
 
@@ -84,9 +84,9 @@ interface Props {
 }
 
 const CalendarColumn: FC<Props> = ({ dateString, isCurrentDay, tasksFiltered }) => {
-  const { hoursAxis, taskBeingEdited, taskBeingPrepared } = useSelector((state: RootState) => state.calendar)
-  const { groups } = useSelector((state: RootState) => state.settings)
-  const dispatch = useDispatch()
+  const { hoursAxis, taskBeingEdited, taskBeingPrepared } = useSelector((state: AppState) => state.calendar)
+  const { groups } = useSelector((state: AppState) => state.settings)
+  const dispatch = useAppDispatch()
 
   const [y, setY] = useState(0)
   const [isEditModalOpen, setIsEditModalOpen] = useState(false)

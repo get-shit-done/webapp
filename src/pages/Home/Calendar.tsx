@@ -5,7 +5,7 @@ import format from 'date-fns/format'
 
 import { useSelector } from 'react-redux'
 import CalendarColumn from './CalendarColumn'
-import { RootState } from '../../Application/Root/reducers'
+import { AppState } from '../../Application/Root'
 
 
 const Wrap = styled.div<{ x: number, y: number }>`
@@ -24,7 +24,7 @@ interface Props {
 } 
 
 const Calendar: FC<Props> = ({ scale: { x, y } }) => {
-  const { hoursAxis, daysAxis, allTasksByDay } = useSelector((state: RootState) => state.calendar)
+  const { hoursAxis, daysAxis, allTasksByDay } = useSelector((state: AppState) => state.calendar)
 
   return (
     <Wrap x={x} y={y}>
@@ -32,7 +32,7 @@ const Calendar: FC<Props> = ({ scale: { x, y } }) => {
         const date = new Date(dateString)
         const day = format(date, 'd')
         const isCurrentDay = isToday(date)
-        const tasks = allTasksByDay.find(x => x.dateString === dateString).tasks
+        const tasks = allTasksByDay[dateString].tasks
         const tasksFiltered = tasks.map(({ id, time, ...rest }, taskI) => {
           const from = time[0]
           const to = time[1]

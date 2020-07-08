@@ -1,5 +1,6 @@
 import { configureStore, applyMiddleware } from '@reduxjs/toolkit'
 import createSagaMiddleware from 'redux-saga'
+import { useDispatch } from 'react-redux'
 
 import reducers from './reducers'
 import { rootSagas } from './sagas'
@@ -17,7 +18,9 @@ if (process.env.NODE_ENV !== 'production' && (module as any).hot) {
   (module as any).hot.accept('./reducers', () => store.replaceReducer(reducers))
 }
 
-export type AppDispatch = typeof store.dispatch
+type AppDispatch = typeof store.dispatch
+export const useAppDispatch = () => useDispatch<AppDispatch>()
+
 
 export default store
 

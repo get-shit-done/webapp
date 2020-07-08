@@ -1,4 +1,5 @@
 // https://redux.js.org/recipes/implementing-undo-history/
+// TODO: add types
 
 function undoable(reducer: any) {
   const initialState: { past: any, present: any } = {

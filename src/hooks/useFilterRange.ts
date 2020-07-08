@@ -1,10 +1,11 @@
 import { useState } from 'react'
-import { useDispatch } from 'react-redux'
+import { useAppDispatch } from '../Application/Root'
+import { AnyAction } from '@reduxjs/toolkit'
 
 interface IProps {
   from: number,
   to: number,
-  cb: ({}: { from: number, to: number }) => void,
+  cb({}: { from: number, to: number }): AnyAction,
 }
 interface Filters {
   fromCustom?: number,
@@ -12,7 +13,7 @@ interface Filters {
 }
 
 const UseRangeFilter = ({ from, to, cb }: IProps) => {
-  const dispatch = useDispatch()
+  const dispatch = useAppDispatch()
   const [{ fromDefault, toDefault }] = useState({ fromDefault: from, toDefault: to })
   const [{ fromCustom, toCustom }, applyFilters] = useState<Filters>({})
 

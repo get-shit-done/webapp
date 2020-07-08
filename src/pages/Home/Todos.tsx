@@ -1,13 +1,13 @@
 import React from 'react'
 import styled from 'styled-components'
-import { useSelector, useDispatch } from 'react-redux'
-import { actions as todoActions } from '../../reducers/todos'
+import { useSelector } from 'react-redux'
+import { actions as todoActions, Todo } from '../../reducers/todos'
 import { actions as toastActions } from '../../components/Toast/reducer'
 import binSvg from '../../assets/svg/bin.svg'
 import Svg from '../../components/Svg/component'
 
 import AddNewTodo from './AddNewTodo'
-import { RootState } from '../../Application/Root/reducers'
+import { AppState, useAppDispatch } from '../../Application/Root'
 
 const Title = styled.div`
   font-weight: bold;
@@ -49,16 +49,11 @@ const Remove = styled(Svg)`
   height: 1.6rem;
   cursor: pointer;
 `
-interface Todo {
-  id: string,
-  todoName: string,
-  isDone?: boolean,
-}
 
 const Todos = () => {
   const { add, remove, toggleIsDone } = todoActions
-  const { todos } = useSelector((state: RootState) => state.todos.present)
-  const dispatch = useDispatch()
+  const { todos } = useSelector((state: AppState) => state.todos.present)
+  const dispatch = useAppDispatch()
   const onAddNewTodo = ({ todo }: { todo: Todo }) => { dispatch(add(todo)) }
   const onRemoveTodo = (id: string, name: string) => {
     dispatch(remove(id))

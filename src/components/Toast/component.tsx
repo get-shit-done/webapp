@@ -1,9 +1,9 @@
 import React, { useEffect, memo, useState, useRef } from 'react'
 import styled from 'styled-components'
-import { useSelector, useDispatch } from 'react-redux'
+import { useSelector } from 'react-redux'
 
 import { actions } from './reducer'
-import { RootState } from '../../Application/Root/reducers'
+import { AppState, useAppDispatch } from '../../Application/Root'
 
 const Wrap = styled.div`
   z-index: 1;
@@ -61,8 +61,8 @@ function Toast() {
   const timeoutIdRef = useRef(null)
   const timeRemainingRef = useRef(null)
   const [timeRemaining, setTimeRemaining] = useState(5)
-  const { message, messagePrefix } = useSelector((state: RootState) => state.toast.toast)
-  const dispatch = useDispatch()
+  const { message, messagePrefix } = useSelector((state: AppState) => state.toast.toast)
+  const dispatch = useAppDispatch()
   timeRemainingRef.current = timeRemaining
 
   const onRemove = () => { dispatch(actions.removeToast()) }

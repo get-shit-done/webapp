@@ -1,12 +1,12 @@
 import React, { useState, memo, FC } from 'react'
-import { useSelector, useDispatch } from 'react-redux'
+import { useSelector } from 'react-redux'
 import { useForm, SubmitHandler } from 'react-hook-form'
 import styled from 'styled-components'
 import TextField from '../../components/form/Field/component'
 import Button from '../../components/Button/component'
 import Dropdown from '../../components/form/Dropdown'
 import { actions, Task, TaskWithMeta } from '../../reducers/calendar'
-import { RootState } from '../../Application/Root/reducers'
+import { AppState, useAppDispatch } from '../../Application/Root'
 
 const Form = styled.form``
 
@@ -15,21 +15,22 @@ interface Props {
   taskBeingEdited: TaskWithMeta,
 }
 type FormValues = {
-  to: string
-  from: string
-  name: string
+  name: string,
+  to: number,
+  from: number,
 }
 
-const AddNewCalendarTask: FC<Props> = ({ dateString, taskBeingEdited }) => {
-  const dispatch = useDispatch()
+const EditCalendarTask: FC<Props> = ({ dateString, taskBeingEdited }) => {
+  const dispatch = useAppDispatch()
   const [selectedGroup, setSelectedGroup] = useState(taskBeingEdited.group)
-  const { groups } = useSelector((state: RootState) => state.settings)
+  const { groups } = useSelector((state: AppState) => state.settings)
   const { id, time, name, group } = taskBeingEdited
   const onSubmit: SubmitHandler<FormValues> = (data): any => dispatch(actions.saveTask({ // TODO: fix this
+    ...data,
     id,
     group: selectedGroup,
+    time: [data.from, data.to],
     dateString,
-    ...data,
   }))
   
   const { register, handleSubmit, errors } = useForm({
@@ -80,16 +81,16 @@ const AddNewCalendarTask: FC<Props> = ({ dateString, taskBeingEdited }) => {
         errorMessage={errors.to?.type}
         inputRef={register({ required: true, maxLength: 80 })}
       />
-      {/* <Button
+      <Button
         isDisabled={Object.entries(errors).length > 0}
         isInForm
-        accentColor={selectedGroup?.group?.color.value}
+        // accentColor={selectedGroup?.group?.color.value}
         type="submit"
       >
         Save task
-      </Button> */}
+      </Button>
     </Form>
   )
 }
 
-export default memo(AddNewCalendarTask)
+export default memo(EditCalendarTask)
