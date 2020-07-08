@@ -1,7 +1,7 @@
 import React, { FC, useState } from 'react'
 import { useSelector } from 'react-redux'
 import styled from 'styled-components'
-import { RootState } from '../../Application/Root/reducers'
+import { AppState } from '../../Application/Root'
 
 const Wrap = styled.div`
   position: relative;
@@ -41,7 +41,7 @@ interface Props {
 }
 
 const Colorpicker: FC<Props> = ({ selectedColor, setSelectedColor }) => {
-  const { colors } = useSelector((state: RootState) => state.settings)
+  const { colors } = useSelector((state: AppState) => state.settings)
   const [isOpen, toggleIsOpen] = useState(false)
 
   function handleClick(color: string) {

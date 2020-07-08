@@ -6,7 +6,7 @@ import TextField from '../../components/form/Field/component'
 import Button from '../../components/Button/component'
 import Dropdown from '../../components/form/Dropdown'
 import { actions } from '../../reducers/calendar'
-import { RootState } from '../../Application/Root/reducers'
+import { AppState, useAppDispatch } from '../../Application/Root'
 
 const Form = styled.form``
 
@@ -31,9 +31,9 @@ interface ISelectedGroup {
 }
 
 const AddNewCalendarTask: FC<Props> = ({ dateString, timeFrom, onModalClose }) => {
-  const dispatch = useDispatch()
+  const dispatch = useAppDispatch()
   const [selectedGroup, setSelectedGroup] = useState<ISelectedGroup>()
-  const { groups } = useSelector((state: RootState) => state.settings)
+  const { groups } = useSelector((state: AppState) => state.settings)
   const { register, handleSubmit, errors, watch } = useForm({ defaultValues: { from: timeFrom, to: '', name: '' } }) // fix this. is not correct shape
   const onSubmit = (data: any) => {
     dispatch(actions.addTask({ ...data, dateString, group: selectedGroup }))

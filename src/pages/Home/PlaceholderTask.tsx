@@ -1,11 +1,11 @@
 import React, { FC, useState, useCallback } from 'react'
 import styled from 'styled-components'
-import { useDispatch, useSelector } from 'react-redux'
+import { useSelector } from 'react-redux'
 import { actions } from '../../reducers/calendar'
 import Modal from '../../components/Modal/component'
 import AddNewCalendarTask from './AddNewCalendarTask'
 import { rgbAdjust, ellipsis } from '../../styles'
-import { RootState } from '../../Application/Root/reducers'
+import { AppState, useAppDispatch } from '../../Application/Root'
 
 const PlaceholderTaskWrap = styled.div<{ isBeingPrepared: boolean, accentColor: string, top: number }>`
   ${ellipsis()};
@@ -34,10 +34,10 @@ interface Props {
 }
 
 const PlaceholderTask: FC<Props> = ({ dateString, hourSlotsRef, y }) => {
-  const { taskBeingPrepared = { group: '', name: '' } } = useSelector((state: RootState) => state.calendar)
-  const { groups } = useSelector((state: RootState) => state.settings)
+  const { taskBeingPrepared = { group: '', name: '' } } = useSelector((state: AppState) => state.calendar)
+  const { groups } = useSelector((state: AppState) => state.settings)
   const [{ isModalOpen, timeFrom }, setState] = useState({ isModalOpen: false, timeFrom: undefined })
-  const dispatch = useDispatch()
+  const dispatch = useAppDispatch()
 
   function onPrepareNewTask() {
     const timeStart = 24 / (hourSlotsRef.current.getBoundingClientRect().height / y)

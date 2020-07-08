@@ -1,12 +1,12 @@
 import React, { useState, memo, FC } from 'react'
-import { useSelector, useDispatch } from 'react-redux'
+import { useSelector } from 'react-redux'
 import { useForm, SubmitHandler } from 'react-hook-form'
 import styled from 'styled-components'
 import TextField from '../../components/form/Field/component'
 import Button from '../../components/Button/component'
 import Dropdown from '../../components/form/Dropdown'
 import { actions, Task, TaskWithMeta } from '../../reducers/calendar'
-import { RootState } from '../../Application/Root/reducers'
+import { AppState, useAppDispatch } from '../../Application/Root'
 
 const Form = styled.form``
 
@@ -21,9 +21,9 @@ type FormValues = {
 }
 
 const AddNewCalendarTask: FC<Props> = ({ dateString, taskBeingEdited }) => {
-  const dispatch = useDispatch()
+  const dispatch = useAppDispatch()
   const [selectedGroup, setSelectedGroup] = useState(taskBeingEdited.group)
-  const { groups } = useSelector((state: RootState) => state.settings)
+  const { groups } = useSelector((state: AppState) => state.settings)
   const { id, time, name, group } = taskBeingEdited
   const onSubmit: SubmitHandler<FormValues> = (data): any => dispatch(actions.saveTask({ // TODO: fix this
     id,

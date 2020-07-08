@@ -5,7 +5,7 @@ import format from 'date-fns/format'
 
 import { useSelector } from 'react-redux'
 import CalendarColumn from './CalendarColumn'
-import { RootState } from '../../Application/Root/reducers'
+import { AppState } from '../../Application/Root'
 
 
 const Wrap = styled.div<{ x: number, y: number }>`
@@ -24,7 +24,7 @@ interface Props {
 } 
 
 const Calendar: FC<Props> = ({ scale: { x, y } }) => {
-  const { hoursAxis, daysAxis, allTasksByDay } = useSelector((state: RootState) => state.calendar)
+  const { hoursAxis, daysAxis, allTasksByDay } = useSelector((state: AppState) => state.calendar)
 
   return (
     <Wrap x={x} y={y}>
