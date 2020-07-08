@@ -1,7 +1,7 @@
 import React from 'react'
 import styled from 'styled-components'
 import { useSelector } from 'react-redux'
-import { actions as todoActions } from '../../reducers/todos'
+import { actions as todoActions, Todo } from '../../reducers/todos'
 import { actions as toastActions } from '../../components/Toast/reducer'
 import binSvg from '../../assets/svg/bin.svg'
 import Svg from '../../components/Svg/component'
@@ -49,11 +49,6 @@ const Remove = styled(Svg)`
   height: 1.6rem;
   cursor: pointer;
 `
-interface Todo {
-  id: string,
-  todoName: string,
-  isDone?: boolean,
-}
 
 const Todos = () => {
   const { add, remove, toggleIsDone } = todoActions
