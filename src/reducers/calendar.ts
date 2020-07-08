@@ -2127,8 +2127,43 @@ const initialState: IInitialState = {
         },
         {
           id: nanoid(),
-          time: [12.75, 16],
+          time: [12.75, 18],
           name: 'get-shit-done',
+          group: 'improvement',
+        },
+      ]
+    }
+  
+    if (index === 7) {
+      tasks = [
+        {
+          id: nanoid(),
+          time: [0, 7.5],
+          name: 'sleep',
+          group: 'essentials',
+        },
+        {
+          id: nanoid(),
+          time: [7.5, 8.5],
+          name: 'lie in bed',
+          group: 'laze',
+        },
+        {
+          id: nanoid(),
+          time: [8.5, 9.5],
+          name: 'morning routine',
+          group: 'essentials',
+        },
+        {
+          id: nanoid(),
+          time: [9.5, 10.75],
+          name: 'work relax',
+          group: 'laze',
+        },
+        {
+          id: nanoid(),
+          time: [10.75, 15],
+          name: 'express-mongo',
           group: 'improvement',
         },
       ]
