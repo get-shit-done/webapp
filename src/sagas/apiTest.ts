@@ -12,7 +12,7 @@ function* fetchUser() {
 }
 
 function* apiTestSagas() {
-  yield takeLatest('todos/apiGet', fetchUser);
+  yield takeLatest(actions.apiGet.toString(), fetchUser);
 }
 
 export { apiTestSagas };
