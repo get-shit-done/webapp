@@ -5,6 +5,8 @@ import lisSvg from '../../assets/svg/list.svg'
 import fullscreenSvg from '../../assets/svg/fullscreen.svg'
 import Svg from '../../components/Svg/component'
 import UseFullscreenToggle from '../../hooks/useFullscreenToggle'
+import { actions as todoActions } from '../../reducers/todos'
+import { useDispatch } from 'react-redux'
 
 const Wrap = styled.div`
   z-index: 2;
@@ -21,6 +23,7 @@ const Tabs = styled.div`
   align-items: center;
   justify-content: center;
   display: flex;
+  flex-direction: column;
 `
 const Toggles = styled.div`
   position: absolute;
@@ -93,6 +96,7 @@ interface Props {
 
 const Sidebar: FC<Props> = ({ isOpen, setIsOpen, children }) => {
   const [isFullscreen, setIsFullscreen] = UseFullscreenToggle(false)
+  const dispatch = useDispatch()
 
   return (
     <Wrap>
@@ -103,6 +107,9 @@ const Sidebar: FC<Props> = ({ isOpen, setIsOpen, children }) => {
         <Tasks isOpen={isOpen} onClick={setIsOpen}>
           <Tab svg={lisSvg} />
         </Tasks>
+        <button onClick={() => dispatch(todoActions.apiGet())}>
+          click
+        </button>
       </Tabs>
       <Content isOpen={isOpen}>
         {children}

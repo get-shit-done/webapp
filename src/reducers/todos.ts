@@ -88,6 +88,9 @@ export const { reducer, actions } = createSlice({
     toggleIsDone: ({ todos }, { payload }) => {
       const todo = todos.find(x => x.id === payload)
       todo.isDone = !todo.isDone
+    },
+    apiGet() {
+      //
     }
   }
 })
