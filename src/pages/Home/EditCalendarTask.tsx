@@ -30,7 +30,7 @@ const EditCalendarTask: FC<Props> = ({ dateString, taskBeingEdited }) => {
     id,
     group: selectedGroup,
     time: [data.from, data.to],
-    // dateString,
+    dateString,
   }))
   
   const { register, handleSubmit, errors } = useForm({
@@ -81,14 +81,14 @@ const EditCalendarTask: FC<Props> = ({ dateString, taskBeingEdited }) => {
         errorMessage={errors.to?.type}
         inputRef={register({ required: true, maxLength: 80 })}
       />
-      {/* <Button
+      <Button
         isDisabled={Object.entries(errors).length > 0}
         isInForm
-        accentColor={selectedGroup?.group?.color.value}
+        // accentColor={selectedGroup?.group?.color.value}
         type="submit"
       >
         Save task
-      </Button> */}
+      </Button>
     </Form>
   )
 }

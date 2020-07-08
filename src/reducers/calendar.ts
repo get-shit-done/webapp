@@ -323,7 +323,7 @@ const initialState: IInitialState = {
 
     return {
       ...acc,
-      [index]: {
+      [MONTH_DAYS_STRING[index]]: {
         tasks,
         dateString: MONTH_DAYS_STRING[index],
       },
@@ -372,36 +372,24 @@ export const { reducer, actions } = createSlice({
       state.taskBeingPrepared = undefined
     },
     editTask(state, { payload: { id, dateString } }: PayloadAction<{ id: string, dateString: string }>) {
-      state.taskBeingEdited = state.allTasksByDay
-        .filter(x => x.dateString === dateString)[0].tasks
-        .find(x => x.id === id)
+      state.taskBeingEdited = state.allTasksByDay[dateString].tasks.find(x => x.id === id)
     },
-    saveTask(state, { payload: { id, name, group, time }}: PayloadAction<Task>) {
-      return {
-        ...state,
-        allTasksByDay: state.allTasksByDay.map((day) => {
-          // if (day.dateString !== dateString) return day
-          return {
-            ...day,
-            tasks: day.tasks.map((task) => {
-              if (task.id !== id) return task
-              return {
-                ...task,
-                name,
-                group,
-                time: [Number(time[0]), Number(time[1])]
-              }
-            })
-          }
-        }),
-      }
+    saveTask(state, { payload: { id, name, group, time, dateString }}: PayloadAction<any>) {
+      state.allTasksByDay[dateString].tasks.map((task: Task) => {
+        if (task.id !== id) return task
+        return {
+          ...task,
+          name,
+          group,
+          time: [Number(time[0]), Number(time[1])]
+        }
+      })
     },
     addTask(state, { payload: { name, dateString, group, from, to }}) {
       console.log(name, dateString, group, from, to)
-      const dayToUpdate = state.allTasksByDay.find(tasksByDay => tasksByDay.dateString === dateString)
 
       state.taskBeingEdited = null
-      dayToUpdate.tasks.push({
+      state.allTasksByDay[dateString].tasks.push({
         id: nanoid(),
         time: [from, to],
         name,
