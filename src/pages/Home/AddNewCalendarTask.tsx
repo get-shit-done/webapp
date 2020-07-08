@@ -12,7 +12,7 @@ const Form = styled.form``
 
 interface Props {
   dateString: string,
-  timeFrom: string,
+  timeFrom: number,
   onModalClose(): void,
 }
 
@@ -34,7 +34,7 @@ const AddNewCalendarTask: FC<Props> = ({ dateString, timeFrom, onModalClose }) =
   const dispatch = useAppDispatch()
   const [selectedGroup, setSelectedGroup] = useState<ISelectedGroup>()
   const { groups } = useSelector((state: AppState) => state.settings)
-  const { register, handleSubmit, errors, watch } = useForm({ defaultValues: { from: timeFrom, to: '', name: '' } }) // fix this. is not correct shape
+  const { register, handleSubmit, errors, watch } = useForm({ defaultValues: { from: timeFrom, to: 16, name: '' } }) // fix this. is not correct shape
   const onSubmit = (data: any) => {
     dispatch(actions.addTask({ ...data, dateString, group: selectedGroup }))
     onModalClose()
@@ -44,7 +44,8 @@ const AddNewCalendarTask: FC<Props> = ({ dateString, timeFrom, onModalClose }) =
   useEffect(() => {
     dispatch(actions.prepareTask({
       ...watchedFields,
-      group: selectedGroup,
+      time: [watchedFields.from, watchedFields.to],
+      group: selectedGroup?.name,
     }))
   }, [watchedFields, selectedGroup])
 

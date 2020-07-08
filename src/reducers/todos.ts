@@ -87,8 +87,8 @@ export const { reducer, actions } = createSlice({
     remove(state, action: PayloadAction<string>) {
       state.todos = state.todos.filter(x => x.id !== action.payload)
     },
-    toggleIsDone: ({ todos }, { payload }) => {
-      const todo = todos.find(x => x.id === payload)
+    toggleIsDone: ({ todos }, action: PayloadAction<string>) => {
+      const todo = todos.find(x => x.id === action.payload)
       todo.isDone = !todo.isDone
     },
     apiGet() {

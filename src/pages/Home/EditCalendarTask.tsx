@@ -15,21 +15,22 @@ interface Props {
   taskBeingEdited: TaskWithMeta,
 }
 type FormValues = {
-  to: string
-  from: string
-  name: string
+  name: string,
+  to: number,
+  from: number,
 }
 
-const AddNewCalendarTask: FC<Props> = ({ dateString, taskBeingEdited }) => {
+const EditCalendarTask: FC<Props> = ({ dateString, taskBeingEdited }) => {
   const dispatch = useAppDispatch()
   const [selectedGroup, setSelectedGroup] = useState(taskBeingEdited.group)
   const { groups } = useSelector((state: AppState) => state.settings)
   const { id, time, name, group } = taskBeingEdited
   const onSubmit: SubmitHandler<FormValues> = (data): any => dispatch(actions.saveTask({ // TODO: fix this
+    ...data,
     id,
     group: selectedGroup,
-    dateString,
-    ...data,
+    time: [data.from, data.to],
+    // dateString,
   }))
   
   const { register, handleSubmit, errors } = useForm({
@@ -92,4 +93,4 @@ const AddNewCalendarTask: FC<Props> = ({ dateString, taskBeingEdited }) => {
   )
 }
 
-export default memo(AddNewCalendarTask)
+export default memo(EditCalendarTask)
