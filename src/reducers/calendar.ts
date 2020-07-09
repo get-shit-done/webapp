@@ -320,7 +320,36 @@ const initialState: IInitialState = {
         },
         {
           id: nanoid(),
-          time: [19.5, 21],
+          time: [19.5, 21.5],
+          name: 'express-mongo',
+          group: 'improvement',
+        },
+      ]
+    }
+  
+    if (index === 8) {
+      tasks = [
+        {
+          id: nanoid(),
+          time: [0, 6.25],
+          name: 'sleep',
+          group: 'essentials',
+        },
+        {
+          id: nanoid(),
+          time: [6.25, 7],
+          name: 'morning routine',
+          group: 'essentials',
+        },
+        {
+          id: nanoid(),
+          time: [7, 7.5],
+          name: 'breakfast - pho',
+          group: 'laze',
+        },
+        {
+          id: nanoid(),
+          time: [7.5, 17],
           name: 'express-mongo',
           group: 'improvement',
         },
@@ -354,15 +383,15 @@ export const { reducer, actions } = createSlice({
   name: 'calendar',
   initialState,
   reducers: {
-    filterHours(state, { payload: { from, to } }: PayloadAction<{ from: number, to: number }>) {
+    filterHours(state, { payload: { from, to } }: PayloadAction<{ from: number, to: number }>): void {
       state.hoursAxis = HOURS_IN_DAY.filter(hour => hour >= from && hour <= to)
     },
-    filterDays(state, { payload: { from, to } }: PayloadAction<{ from: string | number, to: string | number }>) {
+    filterDays(state, { payload: { from, to } }: PayloadAction<{ from: string | number, to: string | number }>): void {
       state.daysAxis = MONTH_DAYS
         .filter(day => format(day, 'd') >= from && format(day, 'd') <= to)
         .map(day => day.toString())
     },
-    prepareTask(state, { payload: { name, group, time } }: PayloadAction<TaskBeingPrepared>) {
+    prepareTask(state, { payload: { name, group, time } }: PayloadAction<TaskBeingPrepared>): void {
       console.log('being prepared', { name, group, time })
       const taskBeingPrepared = {
         time,
@@ -374,10 +403,10 @@ export const { reducer, actions } = createSlice({
     removePreparedTask(state) {
       state.taskBeingPrepared = undefined
     },
-    editTask(state, { payload: { id, dateString } }: PayloadAction<{ id: string, dateString: string }>) {
+    editTask(state, { payload: { id, dateString } }: PayloadAction<{ id: string, dateString: string }>): void {
       state.taskBeingEdited = state.allTasksByDay[dateString].tasks.find(x => x.id === id)
     },
-    saveTask(state, { payload: { id, name, group, time, dateString }}: PayloadAction<any>) { // TODO: need to extend Task
+    saveTask(state, { payload: { id, name, group, time, dateString }}: PayloadAction<any>): void { // TODO: need to extend Task
       state.allTasksByDay[dateString].tasks.map((task: Task) => {
         if (task.id !== id) return task
         return {
@@ -388,7 +417,7 @@ export const { reducer, actions } = createSlice({
         }
       })
     },
-    addTask(state, { payload: { name, dateString, group, from, to }}: PayloadAction<any>) { // Todo: need to extend taskbeingprepared
+    addTask(state, { payload: { name, dateString, group, from, to }}: PayloadAction<any>): void { // Todo: need to extend taskbeingprepared
       console.log(name, dateString, group, from, to)
 
       state.taskBeingEdited = null
