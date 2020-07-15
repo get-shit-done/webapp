@@ -355,6 +355,50 @@ const initialState: IInitialState = {
         },
       ]
     }
+  
+    if (index === 9) {
+      tasks = [
+        {
+          id: nanoid(),
+          time: [10, 13],
+          name: 'upskill',
+          group: 'improvement',
+        },
+      ]
+    }
+  
+    if (index === 11) {
+      tasks = [
+        {
+          id: nanoid(),
+          time: [17, 19],
+          name: 'upskill',
+          group: 'improvement',
+        },
+      ]
+    }
+  
+    if (index === 12) {
+      tasks = [
+        {
+          id: nanoid(),
+          time: [11, 16],
+          name: 'upskill',
+          group: 'improvement',
+        },
+      ]
+    }
+  
+    if (index === 14) {
+      tasks = [
+        {
+          id: nanoid(),
+          time: [12.5, 15],
+          name: 'upskill',
+          group: 'improvement',
+        },
+      ]
+    }
 
     return {
       ...acc,
