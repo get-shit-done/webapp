@@ -34,12 +34,11 @@ const config = {
 
   module: {
     rules: [
-      { test: /\.(js|jsx)$/, use: 'babel-loader', exclude: [/node_modules/] },
       { test: /\.html$/, use: 'html-loader' },
       { test: /\.md$/, use: [ 'html-loader', 'highlight-loader', 'markdown-loader'] },
       { test: /\.svg$/, use: 'raw-loader' },
       {
-        test: /\.ts(x?)$/,
+        test: /\.tsx?$/,
         exclude: /node_modules/,
         use: 'ts-loader',
       },
