@@ -11,23 +11,23 @@ import { AppState, useAppDispatch } from '../../Application/Root'
 const Form = styled.form``
 
 interface Props {
-  dateString: string,
-  timeFrom: number,
-  onModalClose(): void,
+  dateString: string
+  timeFrom: number
+  onModalClose(): void
 }
 
 interface ISelectedGroup {
-  name: string,
-  from: string,
-  to: string,
+  name: string
+  from: string
+  to: string
   group: {
-    id: string,
-    name: string,
+    id: string
+    name: string
     color: {
-      name: string,
-      value: string,
-    },
-  },
+      name: string
+      value: string
+    }
+  }
 }
 
 const AddNewCalendarTask: FC<Props> = ({ dateString, timeFrom, onModalClose }) => {
@@ -42,18 +42,20 @@ const AddNewCalendarTask: FC<Props> = ({ dateString, timeFrom, onModalClose }) =
   const watchedFields = watch()
 
   useEffect(() => {
-    dispatch(actions.prepareTask({
-      ...watchedFields,
-      time: [watchedFields.from, watchedFields.to],
-      group: selectedGroup?.name,
-    }))
+    dispatch(
+      actions.prepareTask({
+        ...watchedFields,
+        time: [watchedFields.from, watchedFields.to],
+        group: selectedGroup?.name,
+      }),
+    )
   }, [watchedFields, selectedGroup])
 
   return (
     <Form onSubmit={handleSubmit(onSubmit)}>
       <TextField
         isInForm
-        theme='light'
+        theme="light"
         name="name"
         placeholder="name"
         errorMessage={errors.name?.type}
@@ -71,7 +73,7 @@ const AddNewCalendarTask: FC<Props> = ({ dateString, timeFrom, onModalClose }) =
       <TextField
         isInForm
         defaultValue={timeFrom}
-        theme='light'
+        theme="light"
         name="from"
         placeholder="time from"
         errorMessage={errors.from?.type}
@@ -79,7 +81,7 @@ const AddNewCalendarTask: FC<Props> = ({ dateString, timeFrom, onModalClose }) =
       />
       <TextField
         isInForm
-        theme='light'
+        theme="light"
         name="to"
         placeholder="time to"
         errorMessage={errors.to?.type}

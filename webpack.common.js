@@ -35,7 +35,7 @@ const config = {
   module: {
     rules: [
       { test: /\.html$/, use: 'html-loader' },
-      { test: /\.md$/, use: [ 'html-loader', 'highlight-loader', 'markdown-loader'] },
+      { test: /\.md$/, use: ['html-loader', 'highlight-loader', 'markdown-loader'] },
       { test: /\.svg$/, use: 'raw-loader' },
       {
         test: /\.tsx?$/,
@@ -59,7 +59,7 @@ const config = {
   plugins: [
     new webpack.ContextReplacementPlugin(
       /date\-fns[\/\\]/,
-      new RegExp(`[/\\\\\](${supportedLocales.join('|')})[/\\\\\]`)
+      new RegExp(`[/\\\\\](${supportedLocales.join('|')})[/\\\\\]`),
     ),
     new MiniCssExtractPlugin({
       fileName: 'style.css',

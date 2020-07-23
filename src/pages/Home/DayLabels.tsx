@@ -23,16 +23,24 @@ const Wrap = styled.div<{ isBeingFiltered: boolean }>`
   color: var(--pastel-gray);
   background: var(--jet);
   transition: height var(--transition), padding var(--transition);
-  
-  ${p => p.isBeingFiltered && `
+
+  ${p =>
+    p.isBeingFiltered &&
+    `
     height: 50px;
   `};
 
   &:hover {
     height: 50px;
-  };
+  }
 `
-const DayLabel = styled.div<{ isBeingFiltered: boolean, isCurrentWeek?: boolean, isCurrentDay: boolean, isActive: boolean, isFiltered: boolean }>`
+const DayLabel = styled.div<{
+  isBeingFiltered: boolean
+  isCurrentWeek?: boolean
+  isCurrentDay: boolean
+  isActive: boolean
+  isFiltered: boolean
+}>`
   ${flex({ grow: 1, shrink: 0, basis: 0, isCenter: true })};
   position: relative;
   border-bottom: 4px solid var(--jet);
@@ -43,7 +51,7 @@ const DayLabel = styled.div<{ isBeingFiltered: boolean, isCurrentWeek?: boolean,
 
   &:last-child {
     &:after {
-      content: "";
+      content: '';
       padding-right: 8px;
     }
   }
@@ -51,39 +59,45 @@ const DayLabel = styled.div<{ isBeingFiltered: boolean, isCurrentWeek?: boolean,
   &:first-child {
     border-left: none;
     flex-direction: row-reverse;
-    
+
     &::before {
       display: none;
-    };
+    }
 
     &::after {
       content: '';
       position: static;
       width: 8px;
       background-color: transparent;
-    };
-  };
+    }
+  }
 
   ${Wrap}:hover & {
     padding-top: 0;
 
     &::before {
       display: none;
-    };
+    }
   }
 
-  ${p => p.isBeingFiltered && `
+  ${p =>
+    p.isBeingFiltered &&
+    `
     padding-top: 16px;
     &::before {
       display: none;
     };
   `};
 
-  ${p => p.isCurrentWeek && `
+  ${p =>
+    p.isCurrentWeek &&
+    `
     flex-grow: 2;
   `};
 
-  ${p => p.isCurrentDay && `
+  ${p =>
+    p.isCurrentDay &&
+    `
     flex-grow: 2;
     background-color: var(--white);
     color: var(--jet);
@@ -104,14 +118,18 @@ const DayLabel = styled.div<{ isBeingFiltered: boolean, isCurrentWeek?: boolean,
     color: var(--isabelline);
     background-color: var(--arsenic);
 
-    ${p => p.isFiltered  && `
+    ${p =>
+      p.isFiltered &&
+      `
       background-color: inherit;
       color: inherit;
       cursor: inherit;
     `};
-  };
+  }
 
-  ${p => p.isActive && `
+  ${p =>
+    p.isActive &&
+    `
     background-color: var(--arsenic);
     box-shadow: inset 0px 4px 0 0px var(--jet), inset 0px -4px 0 0px var(--jet);
     color: var(--isabelline);
@@ -126,25 +144,28 @@ const DayLabel = styled.div<{ isBeingFiltered: boolean, isCurrentWeek?: boolean,
     height: 6px;
     bottom: -4px;
     background-color: #ffffff42;
-  };
+  }
 `
 interface Props {
-  onHover({}: { axis: string, isReset?: boolean }): void,
+  onHover({}: { axis: string; isReset?: boolean }): void
 }
 
 const DayLabels: FC<Props> = ({ onHover }) => {
   const { daysAxis } = useSelector((state: AppState) => state.calendar)
-  const [{ isFiltered, isBeingFiltered, from }, onFilter]
-    = UseFilterRange({ from: 1, to: MONTH_DAYS.length, cb: actions.filterDays })
+  const [{ isFiltered, isBeingFiltered, from }, onFilter] = UseFilterRange({
+    from: 1,
+    to: MONTH_DAYS.length,
+    cb: actions.filterDays,
+  })
   const [filteredRange, highlightFilteredRange] = UseHighlightFilteredRange({ isBeingFiltered, isFiltered, from })
 
   return (
     <Wrap
       isBeingFiltered={isBeingFiltered}
-      onMouseEnter={() => onHover({ axis: 'y'})}
+      onMouseEnter={() => onHover({ axis: 'y' })}
       onMouseLeave={() => onHover({ isReset: !isBeingFiltered, axis: 'y' })}
     >
-      {daysAxis.map((dateString) => {
+      {daysAxis.map(dateString => {
         const date = new Date(dateString)
         const day = Number(format(date, 'd'))
         const dayOfWeek = format(date, 'EEEEE')

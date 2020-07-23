@@ -70,20 +70,20 @@ const Icon = styled(Svg)`
 
   &:hover {
     fill: var(--isabelline);
-  };
+  }
 
   ${ModalWrap}:hover & {
     visibility: visible;
-  };
+  }
 `
 interface Props {
-  title: string,
-  width: number,
-  children: React.ReactNode,
-  onOverlayToggle(event: React.MouseEvent<HTMLSpanElement, MouseEvent>): void,
+  title: string
+  width: number
+  children: React.ReactNode
+  onOverlayToggle(event: React.MouseEvent<HTMLSpanElement, MouseEvent>): void
 }
 
-const Modal: FC<Props> = ({ title, width, children, onOverlayToggle }) => (
+const Modal: FC<Props> = ({ title, width, children, onOverlayToggle }) =>
   ReactDOM.createPortal(
     <Wrap>
       <Overlay onClick={onOverlayToggle} />
@@ -97,8 +97,7 @@ const Modal: FC<Props> = ({ title, width, children, onOverlayToggle }) => (
         </InnerWrap>
       </ModalWrap>
     </Wrap>,
-    document.querySelector('#app')
+    document.querySelector('#app'),
   )
-)
 
 export default Modal

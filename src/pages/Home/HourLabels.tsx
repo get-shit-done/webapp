@@ -21,8 +21,10 @@ const Wrap = styled.div<{ isBeingFiltered: boolean }>`
   width: 24px;
   background-color: var(--jet);
   transition: width var(--transition), padding var(--transition);
-  
-  ${p => p.isBeingFiltered && `
+
+  ${p =>
+    p.isBeingFiltered &&
+    `
     padding-left: 0;
     width: 50px;
   `};
@@ -30,9 +32,9 @@ const Wrap = styled.div<{ isBeingFiltered: boolean }>`
   &:hover {
     padding-left: 0;
     width: 50px;
-  };
+  }
 `
-const HourLabel = styled.div<{ isFiltered: boolean, isActive: boolean, isBeingFiltered: boolean }>`
+const HourLabel = styled.div<{ isFiltered: boolean; isActive: boolean; isBeingFiltered: boolean }>`
   position: relative;
   display: flex;
   justify-content: center;
@@ -44,11 +46,13 @@ const HourLabel = styled.div<{ isFiltered: boolean, isActive: boolean, isBeingFi
   color: var(--pastel-gray);
 
   &:hover {
-    background-color: ${p => p.isFiltered ? 'inherit' : 'var(--arsenic)'};
-    cursor: ${p => p.isFiltered ? 'inherit' : 'pointer'};
-  };
+    background-color: ${p => (p.isFiltered ? 'inherit' : 'var(--arsenic)')};
+    cursor: ${p => (p.isFiltered ? 'inherit' : 'pointer')};
+  }
 
-  ${p => p.isActive && `
+  ${p =>
+    p.isActive &&
+    `
     background-color: var(--arsenic);
     box-shadow: inset 4px 0 0 0px var(--jet), inset -4px 0 0 0px var(--jet)
   `};
@@ -65,10 +69,12 @@ const HourLabel = styled.div<{ isFiltered: boolean, isActive: boolean, isBeingFi
 
     ${Wrap}:hover & {
       display: none;
-    };
-  };
+    }
+  }
 
-  ${p => p.isBeingFiltered && `
+  ${p =>
+    p.isBeingFiltered &&
+    `
     &::before {
       display: none;
     };
@@ -77,12 +83,12 @@ const HourLabel = styled.div<{ isFiltered: boolean, isActive: boolean, isBeingFi
   &:last-child {
     &::before {
       display: none;
-    };
-  };
+    }
+  }
 `
 
 interface Props {
-  onHover({}: { axis: string, isReset?: boolean }): void,
+  onHover({}: { axis: string; isReset?: boolean }): void
 }
 
 const HourLabels: FC<Props> = ({ onHover }) => {
@@ -96,7 +102,7 @@ const HourLabels: FC<Props> = ({ onHover }) => {
       onMouseEnter={() => onHover({ axis: 'x' })}
       onMouseLeave={() => onHover({ isReset: !isBeingFiltered, axis: 'x' })}
     >
-      {hoursAxis.map((hour) => (
+      {hoursAxis.map(hour => (
         <HourLabel
           isBeingFiltered={isBeingFiltered}
           isFiltered={isFiltered}

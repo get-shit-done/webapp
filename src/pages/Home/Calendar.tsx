@@ -7,8 +7,7 @@ import { useSelector } from 'react-redux'
 import CalendarColumn from './CalendarColumn'
 import { AppState } from '../../Application/Root'
 
-
-const Wrap = styled.div<{ x: number, y: number }>`
+const Wrap = styled.div<{ x: number; y: number }>`
   display: flex;
   flex-grow: 1;
   transform-origin: bottom right;
@@ -18,17 +17,17 @@ const Wrap = styled.div<{ x: number, y: number }>`
 
 interface Props {
   scale: {
-    x: number,
-    y: number,
-  },
-} 
+    x: number
+    y: number
+  }
+}
 
 const Calendar: FC<Props> = ({ scale: { x, y } }) => {
   const { hoursAxis, daysAxis, allTasksByDay } = useSelector((state: AppState) => state.calendar)
 
   return (
     <Wrap x={x} y={y}>
-      {daysAxis.map((dateString) => {
+      {daysAxis.map(dateString => {
         const date = new Date(dateString)
         const day = format(date, 'd')
         const isCurrentDay = isToday(date)
@@ -55,7 +54,9 @@ const Calendar: FC<Props> = ({ scale: { x, y } }) => {
           }
         })
 
-        return <CalendarColumn key={day} isCurrentDay={isCurrentDay} dateString={dateString} tasksFiltered={tasksFiltered} />
+        return (
+          <CalendarColumn key={day} isCurrentDay={isCurrentDay} dateString={dateString} tasksFiltered={tasksFiltered} />
+        )
       })}
     </Wrap>
   )

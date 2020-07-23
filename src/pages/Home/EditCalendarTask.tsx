@@ -11,13 +11,13 @@ import { AppState, useAppDispatch } from '../../Application/Root'
 const Form = styled.form``
 
 interface Props {
-  dateString: string,
-  taskBeingEdited: TaskWithMeta,
+  dateString: string
+  taskBeingEdited: TaskWithMeta
 }
 type FormValues = {
-  name: string,
-  to: number,
-  from: number,
+  name: string
+  to: number
+  from: number
 }
 
 const EditCalendarTask: FC<Props> = ({ dateString, taskBeingEdited }) => {
@@ -25,21 +25,25 @@ const EditCalendarTask: FC<Props> = ({ dateString, taskBeingEdited }) => {
   const [selectedGroup, setSelectedGroup] = useState(taskBeingEdited.group)
   const { groups } = useSelector((state: AppState) => state.settings)
   const { id, time, name, group } = taskBeingEdited
-  const onSubmit: SubmitHandler<FormValues> = (data): any => dispatch(actions.saveTask({ // TODO: fix this
-    ...data,
-    id,
-    group: selectedGroup,
-    time: [data.from, data.to],
-    dateString,
-  }))
-  
+  const onSubmit: SubmitHandler<FormValues> = (data): any =>
+    dispatch(
+      actions.saveTask({
+        // TODO: fix this
+        ...data,
+        id,
+        group: selectedGroup,
+        time: [data.from, data.to],
+        dateString,
+      }),
+    )
+
   const { register, handleSubmit, errors } = useForm({
     defaultValues: {
       from: time[0],
       to: time[1],
       name,
       group,
-    }
+    },
   })
 
   return (
@@ -47,7 +51,7 @@ const EditCalendarTask: FC<Props> = ({ dateString, taskBeingEdited }) => {
       <TextField
         isInForm
         defaultValue={name}
-        theme='light'
+        theme="light"
         name="name"
         placeholder="name"
         errorMessage={errors.name?.type}
@@ -66,7 +70,7 @@ const EditCalendarTask: FC<Props> = ({ dateString, taskBeingEdited }) => {
       <TextField
         isInForm
         defaultValue={time[0]}
-        theme='light'
+        theme="light"
         name="from"
         placeholder="time from"
         errorMessage={errors.from?.type}
@@ -75,7 +79,7 @@ const EditCalendarTask: FC<Props> = ({ dateString, taskBeingEdited }) => {
       <TextField
         isInForm
         defaultValue={time[1]}
-        theme='light'
+        theme="light"
         name="to"
         placeholder="time to"
         errorMessage={errors.to?.type}

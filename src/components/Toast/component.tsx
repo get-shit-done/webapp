@@ -28,7 +28,7 @@ const InnerWrap = styled.div`
 
   &:hover {
     opacity: 0.8;
-  };
+  }
 `
 const Prefix = styled.span`
   margin-right: var(--size-sm);
@@ -65,7 +65,9 @@ function Toast() {
   const dispatch = useAppDispatch()
   timeRemainingRef.current = timeRemaining
 
-  const onRemove = () => { dispatch(actions.removeToast()) }
+  const onRemove = () => {
+    dispatch(actions.removeToast())
+  }
   const onUndo = () => {
     dispatch({ type: 'UNDO' })
     onRemove()
@@ -88,19 +90,19 @@ function Toast() {
     }
   }, [message])
 
-
-  return (
-    !message ? null : (
-      <Wrap>
-        <InnerWrap onClick={onRemove}>
-          <Message><Prefix>{messagePrefix}</Prefix>{message}</Message>
-        </InnerWrap>
-        <Undo onClick={onUndo}>
-          undo
-          <TimeRemaining>{timeRemaining}</TimeRemaining>
-        </Undo>
-      </Wrap>
-    )
+  return !message ? null : (
+    <Wrap>
+      <InnerWrap onClick={onRemove}>
+        <Message>
+          <Prefix>{messagePrefix}</Prefix>
+          {message}
+        </Message>
+      </InnerWrap>
+      <Undo onClick={onUndo}>
+        undo
+        <TimeRemaining>{timeRemaining}</TimeRemaining>
+      </Undo>
+    </Wrap>
   )
 }
 

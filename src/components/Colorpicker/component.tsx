@@ -13,7 +13,7 @@ const Toggle = styled.div`
   border-radius: 50%;
 `
 const Colors = styled.div<{ isOpen: boolean }>`
-  display: ${p => p.isOpen ? 'flex' : 'none'};
+  display: ${p => (p.isOpen ? 'flex' : 'none')};
   width: 208px;
   background-color: var(--charcoal);
   position: absolute;
@@ -33,11 +33,11 @@ const Color = styled.div<{ color: string }>`
   &:hover {
     z-index: 1;
     box-shadow: 0 0 0 1px var(--charcoal);
-  };
+  }
 `
 interface Props {
-  selectedColor: string,
-  setSelectedColor (color: string): void,
+  selectedColor: string
+  setSelectedColor(color: string): void
 }
 
 const Colorpicker: FC<Props> = ({ selectedColor, setSelectedColor }) => {

@@ -24,7 +24,7 @@ const InnerWrap = styled.div`
 
   &:hover {
     opacity: 0.8;
-  };
+  }
 `
 const Message = styled.div`
   text-overflow: ellipsis;
@@ -46,19 +46,17 @@ const Undo = styled.div`
 const SWUpdate: FC<{ isUpdateAvailable: boolean }> = ({ isUpdateAvailable }) => {
   const [doNotUpdate, setDoNotUpdate] = useState(false)
   const onReload = () => window.location.reload(true)
-  const onRemove = () => { setDoNotUpdate(true) }
+  const onRemove = () => {
+    setDoNotUpdate(true)
+  }
 
-  return (
-    (!isUpdateAvailable || doNotUpdate) ? null : (
-      <Wrap>
-        <InnerWrap onClick={onRemove}>
-          <Message>An update is available</Message>
-        </InnerWrap>
-        <Undo onClick={onReload}>
-          Update
-        </Undo>
-      </Wrap>
-    )
+  return !isUpdateAvailable || doNotUpdate ? null : (
+    <Wrap>
+      <InnerWrap onClick={onRemove}>
+        <Message>An update is available</Message>
+      </InnerWrap>
+      <Undo onClick={onReload}>Update</Undo>
+    </Wrap>
   )
 }
 

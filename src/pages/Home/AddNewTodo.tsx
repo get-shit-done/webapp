@@ -11,15 +11,15 @@ interface IProps {
   addNewTodo(data: any): void
 }
 
-const AddNewTodo: FC<IProps> = (({ addNewTodo }) => {
+const AddNewTodo: FC<IProps> = ({ addNewTodo }) => {
   const { register, handleSubmit, errors } = useForm()
   const onSubmit = (data: any) => addNewTodo(data)
   const errorMessage = (errors.todo || {}).type
-  
+
   return (
     <Form onSubmit={handleSubmit(onSubmit)}>
       <TextField
-        theme='light'
+        theme="light"
         name="todo"
         placeholder="add todo"
         errorMessage={errorMessage}
@@ -27,6 +27,6 @@ const AddNewTodo: FC<IProps> = (({ addNewTodo }) => {
       />
     </Form>
   )
-})
+}
 
 export default AddNewTodo

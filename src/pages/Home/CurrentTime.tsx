@@ -25,7 +25,7 @@ const Wrap = styled.div<{ top: number }>`
     background: var(--white);
     border-radius: 50%;
     box-shadow: inset 0 0 0 1px var(--granite-gray);
-  };
+  }
 `
 const Time = styled.span`
   position: absolute;
@@ -53,10 +53,8 @@ const CurrentTime = () => {
   }, [])
 
   return (
-    <Wrap top={nowInMinutes / MINUTES_IN_DAY * 100}>
-      <Time>
-        {format(currentTime, 'p')}
-      </Time>
+    <Wrap top={(nowInMinutes / MINUTES_IN_DAY) * 100}>
+      <Time>{format(currentTime, 'p')}</Time>
     </Wrap>
   )
 }
