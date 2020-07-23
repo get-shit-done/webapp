@@ -82,13 +82,10 @@ export const { reducer, actions } = createSlice({
         timestamp,
       })
     },
-    getTasks() {},
+    getTasksRequested() {},
     getTasksSuccess(state, { payload: { data } }) {
-      // console.log('daaata', data)
       state.allTasksByDay = data
     },
-    getTasksFail(state, action) {
-      console.log(action)
-    },
+    getTasksFail(state, action) {},
   },
 })

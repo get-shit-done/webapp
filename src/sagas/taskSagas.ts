@@ -25,7 +25,7 @@ function* saveTask(task: any) {
 
 
 function* taskSagas() {
-  yield takeLatest(actions.getTasks.toString(), fetchTasks),
+  yield takeLatest(actions.getTasksRequested.toString(), fetchTasks),
   yield takeLatest(actions.saveTaskRequested.toString(), saveTask)
 }
 

@@ -25,7 +25,7 @@ const Application = () => {
   const dispatch = useAppDispatch()
 
   useEffect(() => {
-    dispatch(actions.getTasks())
+    dispatch(actions.getTasksRequested())
   }, [])
 
   return (
