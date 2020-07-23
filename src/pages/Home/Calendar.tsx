@@ -31,7 +31,7 @@ const Calendar: FC<Props> = ({ scale: { x, y } }) => {
         const date = new Date(dateString)
         const day = format(date, 'd')
         const isCurrentDay = isToday(date)
-        const tasks = allTasksByDay[dateString].tasks
+        const tasks = allTasksByDay[dateString]?.tasks || []
         const tasksFiltered = tasks.map(({ id, time, ...rest }, taskI) => {
           const from = time[0]
           const to = time[1]
