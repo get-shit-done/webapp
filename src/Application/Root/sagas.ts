@@ -1,9 +1,9 @@
 import { fork } from 'redux-saga/effects';
 
-import { apiTestSagas } from '../../sagas/apiTest'
+import { taskSagas } from '../../sagas/taskSagas'
 
 export function* rootSagas() {
   yield* [
-    fork(apiTestSagas),
+    fork(taskSagas),
   ]
 }

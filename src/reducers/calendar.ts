@@ -3,29 +3,29 @@ import format from 'date-fns/format'
 import { MONTH_DAYS, MONTH_DAYS_STRING, HOURS_IN_DAY } from '../constants'
 
 export interface TaskBeingPrepared {
-  time?: number[],
-  name: string,
+  time?: number[]
+  name: string
   group: string
 }
 export interface Task extends TaskBeingPrepared {
-  id: string,
+  id: string
 }
 export interface TaskWithMeta extends Task {
-  heightInFlex?: number,
-  gapBefore?: number,
-  gapAfter?: number,
+  heightInFlex?: number
+  gapBefore?: number
+  gapAfter?: number
 }
 interface IInitialState {
-  taskBeingPrepared: TaskBeingPrepared | null,
-  taskBeingEdited: TaskWithMeta | null,
+  taskBeingPrepared: TaskBeingPrepared | null
+  taskBeingEdited: TaskWithMeta | null
   allTasksByDay: {
     [key: string]: {
-      tasks: Task[],
-      dateString: string,
-    },
-  },
-  hoursAxis: number[],
-  daysAxis: string[],
+      tasks: Task[]
+      dateString: string
+    }
+  }
+  hoursAxis: number[]
+  daysAxis: string[]
 }
 const initialState: IInitialState = {
   taskBeingPrepared: undefined,
@@ -85,7 +85,7 @@ const initialState: IInitialState = {
         },
       ]
     }
-  
+
     if (index === 1) {
       tasks = [
         {
@@ -144,7 +144,7 @@ const initialState: IInitialState = {
         },
       ]
     }
-  
+
     if (index === 2) {
       tasks = [
         {
@@ -191,7 +191,7 @@ const initialState: IInitialState = {
         },
       ]
     }
-  
+
     if (index === 5) {
       tasks = [
         {
@@ -232,7 +232,7 @@ const initialState: IInitialState = {
         },
       ]
     }
-  
+
     if (index === 6) {
       tasks = [
         {
@@ -285,7 +285,7 @@ const initialState: IInitialState = {
         },
       ]
     }
-  
+
     if (index === 7) {
       tasks = [
         {
@@ -326,7 +326,7 @@ const initialState: IInitialState = {
         },
       ]
     }
-  
+
     if (index === 8) {
       tasks = [
         {
@@ -355,7 +355,7 @@ const initialState: IInitialState = {
         },
       ]
     }
-  
+
     if (index === 9) {
       tasks = [
         {
@@ -366,7 +366,7 @@ const initialState: IInitialState = {
         },
       ]
     }
-  
+
     if (index === 11) {
       tasks = [
         {
@@ -377,7 +377,7 @@ const initialState: IInitialState = {
         },
       ]
     }
-  
+
     if (index === 12) {
       tasks = [
         {
@@ -388,12 +388,161 @@ const initialState: IInitialState = {
         },
       ]
     }
-  
+
     if (index === 14) {
       tasks = [
         {
           id: nanoid(),
-          time: [12.5, 15],
+          time: [12.5, 17],
+          name: 'upskill',
+          group: 'improvement',
+        },
+      ]
+    }
+
+    if (index === 15) {
+      tasks = [
+        {
+          id: nanoid(),
+          time: [9.5, 11],
+          name: 'upskill',
+          group: 'improvement',
+        },
+        {
+          id: nanoid(),
+          time: [11, 13.5],
+          name: 'admin',
+          group: 'essentials',
+        },
+        {
+          id: nanoid(),
+          time: [13.5, 18.5],
+          name: 'upskill',
+          group: 'improvement',
+        },
+      ]
+    }
+
+    if (index === 16) {
+      tasks = [
+        {
+          id: nanoid(),
+          time: [9.5, 14],
+          name: 'upskill',
+          group: 'improvement',
+        },
+        {
+          id: nanoid(),
+          time: [14, 15],
+          name: 'lunch',
+          group: 'essentials',
+        },
+        {
+          id: nanoid(),
+          time: [15, 18.25],
+          name: 'upskill',
+          group: 'improvement',
+        },
+      ]
+    }
+
+    if (index === 17) {
+      tasks = [
+        {
+          id: nanoid(),
+          time: [10, 14],
+          name: 'upskill',
+          group: 'improvement',
+        },
+        {
+          id: nanoid(),
+          time: [14, 15],
+          name: 'lunch',
+          group: 'essentials',
+        },
+        {
+          id: nanoid(),
+          time: [15, 18.25],
+          name: 'upskill',
+          group: 'improvement',
+        },
+      ]
+    }
+
+    if (index === 19) {
+      tasks = [
+        {
+          id: nanoid(),
+          time: [12, 17.25],
+          name: 'upskill',
+          group: 'improvement',
+        },
+      ]
+    }
+
+    if (index === 20) {
+      tasks = [
+        {
+          id: nanoid(),
+          time: [8.5, 12],
+          name: 'upskill',
+          group: 'improvement',
+        },
+        {
+          id: nanoid(),
+          time: [12, 12.75],
+          name: 'break',
+          group: 'laze',
+        },
+        {
+          id: nanoid(),
+          time: [12.75, 17.5],
+          name: 'upskill',
+          group: 'improvement',
+        },
+      ]
+    }
+
+    if (index === 21) {
+      tasks = [
+        {
+          id: nanoid(),
+          time: [9, 13],
+          name: 'upskill',
+          group: 'improvement',
+        },
+        {
+          id: nanoid(),
+          time: [13, 13.5],
+          name: 'break',
+          group: 'laze',
+        },
+        {
+          id: nanoid(),
+          time: [13.5, 18.25],
+          name: 'upskill',
+          group: 'improvement',
+        },
+      ]
+    }
+
+    if (index === 22) {
+      tasks = [
+        {
+          id: nanoid(),
+          time: [8.25, 13],
+          name: 'upskill',
+          group: 'improvement',
+        },
+        {
+          id: nanoid(),
+          time: [13, 13.5],
+          name: 'break',
+          group: 'laze',
+        },
+        {
+          id: nanoid(),
+          time: [13.5, 18.25],
           name: 'upskill',
           group: 'improvement',
         },
@@ -407,17 +556,15 @@ const initialState: IInitialState = {
         dateString: MONTH_DAYS_STRING[index],
       },
     }
-
   }, {}),
 
   // allTasksByDay: MONTH_DAYS_STRING.map((dateString, index) => {
   //   let tasks: Task[] = []
 
-
-    // return {
-    //   tasks,
-    //   dateString,
-    // }
+  // return {
+  //   tasks,
+  //   dateString,
+  // }
   // }),
   hoursAxis: HOURS_IN_DAY,
   daysAxis: MONTH_DAYS_STRING,
@@ -427,13 +574,13 @@ export const { reducer, actions } = createSlice({
   name: 'calendar',
   initialState,
   reducers: {
-    filterHours(state, { payload: { from, to } }: PayloadAction<{ from: number, to: number }>): void {
+    filterHours(state, { payload: { from, to } }: PayloadAction<{ from: number; to: number }>): void {
       state.hoursAxis = HOURS_IN_DAY.filter(hour => hour >= from && hour <= to)
     },
-    filterDays(state, { payload: { from, to } }: PayloadAction<{ from: string | number, to: string | number }>): void {
-      state.daysAxis = MONTH_DAYS
-        .filter(day => format(day, 'd') >= from && format(day, 'd') <= to)
-        .map(day => day.toString())
+    filterDays(state, { payload: { from, to } }: PayloadAction<{ from: string | number; to: string | number }>): void {
+      state.daysAxis = MONTH_DAYS.filter(day => format(day, 'd') >= from && format(day, 'd') <= to).map(day =>
+        day.toString(),
+      )
     },
     prepareTask(state, { payload: { name, group, time } }: PayloadAction<TaskBeingPrepared>): void {
       console.log('being prepared', { name, group, time })
@@ -447,21 +594,23 @@ export const { reducer, actions } = createSlice({
     removePreparedTask(state) {
       state.taskBeingPrepared = undefined
     },
-    editTask(state, { payload: { id, dateString } }: PayloadAction<{ id: string, dateString: string }>): void {
+    editTask(state, { payload: { id, dateString } }: PayloadAction<{ id: string; dateString: string }>): void {
       state.taskBeingEdited = state.allTasksByDay[dateString].tasks.find(x => x.id === id)
     },
-    saveTask(state, { payload: { id, name, group, time, dateString }}: PayloadAction<any>): void { // TODO: need to extend Task
+    saveTask(state, { payload: { id, name, group, time, dateString } }: PayloadAction<any>): void {
+      // TODO: need to extend Task
       state.allTasksByDay[dateString].tasks.map((task: Task) => {
         if (task.id !== id) return task
         return {
           ...task,
           name,
           group,
-          time: [Number(time[0]), Number(time[1])]
+          time: [Number(time[0]), Number(time[1])],
         }
       })
     },
-    addTask(state, { payload: { name, dateString, group, from, to }}: PayloadAction<any>): void { // Todo: need to extend taskbeingprepared
+    addTask(state, { payload: { name, dateString, group, from, to } }: PayloadAction<any>): void {
+      // Todo: need to extend taskbeingprepared
       console.log(name, dateString, group, from, to)
 
       state.taskBeingEdited = null
@@ -471,6 +620,13 @@ export const { reducer, actions } = createSlice({
         name,
         group: group.name,
       })
-    }
-  }
+    },
+    getTasks() {},
+    getTasksSuccess(state, action) {
+      console.log(action)
+    },
+    getTasksFail(state, action) {
+      console.log(action)
+    },
+  },
 })
