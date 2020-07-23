@@ -11,7 +11,7 @@ import { AppState, useAppDispatch } from '../../Application/Root'
 const Form = styled.form``
 
 interface Props {
-  dateString: string
+  timestamp: string
   taskBeingEdited: TaskWithMeta
 }
 type FormValues = {
@@ -20,20 +20,20 @@ type FormValues = {
   from: number
 }
 
-const EditCalendarTask: FC<Props> = ({ dateString, taskBeingEdited }) => {
+const EditCalendarTask: FC<Props> = ({ timestamp, taskBeingEdited }) => {
   const dispatch = useAppDispatch()
   const [selectedGroup, setSelectedGroup] = useState(taskBeingEdited.group)
   const { groups } = useSelector((state: AppState) => state.settings)
   const { _id, time, name, group } = taskBeingEdited
   const onSubmit: SubmitHandler<FormValues> = (data): any =>
     dispatch(
-      actions.saveTask({
+      actions.saveTaskRequested({
         // TODO: fix this
         ...data,
         _id,
         group: selectedGroup,
-        time: [data.from, data.to],
-        dateString,
+        time: [Number(data.from), Number(data.to)],
+        timestamp,
       }),
     )
 

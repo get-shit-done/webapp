@@ -165,8 +165,8 @@ const DayLabels: FC<Props> = ({ onHover }) => {
       onMouseEnter={() => onHover({ axis: 'y' })}
       onMouseLeave={() => onHover({ isReset: !isBeingFiltered, axis: 'y' })}
     >
-      {daysAxis.map(dateString => {
-        const date = new Date(dateString)
+      {daysAxis.map(timestamp => {
+        const date = new Date(timestamp)
         const day = Number(format(date, 'd'))
         const dayOfWeek = format(date, 'EEEEE')
         const isCurrentDay = isToday(date)

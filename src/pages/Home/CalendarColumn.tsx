@@ -84,12 +84,12 @@ const Cell = styled.div<{ isGap?: boolean; flex: number; accentColor?: string; i
 `
 
 interface Props {
-  dateString: string
+  timestamp: string
   isCurrentDay: boolean
   tasksFiltered: TaskWithMeta[]
 }
 
-const CalendarColumn: FC<Props> = ({ dateString, isCurrentDay, tasksFiltered }) => {
+const CalendarColumn: FC<Props> = ({ timestamp, isCurrentDay, tasksFiltered }) => {
   const { hoursAxis, taskBeingEdited, taskBeingPrepared } = useSelector((state: AppState) => state.calendar)
   const { groups } = useSelector((state: AppState) => state.settings)
   const dispatch = useAppDispatch()
@@ -111,7 +111,7 @@ const CalendarColumn: FC<Props> = ({ dateString, isCurrentDay, tasksFiltered }) 
   function onEditTask(_id: string) {
     console.log('edit task', _id)
     setIsEditModalOpen(true)
-    dispatch(actions.editTask({ _id, dateString }))
+    dispatch(actions.editTask({ _id, timestamp }))
   }
 
   return (
@@ -139,11 +139,11 @@ const CalendarColumn: FC<Props> = ({ dateString, isCurrentDay, tasksFiltered }) 
             </Fragment>
           )
         })}
-        <PlaceholderTask dateString={dateString} hourSlotsRef={hourSlotsRef} y={y} />
+        <PlaceholderTask timestamp={timestamp} hourSlotsRef={hourSlotsRef} y={y} />
 
         {isEditModalOpen && (
           <Modal title="task details" width={17} onOverlayToggle={() => setIsEditModalOpen(false)}>
-            <EditCalendarTask dateString={dateString} taskBeingEdited={taskBeingEdited} />
+            <EditCalendarTask timestamp={timestamp} taskBeingEdited={taskBeingEdited} />
           </Modal>
         )}
       </HourSlots>

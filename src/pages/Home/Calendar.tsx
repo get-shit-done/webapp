@@ -27,11 +27,11 @@ const Calendar: FC<Props> = ({ scale: { x, y } }) => {
 
   return (
     <Wrap x={x} y={y}>
-      {daysAxis.map(dateString => {
-        const date = new Date(dateString)
+      {daysAxis.map(timestamp => {
+        const date = new Date(timestamp)
         const day = format(date, 'd')
         const isCurrentDay = isToday(date)
-        const tasks = allTasksByDay[dateString]?.tasks || []
+        const tasks = allTasksByDay[timestamp]?.tasks || []
         const tasksFiltered = tasks.map(({ _id, time, ...rest }, taskI) => {
           const from = time[0]
           const to = time[1]
@@ -55,7 +55,7 @@ const Calendar: FC<Props> = ({ scale: { x, y } }) => {
         })
 
         return (
-          <CalendarColumn key={day} isCurrentDay={isCurrentDay} dateString={dateString} tasksFiltered={tasksFiltered} />
+          <CalendarColumn key={day} isCurrentDay={isCurrentDay} timestamp={timestamp} tasksFiltered={tasksFiltered} />
         )
       })}
     </Wrap>

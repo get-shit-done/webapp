@@ -29,12 +29,12 @@ const PlaceholderTaskWrap = styled.div<{ isBeingPrepared: boolean; accentColor: 
 `
 
 interface Props {
-  dateString: string
+  timestamp: string
   hourSlotsRef: any
   y: number
 }
 
-const PlaceholderTask: FC<Props> = ({ dateString, hourSlotsRef, y }) => {
+const PlaceholderTask: FC<Props> = ({ timestamp, hourSlotsRef, y }) => {
   const { taskBeingPrepared = { group: '', name: '' } } = useSelector((state: AppState) => state.calendar)
   const { groups } = useSelector((state: AppState) => state.settings)
   const [{ isModalOpen, timeFrom }, setState] = useState({ isModalOpen: false, timeFrom: undefined })
@@ -64,7 +64,7 @@ const PlaceholderTask: FC<Props> = ({ dateString, hourSlotsRef, y }) => {
 
       {isModalOpen && (
         <Modal title="task details" width={17} onOverlayToggle={onModalClose}>
-          <AddNewCalendarTask dateString={dateString} timeFrom={timeFrom} onModalClose={onModalClose} />
+          <AddNewCalendarTask timestamp={timestamp} timeFrom={timeFrom} onModalClose={onModalClose} />
         </Modal>
       )}
     </>

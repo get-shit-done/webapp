@@ -11,7 +11,7 @@ import { AppState, useAppDispatch } from '../../Application/Root'
 const Form = styled.form``
 
 interface Props {
-  dateString: string
+  timestamp: string
   timeFrom: number
   onModalClose(): void
 }
@@ -30,13 +30,13 @@ interface ISelectedGroup {
   }
 }
 
-const AddNewCalendarTask: FC<Props> = ({ dateString, timeFrom, onModalClose }) => {
+const AddNewCalendarTask: FC<Props> = ({ timestamp, timeFrom, onModalClose }) => {
   const dispatch = useAppDispatch()
   const [selectedGroup, setSelectedGroup] = useState<ISelectedGroup>()
   const { groups } = useSelector((state: AppState) => state.settings)
   const { register, handleSubmit, errors, watch } = useForm({ defaultValues: { from: timeFrom, to: 16, name: '' } }) // fix this. is not correct shape
   const onSubmit = (data: any) => {
-    dispatch(actions.addTask({ ...data, dateString, group: selectedGroup }))
+    dispatch(actions.addTask({ ...data, timestamp, group: selectedGroup }))
     onModalClose()
   }
   const watchedFields = watch()
