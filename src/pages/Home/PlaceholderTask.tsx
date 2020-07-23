@@ -35,34 +35,35 @@ interface Props {
 }
 
 const PlaceholderTask: FC<Props> = ({ timestamp, hourSlotsRef, y }) => {
-  const { taskBeingPrepared = { group: '', name: '' } } = useSelector((state: AppState) => state.calendar)
-  const { groups } = useSelector((state: AppState) => state.settings)
-  const [{ isModalOpen, timeFrom }, setState] = useState({ isModalOpen: false, timeFrom: undefined })
+  const { taskBeingPrepared } = useSelector((state: AppState) => state.calendar)
+  const { groups, colors } = useSelector((state: AppState) => state.settings)
+  const [{ isTaskBeingPrepared, timeFrom }, setState] = useState({ isTaskBeingPrepared: false, timeFrom: undefined })
   const dispatch = useAppDispatch()
+  const colorId = groups.find(x => x.name === taskBeingPrepared.group)?.colorId
 
   function onPrepareNewTask() {
     const timeStart = 24 / (hourSlotsRef.current.getBoundingClientRect().height / y)
     const timeStartRounded = Number(timeStart.toFixed(1))
-    setState({ isModalOpen: true, timeFrom: timeStartRounded })
+    setState({ isTaskBeingPrepared: true, timeFrom: timeStartRounded })
   }
 
   const onModalClose = useCallback(() => {
-    setState({ isModalOpen: false, timeFrom: undefined })
+    setState({ isTaskBeingPrepared: false, timeFrom: undefined })
     dispatch(actions.removePreparedTask())
   }, [])
 
   return (
     <>
       <PlaceholderTaskWrap
-        isBeingPrepared={timeFrom}
+        isBeingPrepared={isTaskBeingPrepared}
         top={y}
-        accentColor={groups.find(x => x.name === taskBeingPrepared.group)?.color.value}
+        accentColor={colors[colorId]}
         onClick={onPrepareNewTask}
       >
-        {taskBeingPrepared.name}
+        {taskBeingPrepared?.name}
       </PlaceholderTaskWrap>
 
-      {isModalOpen && (
+      {isTaskBeingPrepared && (
         <Modal title="task details" width={17} onOverlayToggle={onModalClose}>
           <AddNewCalendarTask timestamp={timestamp} timeFrom={timeFrom} onModalClose={onModalClose} />
         </Modal>

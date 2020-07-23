@@ -3,13 +3,17 @@ import format from 'date-fns/format'
 import { MONTH_DAYS, MONTH_DAYS_STRING, HOURS_IN_DAY } from '../constants'
 
 export interface TaskBeingPrepared {
+  // [key: string]: any,
+  time?: number[]
+  name?: string
+  group?: string
+}
+export interface Task {
   [key: string]: any, // TODO: is this really necessary? wtf
+  _id: string
   time?: number[]
   name: string
   group: string
-}
-export interface Task extends TaskBeingPrepared {
-  _id: string
   timestamp: string,
 }
 export interface TaskWithMeta extends Task {
@@ -18,7 +22,7 @@ export interface TaskWithMeta extends Task {
   gapAfter?: number
 }
 interface IInitialState {
-  taskBeingPrepared: TaskBeingPrepared | null
+  taskBeingPrepared: TaskBeingPrepared
   taskBeingEdited: TaskWithMeta | null
   allTasksByDay: {
     [key: string]: {
@@ -29,7 +33,7 @@ interface IInitialState {
   daysAxis: string[]
 }
 const initialState: IInitialState = {
-  taskBeingPrepared: undefined,
+  taskBeingPrepared: {},
   taskBeingEdited: null,
   allTasksByDay: {},
   hoursAxis: HOURS_IN_DAY,
@@ -58,7 +62,7 @@ export const { reducer, actions } = createSlice({
       state.taskBeingPrepared = taskBeingPrepared
     },
     removePreparedTask(state) {
-      state.taskBeingPrepared = undefined
+      state.taskBeingPrepared = {}
     },
     editTask(state, { payload: { _id, timestamp } }: PayloadAction<{ _id: string; timestamp: string }>): void {
       state.taskBeingEdited = state.allTasksByDay[timestamp].tasks.find(x => x._id === _id)

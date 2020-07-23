@@ -91,7 +91,7 @@ interface Props {
 
 const CalendarColumn: FC<Props> = ({ timestamp, isCurrentDay, tasksFiltered }) => {
   const { hoursAxis, taskBeingEdited, taskBeingPrepared } = useSelector((state: AppState) => state.calendar)
-  const { groups } = useSelector((state: AppState) => state.settings)
+  const { groups, colors } = useSelector((state: AppState) => state.settings)
   const dispatch = useAppDispatch()
 
   const [y, setY] = useState(0)
@@ -99,7 +99,7 @@ const CalendarColumn: FC<Props> = ({ timestamp, isCurrentDay, tasksFiltered }) =
   const hourSlotsRef = useRef(null)
 
   function updatePlaceholderTask(event: React.MouseEvent<HTMLDivElement, MouseEvent>) {
-    if (taskBeingPrepared !== undefined) return
+    if (Object.values(taskBeingPrepared).length > 0) return
     const HALF_HOUR_PX = 19.4
     const columnTopPx = event.currentTarget.getBoundingClientRect().top
     const placeholderY = event.clientY - columnTopPx
@@ -119,16 +119,14 @@ const CalendarColumn: FC<Props> = ({ timestamp, isCurrentDay, tasksFiltered }) =
       {isCurrentDay && <CurrentTime />}
       <HourSlots ref={hourSlotsRef} onMouseMove={updatePlaceholderTask} className={CN_HOUR_SLOTS}>
         {tasksFiltered.map(({ _id, heightInFlex, name, group, gapBefore, gapAfter }) => {
-          const {
-            color: { value },
-          } = groups.find(x => x.name === group)
+          const { colorId } = groups.find(x => x.name === group)
           return (
             <Fragment key={_id}>
               {gapBefore > 0 && <Cell isGap flex={gapBefore} />}
               {heightInFlex > 0 && (
                 <Cell
                   flex={heightInFlex}
-                  accentColor={value}
+                  accentColor={colors[colorId]}
                   isSmall={hoursAxis.length > 16 && heightInFlex <= 0.25}
                   onClick={() => onEditTask(_id)}
                 >

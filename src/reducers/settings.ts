@@ -1,6 +1,19 @@
 import { createSlice, nanoid } from '@reduxjs/toolkit'
 
-const initialState = {
+interface IGroup {
+  id: string,
+  name: string,
+  colorId: string,
+}
+
+interface IInitialState {
+  colors: {
+    [key: string]: string
+  },
+  groups: IGroup[]
+}
+
+const initialState: IInitialState = {
   colors: {
     aero_blue: 'rgb(216, 255, 230)',
     papaya_whip: 'rgb(255, 236, 210)',
@@ -35,66 +48,42 @@ const initialState = {
     {
       id: nanoid(),
       name: 'essentials',
-      color: {
-        name: 'aero_blue',
-        value: 'rgb(216, 255, 230)',
-      }
+      colorId: 'aero_blue',
     },
     {
       id: nanoid(),
       name: 'work',
-      color: {
-        name: 'blanched_almond',
-        value: 'rgb(251, 231, 198)',
-      },
+      colorId: 'blanched_almond',
     },
     {
       id: nanoid(),
       name: 'improvement',
-      color: {
-        name: 'mimi_pink',
-        value: 'rgb(255, 212, 219)',
-      },
+      colorId: 'mimi_pink',
     },
     {
       id: nanoid(),
       name: 'leasure',
-      color: {
-        name: 'beau_blue',
-        value: 'rgb(193, 206, 212)',
-      },
+      colorId: 'beau_blue',
     },
     {
       id: nanoid(),
       name: 'productivity break',
-      color: {
-        name: 'aero_blue_2',
-        value: 'rgb(202, 248, 236)',
-      },
+      colorId: 'aero_blue_2',
     },
     {
       id: nanoid(),
       name: 'health',
-      color: {
-        name: 'teagreen',
-        value: 'rgb(199, 229, 199)',
-      },
+      colorId: 'teagreen',
     },
     {
       id: nanoid(),
       name: 'laze',
-      color: {
-        name: 'light_cyan',
-        value: 'rgb(202, 247, 255)',
-      },
+      colorId: 'light_cyan',
     },
     {
       id: nanoid(),
       name: 'planning',
-      color: {
-        name: 'azure',
-        value: 'rgb(242, 255, 255)',
-      },
+      colorId: 'azure',
     },
   ]
 }
