@@ -6,7 +6,6 @@ import fullscreenSvg from '../../assets/svg/fullscreen.svg'
 import Svg from '../../components/Svg/component'
 import UseFullscreenToggle from '../../hooks/useFullscreenToggle'
 import { actions as todoActions } from '../../reducers/todos'
-import { useAppDispatch } from '../../Application/Root'
 
 const Wrap = styled.div`
   z-index: 2;
@@ -39,15 +38,17 @@ const Tasks = styled.div<{ isOpen: boolean }>`
 
   svg {
     fill: var(--roman-silver);
-  };
+  }
 
   &:hover {
     svg {
       fill: var(--isabelline);
-    };
-  };
+    }
+  }
 
-  ${p => p.isOpen && `
+  ${p =>
+    p.isOpen &&
+    `
     svg {
       fill: var(--isabelline);
     };
@@ -58,7 +59,9 @@ const Toggle = styled(Svg)<{ isActive: boolean }>`
   height: 2rem;
   cursor: pointer;
 
-  ${p => p.isActive && `
+  ${p =>
+    p.isActive &&
+    `
     svg {
       fill: var(--isabelline);
     };
@@ -79,24 +82,25 @@ const Content = styled.div<{ isOpen: boolean }>`
   width: ${STYLE_SIDEBAR_WIDTH_UNIT}rem;
   color: var(--isabelline);
   background-color: var(--charcoal);
-  box-shadow: inset -1px 0 0 0px var(--independence); 
+  box-shadow: inset -1px 0 0 0px var(--independence);
   transform: translateX(100%);
   transition: transform var(--transition);
 
-  ${p => p.isOpen && `
+  ${p =>
+    p.isOpen &&
+    `
     transform: translateX(0);
   `};
 `
 
 interface Props {
-  isOpen: boolean,
-  setIsOpen: any,
-  children: any,
+  isOpen: boolean
+  setIsOpen: any
+  children: any
 }
 
 const Sidebar: FC<Props> = ({ isOpen, setIsOpen, children }) => {
   const [isFullscreen, setIsFullscreen] = UseFullscreenToggle(false)
-  const dispatch = useAppDispatch()
 
   return (
     <Wrap>
@@ -107,13 +111,8 @@ const Sidebar: FC<Props> = ({ isOpen, setIsOpen, children }) => {
         <Tasks isOpen={isOpen} onClick={setIsOpen}>
           <Tab svg={lisSvg} />
         </Tasks>
-        <button onClick={() => dispatch(todoActions.apiGet())}>
-          click
-        </button>
       </Tabs>
-      <Content isOpen={isOpen}>
-        {children}
-      </Content>
+      <Content isOpen={isOpen}>{children}</Content>
     </Wrap>
   )
 }

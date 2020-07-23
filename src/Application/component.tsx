@@ -1,14 +1,14 @@
-import React from 'react'
-import { Provider } from 'react-redux'
-import { BrowserRouter as Router, Route, Switch, Redirect } from 'react-router-dom'
+import React, { useEffect } from 'react'
+import { Route, Switch, Redirect } from 'react-router-dom'
 import styled, { createGlobalStyle } from 'styled-components'
-import store from './Root/store'
+import { useAppDispatch } from './Root/store'
 import { reset } from '../styles'
 
 import { homePath } from './paths'
 import Home from '../pages/Home/Home'
 import SWUpdate from '../components/SWUpdate/component'
 import UseServiceWorker from '../hooks/useServiceWorker'
+import { actions } from '../reducers/calendar'
 
 const GlobalStyle = createGlobalStyle`
   ${reset};
@@ -22,20 +22,23 @@ const PageWrap = styled.div`
 
 const Application = () => {
   const [isUpdateAvailable] = UseServiceWorker(false)
+  const dispatch = useAppDispatch()
+
+  useEffect(() => {
+    dispatch(actions.getTasks())
+  }, [])
 
   return (
-    <Provider store={store}>
-      <Router>
-        <GlobalStyle />
-        <PageWrap>
-          <Switch>
-            <Route exact path={homePath()} component={Home} />
-            <Redirect to={homePath()} />
-          </Switch>
-          <SWUpdate isUpdateAvailable={isUpdateAvailable} />
-        </PageWrap>
-      </Router>
-    </Provider>
+    <div>
+      <GlobalStyle />
+      <PageWrap>
+        <Switch>
+          <Route exact path={homePath()} component={Home} />
+          <Redirect to={homePath()} />
+        </Switch>
+        <SWUpdate isUpdateAvailable={isUpdateAvailable} />
+      </PageWrap>
+    </div>
   )
 }
 
