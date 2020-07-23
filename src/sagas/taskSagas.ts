@@ -12,6 +12,7 @@ function* fetchTasks() {
   }
 }
 
+
 function* taskSagas() {
   yield takeLatest(actions.getTasks.toString(), fetchTasks)
 }

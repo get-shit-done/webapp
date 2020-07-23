@@ -108,29 +108,29 @@ const CalendarColumn: FC<Props> = ({ dateString, isCurrentDay, tasksFiltered }) 
     if (isNewNearest) setY(nearest25)
   }
 
-  function onEditTask(id: string) {
-    console.log('edit task', id)
+  function onEditTask(_id: string) {
+    console.log('edit task', _id)
     setIsEditModalOpen(true)
-    dispatch(actions.editTask({ id, dateString }))
+    dispatch(actions.editTask({ _id, dateString }))
   }
 
   return (
     <Wrap isCurrentDay={isCurrentDay}>
       {isCurrentDay && <CurrentTime />}
       <HourSlots ref={hourSlotsRef} onMouseMove={updatePlaceholderTask} className={CN_HOUR_SLOTS}>
-        {tasksFiltered.map(({ id, heightInFlex, name, group, gapBefore, gapAfter }) => {
+        {tasksFiltered.map(({ _id, heightInFlex, name, group, gapBefore, gapAfter }) => {
           const {
             color: { value },
           } = groups.find(x => x.name === group)
           return (
-            <Fragment key={id}>
+            <Fragment key={_id}>
               {gapBefore > 0 && <Cell isGap flex={gapBefore} />}
               {heightInFlex > 0 && (
                 <Cell
                   flex={heightInFlex}
                   accentColor={value}
                   isSmall={hoursAxis.length > 16 && heightInFlex <= 0.25}
-                  onClick={() => onEditTask(id)}
+                  onClick={() => onEditTask(_id)}
                 >
                   {name}
                 </Cell>

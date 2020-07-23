@@ -24,13 +24,13 @@ const EditCalendarTask: FC<Props> = ({ dateString, taskBeingEdited }) => {
   const dispatch = useAppDispatch()
   const [selectedGroup, setSelectedGroup] = useState(taskBeingEdited.group)
   const { groups } = useSelector((state: AppState) => state.settings)
-  const { id, time, name, group } = taskBeingEdited
+  const { _id, time, name, group } = taskBeingEdited
   const onSubmit: SubmitHandler<FormValues> = (data): any =>
     dispatch(
       actions.saveTask({
         // TODO: fix this
         ...data,
-        id,
+        _id,
         group: selectedGroup,
         time: [data.from, data.to],
         dateString,
