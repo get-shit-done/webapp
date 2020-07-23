@@ -3,12 +3,14 @@ import format from 'date-fns/format'
 import { MONTH_DAYS, MONTH_DAYS_STRING, HOURS_IN_DAY } from '../constants'
 
 export interface TaskBeingPrepared {
+  [key: string]: any, // TODO: is this really necessary? wtf
   time?: number[]
   name: string
   group: string
 }
 export interface Task extends TaskBeingPrepared {
   _id: string
+  timestamp: string,
 }
 export interface TaskWithMeta extends Task {
   heightInFlex?: number
@@ -21,9 +23,8 @@ interface IInitialState {
   allTasksByDay: {
     [key: string]: {
       tasks: Task[]
-      dateString: string
     }
-  }
+  },
   hoursAxis: number[]
   daysAxis: string[]
 }
@@ -59,31 +60,26 @@ export const { reducer, actions } = createSlice({
     removePreparedTask(state) {
       state.taskBeingPrepared = undefined
     },
-    editTask(state, { payload: { _id, dateString } }: PayloadAction<{ _id: string; dateString: string }>): void {
-      state.taskBeingEdited = state.allTasksByDay[dateString].tasks.find(x => x._id === _id)
+    editTask(state, { payload: { _id, timestamp } }: PayloadAction<{ _id: string; timestamp: string }>): void {
+      state.taskBeingEdited = state.allTasksByDay[timestamp].tasks.find(x => x._id === _id)
     },
-    saveTask(state, { payload: { _id, name, group, time, dateString } }: PayloadAction<any>): void {
-      // TODO: need to extend Task
-      state.allTasksByDay[dateString].tasks.map((task: Task) => {
-        if (task._id !== _id) return task
-        return {
-          ...task,
-          name,
-          group,
-          time: [Number(time[0]), Number(time[1])],
-        }
-      })
+    saveTaskRequested(state, action) {},
+    saveTaskSuccess(state, { payload }: PayloadAction<Task>): void {
+      const task: Task = state.allTasksByDay[payload.timestamp].tasks.find(x => x._id === payload._id)
+      for (const x in task) { task[x] = payload[x] }
     },
-    addTask(state, { payload: { name, dateString, group, from, to } }: PayloadAction<any>): void {
+    saveTaskFailed() {},
+    addTask(state, { payload: { name, timestamp, group, from, to } }: PayloadAction<any>): void {
       // Todo: need to extend taskbeingprepared
-      console.log(name, dateString, group, from, to)
+      console.log(name, timestamp, group, from, to)
 
       state.taskBeingEdited = null
-      state.allTasksByDay[dateString].tasks.push({
+      state.allTasksByDay[timestamp].tasks.push({
         _id: nanoid(),
         time: [from, to],
         name,
         group: group.name,
+        timestamp,
       })
     },
     getTasks() {},
