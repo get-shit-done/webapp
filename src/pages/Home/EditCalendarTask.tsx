@@ -5,7 +5,7 @@ import styled from 'styled-components'
 import TextField from '../../components/form/Field/component'
 import Button from '../../components/Button/component'
 import Dropdown from '../../components/form/Dropdown'
-import { actions, Task, TaskWithMeta } from '../../reducers/calendar'
+import { actions, TaskWithMeta } from '../../reducers/calendar'
 import { AppState, useAppDispatch } from '../../Application/Root'
 
 const Form = styled.form``

@@ -1,7 +1,7 @@
 import { call, put, takeLatest } from 'redux-saga/effects'
 import axios from 'axios'
 import { API_GET_TASKS, API_SAVE_TASK } from '../api'
-import { actions, Task } from '../reducers/calendar'
+import { actions } from '../reducers/calendar'
 
 function* fetchTasks() {
   try {
@@ -12,11 +12,9 @@ function* fetchTasks() {
   }
 }
 
-function* saveTask(task: any) {
-  // console.log(task.payload._id)
+function* saveTask(data: any) {
   try {
-    const response = yield call(axios.patch, API_SAVE_TASK(task.payload._id), task.payload)
-    console.log('responseresponse', response)
+    const response = yield call(axios.patch, API_SAVE_TASK(data.payload._id), data.payload)
     yield put({ type: actions.saveTaskSuccess.toString(), payload: response.data.data })
   } catch (error) {
     yield put({ type: actions.saveTaskFailed.toString(), payload: error.message })
