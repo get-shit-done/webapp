@@ -12,7 +12,7 @@ import { AppState, useAppDispatch } from '../../Application/Root'
 
 const CN_HOUR_SLOTS = 'hour-slots'
 
-const Wrap = styled.div<{ isCurrentWeek?: boolean, isCurrentDay: boolean }>`
+const Wrap = styled.div<{ isCurrentWeek?: boolean; isCurrentDay: boolean }>`
   display: flex;
   flex-direction: column;
   flex-grow: 1;
@@ -24,11 +24,15 @@ const Wrap = styled.div<{ isCurrentWeek?: boolean, isCurrentDay: boolean }>`
     border-left: 0;
   }
 
-  ${p => p.isCurrentWeek && `
+  ${p =>
+    p.isCurrentWeek &&
+    `
     flex-grow: 2;
   `};
 
-  ${p => p.isCurrentDay && `
+  ${p =>
+    p.isCurrentDay &&
+    `
     flex-grow: 2;
     // background-color: var(--charcoal);
 
@@ -51,11 +55,11 @@ const HourSlots = styled.div`
 
   ${Wrap}:first-child & {
     padding-left: 12px;
-  };
+  }
 `
-const Cell = styled.div<{ isGap?: boolean, flex: number, accentColor?: string, isSmall?: boolean }>`
+const Cell = styled.div<{ isGap?: boolean; flex: number; accentColor?: string; isSmall?: boolean }>`
   ${ellipsis()};
-  z-index: ${p => p.isGap ? 0 : 1};
+  z-index: ${p => (p.isGap ? 0 : 1)};
   position: relative;
   display: flex;
   flex-grow: ${p => p.flex};
@@ -69,23 +73,25 @@ const Cell = styled.div<{ isGap?: boolean, flex: number, accentColor?: string, i
   display: block;
   padding: 0 var(--size-sm);
   line-height: 1.5;
-  color: ${p => p.accentColor ? rgbAdjust(p.accentColor, -80) : 'red'};
+  color: ${p => (p.accentColor ? rgbAdjust(p.accentColor, -80) : 'red')};
 
-  ${p => p.isSmall && `
+  ${p =>
+    p.isSmall &&
+    `
     line-height: 0.8;
     font-size: 11px;
   `};
 `
 
 interface Props {
-  dateString: string,
-  isCurrentDay: boolean,
-  tasksFiltered: TaskWithMeta[],
+  timestamp: string
+  isCurrentDay: boolean
+  tasksFiltered: TaskWithMeta[]
 }
 
-const CalendarColumn: FC<Props> = ({ dateString, isCurrentDay, tasksFiltered }) => {
+const CalendarColumn: FC<Props> = ({ timestamp, isCurrentDay, tasksFiltered }) => {
   const { hoursAxis, taskBeingEdited, taskBeingPrepared } = useSelector((state: AppState) => state.calendar)
-  const { groups } = useSelector((state: AppState) => state.settings)
+  const { groups, colors } = useSelector((state: AppState) => state.settings)
   const dispatch = useAppDispatch()
 
   const [y, setY] = useState(0)
@@ -93,7 +99,7 @@ const CalendarColumn: FC<Props> = ({ dateString, isCurrentDay, tasksFiltered }) 
   const hourSlotsRef = useRef(null)
 
   function updatePlaceholderTask(event: React.MouseEvent<HTMLDivElement, MouseEvent>) {
-    if (taskBeingPrepared !== undefined) return
+    if (Object.values(taskBeingPrepared).length > 0) return
     const HALF_HOUR_PX = 19.4
     const columnTopPx = event.currentTarget.getBoundingClientRect().top
     const placeholderY = event.clientY - columnTopPx
@@ -102,31 +108,27 @@ const CalendarColumn: FC<Props> = ({ dateString, isCurrentDay, tasksFiltered }) 
     if (isNewNearest) setY(nearest25)
   }
 
-  function onEditTask(id: string) {
-    console.log('edit task', id)
+  function onEditTask(_id: string) {
+    console.log('edit task', _id)
     setIsEditModalOpen(true)
-    dispatch(actions.editTask({ id, dateString }))
+    dispatch(actions.editTask({ _id, timestamp }))
   }
 
   return (
     <Wrap isCurrentDay={isCurrentDay}>
       {isCurrentDay && <CurrentTime />}
-      <HourSlots
-        ref={hourSlotsRef}
-        onMouseMove={updatePlaceholderTask}
-        className={CN_HOUR_SLOTS}
-      >
-        {tasksFiltered.map(({ id, heightInFlex, name, group, gapBefore, gapAfter }) => {
-          const { color: { value } } = groups.find(x => x.name === group)
+      <HourSlots ref={hourSlotsRef} onMouseMove={updatePlaceholderTask} className={CN_HOUR_SLOTS}>
+        {tasksFiltered.map(({ _id, heightInFlex, name, group, gapBefore, gapAfter }) => {
+          const { colorId } = groups.find(x => x.name === group)
           return (
-            <Fragment key={id}>
+            <Fragment key={_id}>
               {gapBefore > 0 && <Cell isGap flex={gapBefore} />}
               {heightInFlex > 0 && (
                 <Cell
                   flex={heightInFlex}
-                  accentColor={value}
+                  accentColor={colors[colorId]}
                   isSmall={hoursAxis.length > 16 && heightInFlex <= 0.25}
-                  onClick={() => onEditTask(id)}
+                  onClick={() => onEditTask(_id)}
                 >
                   {name}
                 </Cell>
@@ -135,15 +137,11 @@ const CalendarColumn: FC<Props> = ({ dateString, isCurrentDay, tasksFiltered }) 
             </Fragment>
           )
         })}
-        <PlaceholderTask dateString={dateString} hourSlotsRef={hourSlotsRef} y={y} />
-      
+        <PlaceholderTask timestamp={timestamp} hourSlotsRef={hourSlotsRef} y={y} />
+
         {isEditModalOpen && (
-          <Modal
-            title="task details"
-            width={17}
-            onOverlayToggle={() => setIsEditModalOpen(false)}
-          >
-            <EditCalendarTask dateString={dateString} taskBeingEdited={taskBeingEdited} />
+          <Modal title="task details" width={17} onOverlayToggle={() => setIsEditModalOpen(false)}>
+            <EditCalendarTask timestamp={timestamp} taskBeingEdited={taskBeingEdited} />
           </Modal>
         )}
       </HourSlots>

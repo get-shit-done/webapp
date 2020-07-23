@@ -14,7 +14,7 @@
   "author": "Vincent Bollaert <vincentbollaert@gmail.com>",
   "license": "MIT",
   "scripts": {
-    "develop": "webpack-dev-server --config webpack.dev.js --progress --watch",
+    "develop": "webpack-dev-server --config webpack.dev.js --progress",
     "production": "rm public -rf && webpack --config webpack.prod.js",
     "production:preview": "http-server public"
   },

@@ -11,14 +11,13 @@ import DayLabels from './DayLabels'
 import Calendar from './Calendar'
 import useScaleForTransition from '../../hooks/useScaleForTransition'
 
-
 const PageWrap = styled.div`
   display: flex;
   overflow: hidden;
   position: relative;
   background-color: var(--charcoal);
 `
-const Wrap = styled.div<{ isOpen: boolean, scaleTest: any }>`
+const Wrap = styled.div<{ isOpen: boolean; scaleTest: any }>`
   display: flex;
   flex-grow: 1;
   position: relative;
@@ -29,7 +28,9 @@ const Wrap = styled.div<{ isOpen: boolean, scaleTest: any }>`
   will-change: padding;
   transform-origin: left;
   transition: transform var(--transition);
-  ${p => p.isOpen && `
+  ${p =>
+    p.isOpen &&
+    `
     transform: scale(${p.scaleTest.x}, ${p.scaleTest.y});
   `};
 `
@@ -49,7 +50,7 @@ const Home = () => {
   const wrapRef = useRef(null)
   const calendarRef = useRef(null)
 
-  const onSetCalendarScale = ({ isReset, axis }: { isReset?: boolean, axis: string }) => {
+  const onSetCalendarScale = ({ isReset, axis }: { isReset?: boolean; axis: string }) => {
     setCalendarScale({ ref: calendarRef, inPixels: 26, isReset, axis })
   }
   const onSidebarToggle = () => {
@@ -67,7 +68,7 @@ const Home = () => {
         </CalendarWrap>
         <Toast />
       </Wrap>
-      
+
       <Sidebar isOpen={isOpen} setIsOpen={onSidebarToggle}>
         <Suspense fallback={<div />}>
           <Todos />

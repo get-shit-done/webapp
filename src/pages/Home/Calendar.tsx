@@ -7,8 +7,7 @@ import { useSelector } from 'react-redux'
 import CalendarColumn from './CalendarColumn'
 import { AppState } from '../../Application/Root'
 
-
-const Wrap = styled.div<{ x: number, y: number }>`
+const Wrap = styled.div<{ x: number; y: number }>`
   display: flex;
   flex-grow: 1;
   transform-origin: bottom right;
@@ -18,22 +17,22 @@ const Wrap = styled.div<{ x: number, y: number }>`
 
 interface Props {
   scale: {
-    x: number,
-    y: number,
-  },
-} 
+    x: number
+    y: number
+  }
+}
 
 const Calendar: FC<Props> = ({ scale: { x, y } }) => {
   const { hoursAxis, daysAxis, allTasksByDay } = useSelector((state: AppState) => state.calendar)
 
   return (
     <Wrap x={x} y={y}>
-      {daysAxis.map((dateString) => {
-        const date = new Date(dateString)
+      {daysAxis.map(timestamp => {
+        const date = new Date(timestamp)
         const day = format(date, 'd')
         const isCurrentDay = isToday(date)
-        const tasks = allTasksByDay[dateString].tasks
-        const tasksFiltered = tasks.map(({ id, time, ...rest }, taskI) => {
+        const tasks = allTasksByDay[timestamp]?.tasks || []
+        const tasksFiltered = tasks.map(({ _id, time, ...rest }, taskI) => {
           const from = time[0]
           const to = time[1]
           const isFirstTask = taskI === 0
@@ -47,7 +46,7 @@ const Calendar: FC<Props> = ({ scale: { x, y } }) => {
           let gapAfter = isLastTask ? lastHourAdjusted - to : 0
 
           return {
-            id,
+            _id,
             heightInFlex,
             gapBefore,
             gapAfter,
@@ -55,7 +54,9 @@ const Calendar: FC<Props> = ({ scale: { x, y } }) => {
           }
         })
 
-        return <CalendarColumn key={day} isCurrentDay={isCurrentDay} dateString={dateString} tasksFiltered={tasksFiltered} />
+        return (
+          <CalendarColumn key={day} isCurrentDay={isCurrentDay} timestamp={timestamp} tasksFiltered={tasksFiltered} />
+        )
       })}
     </Wrap>
   )

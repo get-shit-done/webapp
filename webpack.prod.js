@@ -14,9 +14,7 @@ module.exports = merge(common, {
     pathinfo: false,
   },
   module: {
-    rules: [
-      { test: /\.(css)$/, use: [MiniCssExtractPlugin.loader, 'css-loader'] }
-    ],
+    rules: [{ test: /\.(css)$/, use: [MiniCssExtractPlugin.loader, 'css-loader'] }],
   },
 
   optimization: {
@@ -38,8 +36,8 @@ module.exports = merge(common, {
         vendors: {
           test: /[\\/]node_modules[\\/]/,
           name: 'vendor',
-          chunks: 'all'
-        }
+          chunks: 'all',
+        },
       },
     },
     runtimeChunk: 'single',
@@ -68,12 +66,15 @@ module.exports = merge(common, {
     }),
     new OptimizeCssnanoPlugin({
       cssnanoOptions: {
-        preset: ['default', {
-          discardComments: {
-            removeAll: true,
+        preset: [
+          'default',
+          {
+            discardComments: {
+              removeAll: true,
+            },
           },
-        }],
+        ],
       },
     }),
-  ]
+  ],
 })

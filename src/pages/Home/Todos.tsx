@@ -24,9 +24,11 @@ const Todo = styled.div<{ isDone: boolean }>`
 
   &:hover {
     color: var(--cool-gray);
-  };
+  }
 
-  ${p => p.isDone && `
+  ${p =>
+    p.isDone &&
+    `
     color: var(--rhythm);
 
     &:hover {
@@ -42,7 +44,7 @@ const Actions = styled.div`
 
   ${Todo}:hover & {
     display: flex;
-  };
+  }
 `
 const Remove = styled(Svg)`
   width: 1.6rem;
@@ -54,7 +56,9 @@ const Todos = () => {
   const { add, remove, toggleIsDone } = todoActions
   const { todos } = useSelector((state: AppState) => state.todos.present)
   const dispatch = useAppDispatch()
-  const onAddNewTodo = ({ todo }: { todo: Todo }) => { dispatch(add(todo)) }
+  const onAddNewTodo = ({ todo }: { todo: Todo }) => {
+    dispatch(add(todo))
+  }
   const onRemoveTodo = (id: string, name: string) => {
     dispatch(remove(id))
     dispatch(toastActions.addToast({ prefix: 'task removed', message: name }))
@@ -63,13 +67,11 @@ const Todos = () => {
   return (
     <>
       <Title>Todos</Title>
-      
+
       <AddNewTodo addNewTodo={onAddNewTodo} />
       {todos.map(({ id, todoName, isDone }: Todo) => (
         <Todo isDone={isDone} key={id} onClick={() => dispatch(toggleIsDone(id))}>
-          <Name>
-            {todoName}
-          </Name>
+          <Name>{todoName}</Name>
           <Actions>
             <Remove isDanger theme="light" svg={binSvg} onClick={() => onRemoveTodo(id, todoName)} />
           </Actions>
@@ -78,6 +80,5 @@ const Todos = () => {
     </>
   )
 }
-
 
 export default Todos

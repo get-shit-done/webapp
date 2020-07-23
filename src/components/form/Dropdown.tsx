@@ -12,7 +12,7 @@ const InputHidden = styled.input`
   display: none;
 `
 const List = styled.div<{ isOpen: boolean }>`
-  display: ${p => p.isOpen ? 'flex' : 'none'};
+  display: ${p => (p.isOpen ? 'flex' : 'none')};
   position: absolute;
   flex-direction: column;
   background-color: #525769;
@@ -24,17 +24,17 @@ const List = styled.div<{ isOpen: boolean }>`
   border-radius: 2px;
   box-shadow: 3px 3px 8px -5px #343742;
 `
-const Item = styled.div<{ isActive: boolean, color: string }>`
+const Item = styled.div<{ isActive: boolean; color: string }>`
   position: relative;
   display: flex;
   align-items: center;
   padding: 4px;
-  color: ${p => p.isActive ? p.color : 'var(--isabelline)'};
+  color: ${p => (p.isActive ? p.color : 'var(--isabelline)')};
   cursor: pointer;
 
   &:hover {
-    color: ${p => p.isActive ? p.color : 'var(--white)'};
-  };
+    color: ${p => (p.isActive ? p.color : 'var(--white)')};
+  }
 `
 const After = styled.div`
   width: 15px;
@@ -46,20 +46,20 @@ const After = styled.div`
 `
 
 interface IItem {
-  id: string,
-  color?: { value: string },
-  [key: string]: any,
+  id: string
+  color?: { value: string }
+  [key: string]: any
 }
 interface IProps {
-  theme: string,
-  isInForm?: boolean,
-  activeItem?: any,
-  label: string,
-  name?: string,
-  list: IItem[],
-  listKey: string,
-  onSelect<T>(arg: T): void,
-  inputRef(instance: HTMLInputElement): void,
+  theme: string
+  isInForm?: boolean
+  activeItem?: any
+  label: string
+  name?: string
+  list: IItem[]
+  listKey: string
+  onSelect<T>(arg: T): void
+  inputRef(instance: HTMLInputElement): void
 }
 
 const Dropdown: FC<IProps> = ({ theme, isInForm, activeItem = {}, label, name, list, listKey, onSelect, inputRef }) => {
@@ -72,18 +72,10 @@ const Dropdown: FC<IProps> = ({ theme, isInForm, activeItem = {}, label, name, l
     setIsOpen(false)
   }
   return (
-    <Wrap
-      theme={theme}
-      isInForm={isInForm}
-      tabIndex={0}
-      onBlur={() => setIsOpen(false)}
-    >
-    {/* <Wrap theme={theme} isInForm={isInForm}> */}
+    <Wrap theme={theme} isInForm={isInForm} tabIndex={0} onBlur={() => setIsOpen(false)}>
+      {/* <Wrap theme={theme} isInForm={isInForm}> */}
       <Header color={activeItemUpdated.color?.value} onClick={() => setIsOpen(!isOpen)}>
-        <Placeholder
-          theme={theme}
-          hasValue={activeItemUpdated.id !== undefined && activeItemUpdated.id !== ''}
-        >
+        <Placeholder theme={theme} hasValue={activeItemUpdated.id !== undefined && activeItemUpdated.id !== ''}>
           {label}
         </Placeholder>
         <Input as="div">{activeItemUpdated[listKey]}</Input>

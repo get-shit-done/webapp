@@ -5,16 +5,16 @@ import { SvgStyled, Input, Wrap } from '../shared'
 import ErrorField from '../../error/Field/component'
 
 interface Props {
-  isInForm?: boolean,
-  theme?: string,
-  name: string,
-  type?: string,
-  defaultValue?: string | number,
-  placeholder: string,
-  svg?: string,
-  errorMessage?: string,
-  className?: string,
-  inputRef(instance: HTMLInputElement): void,
+  isInForm?: boolean
+  theme?: string
+  name: string
+  type?: string
+  defaultValue?: string | number
+  placeholder: string
+  svg?: string
+  errorMessage?: string
+  className?: string
+  inputRef(instance: HTMLInputElement): void
 }
 
 const Field: FC<Props> = ({
@@ -30,7 +30,7 @@ const Field: FC<Props> = ({
   inputRef,
 }) => {
   const [value, setValue] = useState(defaultValue)
-  const hasValue = (value !== undefined && value !== '')
+  const hasValue = value !== undefined && value !== ''
   const onChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = event.target
     setValue(value)
@@ -38,7 +38,9 @@ const Field: FC<Props> = ({
 
   return (
     <Wrap isInForm={isInForm} theme={theme} className={className}>
-      <Placeholder theme={theme} hasValue={hasValue}>{placeholder}</Placeholder>
+      <Placeholder theme={theme} hasValue={hasValue}>
+        {placeholder}
+      </Placeholder>
       <Input name={name} type={type} isError={errorMessage} onChange={onChange} ref={inputRef} />
       {svg && <SvgStyled svg={svg} />}
       <ErrorField errorMessage={errorMessage} />

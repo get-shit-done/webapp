@@ -1,8 +1,8 @@
 import { createSlice, nanoid, PayloadAction } from '@reduxjs/toolkit'
 
 export interface Todo {
-  id: string,
-  todoName: string,
+  id: string
+  todoName: string
   isDone: boolean
 }
 
@@ -72,18 +72,20 @@ const initialState = {
       todoName: 'make Mai a kickass meal',
       isDone: false,
     },
-  ]
+  ],
 }
 
 export const { reducer, actions } = createSlice({
   name: 'todos',
   initialState: initialState,
   reducers: {
-    add({ todos }, { payload: { todoName }}: PayloadAction<Todo>): void { todos.push({
-      id: nanoid(),
-      isDone: false,
-      todoName,
-    }) },
+    add({ todos }, { payload: { todoName } }: PayloadAction<Todo>): void {
+      todos.push({
+        id: nanoid(),
+        isDone: false,
+        todoName,
+      })
+    },
     remove(state, { payload }: PayloadAction<string>): void {
       state.todos = state.todos.filter(x => x.id !== payload)
     },
@@ -99,6 +101,6 @@ export const { reducer, actions } = createSlice({
     },
     apiFail(state, action) {
       console.log(action)
-    }
+    },
   },
 })

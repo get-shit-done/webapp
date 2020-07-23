@@ -34,12 +34,11 @@ const config = {
 
   module: {
     rules: [
-      { test: /\.(js|jsx)$/, use: 'babel-loader', exclude: [/node_modules/] },
       { test: /\.html$/, use: 'html-loader' },
-      { test: /\.md$/, use: [ 'html-loader', 'highlight-loader', 'markdown-loader'] },
+      { test: /\.md$/, use: ['html-loader', 'highlight-loader', 'markdown-loader'] },
       { test: /\.svg$/, use: 'raw-loader' },
       {
-        test: /\.ts(x?)$/,
+        test: /\.tsx?$/,
         exclude: /node_modules/,
         use: 'ts-loader',
       },
@@ -60,7 +59,7 @@ const config = {
   plugins: [
     new webpack.ContextReplacementPlugin(
       /date\-fns[\/\\]/,
-      new RegExp(`[/\\\\\](${supportedLocales.join('|')})[/\\\\\]`)
+      new RegExp(`[/\\\\\](${supportedLocales.join('|')})[/\\\\\]`),
     ),
     new MiniCssExtractPlugin({
       fileName: 'style.css',

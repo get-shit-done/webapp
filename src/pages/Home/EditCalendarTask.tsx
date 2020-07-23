@@ -5,41 +5,48 @@ import styled from 'styled-components'
 import TextField from '../../components/form/Field/component'
 import Button from '../../components/Button/component'
 import Dropdown from '../../components/form/Dropdown'
-import { actions, Task, TaskWithMeta } from '../../reducers/calendar'
+import { actions, TaskWithMeta } from '../../reducers/calendar'
 import { AppState, useAppDispatch } from '../../Application/Root'
 
 const Form = styled.form``
 
 interface Props {
-  dateString: string,
-  taskBeingEdited: TaskWithMeta,
+  timestamp: string
+  taskBeingEdited: TaskWithMeta
 }
 type FormValues = {
-  name: string,
-  to: number,
-  from: number,
+  name: string
+  to: number
+  from: number
 }
 
-const EditCalendarTask: FC<Props> = ({ dateString, taskBeingEdited }) => {
+const EditCalendarTask: FC<Props> = ({ timestamp, taskBeingEdited }) => {
   const dispatch = useAppDispatch()
   const [selectedGroup, setSelectedGroup] = useState(taskBeingEdited.group)
-  const { groups } = useSelector((state: AppState) => state.settings)
-  const { id, time, name, group } = taskBeingEdited
-  const onSubmit: SubmitHandler<FormValues> = (data): any => dispatch(actions.saveTask({ // TODO: fix this
-    ...data,
-    id,
-    group: selectedGroup,
-    time: [data.from, data.to],
-    dateString,
-  }))
-  
+  const { groups, colors } = useSelector((state: AppState) => state.settings)
+  const { _id, time, name, group } = taskBeingEdited
+  const colorId = groups.find(x => x.name === taskBeingEdited.group).colorId
+  console.log('colorIdcolorId', colorId)
+
+  const onSubmit: SubmitHandler<FormValues> = (data): any =>
+    dispatch(
+      actions.saveTaskRequested({
+        // TODO: fix this
+        ...data,
+        _id,
+        group: taskBeingEdited.group,
+        time: [Number(data.from), Number(data.to)],
+        timestamp,
+      }),
+    )
+
   const { register, handleSubmit, errors } = useForm({
     defaultValues: {
       from: time[0],
       to: time[1],
       name,
       group,
-    }
+    },
   })
 
   return (
@@ -47,12 +54,14 @@ const EditCalendarTask: FC<Props> = ({ dateString, taskBeingEdited }) => {
       <TextField
         isInForm
         defaultValue={name}
-        theme='light'
+        theme="light"
         name="name"
         placeholder="name"
         errorMessage={errors.name?.type}
         inputRef={register({ required: true, maxLength: 80 })}
       />
+
+      {/* hacked this hard. redo the group and coloring entirely */}
       {/* <Dropdown
         isInForm
         theme="light"
@@ -60,13 +69,14 @@ const EditCalendarTask: FC<Props> = ({ dateString, taskBeingEdited }) => {
         list={groups}
         listKey="name"
         activeItem={groups.find(x => x.name === group)}
-        onSelect={group => setSelectedGroup(group.name)}
+        // @ts-ignore
+        onSelect={group => setSelectedGroup(group)}
         inputRef={register({ required: true, maxLength: 80 })}
       /> */}
       <TextField
         isInForm
         defaultValue={time[0]}
-        theme='light'
+        theme="light"
         name="from"
         placeholder="time from"
         errorMessage={errors.from?.type}
@@ -75,18 +85,13 @@ const EditCalendarTask: FC<Props> = ({ dateString, taskBeingEdited }) => {
       <TextField
         isInForm
         defaultValue={time[1]}
-        theme='light'
+        theme="light"
         name="to"
         placeholder="time to"
         errorMessage={errors.to?.type}
         inputRef={register({ required: true, maxLength: 80 })}
       />
-      <Button
-        isDisabled={Object.entries(errors).length > 0}
-        isInForm
-        // accentColor={selectedGroup?.group?.color.value}
-        type="submit"
-      >
+      <Button isDisabled={Object.entries(errors).length > 0} isInForm accentColor={colors[colorId]} type="submit">
         Save task
       </Button>
     </Form>
