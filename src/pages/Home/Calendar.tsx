@@ -50,6 +50,7 @@ const Calendar: FC<Props> = ({ scale: { x, y } }) => {
             heightInFlex,
             gapBefore,
             gapAfter,
+            time,
             ...rest,
           }
         })

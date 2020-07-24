@@ -8,15 +8,18 @@ export interface TaskBeingPrepared {
   name?: string
   group?: string
 }
-export interface Task {
+export interface NewTask {
   [key: string]: any, // TODO: is this really necessary? wtf
-  _id: string
-  time?: number[]
+  time: number[]
   name: string
   group: string
   timestamp: string,
 }
-export interface TaskWithMeta extends Task {
+export interface SavedTask extends NewTask {
+  _id: string
+}
+
+export interface TaskWithMeta extends SavedTask {
   heightInFlex?: number
   gapBefore?: number
   gapAfter?: number
@@ -26,7 +29,7 @@ interface IInitialState {
   taskBeingEdited: TaskWithMeta | null
   allTasksByDay: {
     [key: string]: {
-      tasks: Task[]
+      tasks: SavedTask[]
     }
   },
   hoursAxis: number[]
@@ -68,13 +71,12 @@ export const { reducer, actions } = createSlice({
       state.taskBeingEdited = state.allTasksByDay[timestamp].tasks.find(x => x._id === _id)
     },
     saveTaskRequested(state, action) {},
-    saveTaskSuccess(state, { payload }: PayloadAction<Task>): void {
-      const task: Task = state.allTasksByDay[payload.timestamp].tasks.find(x => x._id === payload._id)
+    saveTaskSuccess(state, { payload }: PayloadAction<SavedTask>): void {
+      const task: SavedTask = state.allTasksByDay[payload.timestamp].tasks.find(x => x._id === payload._id)
       for (const x in task) { task[x] = payload[x] }
     },
     saveTaskFailed() {},
-    addTask(state, { payload: { name, timestamp, group, time } }: PayloadAction<any>): void {
-      console.log(name, timestamp, group, time)
+    addTask(state, { payload: { name, timestamp, group, time } }: PayloadAction<NewTask>): void {
       state.allTasksByDay[timestamp] = state.allTasksByDay[timestamp] || { tasks: [] }
 
       state.taskBeingEdited = null
