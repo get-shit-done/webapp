@@ -1,15 +1,15 @@
 import { createSlice, nanoid } from '@reduxjs/toolkit'
 
-interface IGroup {
-  id: string,
-  name: string,
-  colorId: string,
+export interface IGroup {
+  id: string
+  name: string
+  colorId: string
 }
 
 interface IInitialState {
   colors: {
     [key: string]: string
-  },
+  }
   groups: IGroup[]
 }
 
@@ -85,7 +85,7 @@ const initialState: IInitialState = {
       name: 'planning',
       colorId: 'azure',
     },
-  ]
+  ],
 }
 
 export const { reducer, actions } = createSlice({

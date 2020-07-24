@@ -7,6 +7,8 @@ import Button from '../../../components/Button/component'
 import Dropdown from '../../../components/form/Dropdown'
 import { actions } from '../../../reducers/calendar'
 import { AppState, useAppDispatch } from '../../../Application/Root'
+import { IGroup } from '../../../reducers/settings'
+import { ModalFooter } from '../../../components/Modal'
 
 const Form = styled.form``
 
@@ -16,38 +18,31 @@ interface Props {
   onModalClose(): void
 }
 
-interface ISelectedGroup {
+interface ISelectedGroup extends IGroup {
   name: string
   from: string
   to: string
-  group: {
-    id: string
-    name: string
-    color: {
-      name: string
-      value: string
-    }
-  }
 }
 
 const AddNewCalendarTask: FC<Props> = ({ timestamp, timeFrom, onModalClose }) => {
   const dispatch = useAppDispatch()
   const [selectedGroup, setSelectedGroup] = useState<ISelectedGroup>()
-  // const { groups } = useSelector((state: AppState) => state.settings)
+  const { colors } = useSelector((state: AppState) => state.settings)
   const { register, handleSubmit, errors, watch } = useForm({ defaultValues: { from: timeFrom, to: 16, name: '' } }) // fix this. is not correct shape
   const onSubmit = (data: any) => {
-    console.log('data', data)
+    const { name, from, to } = data
     dispatch(
       actions.addTaskRequested({
-        name: data.name,
-        time: [Number(data.from), Number(data.to)],
+        name,
+        time: [Number(from), Number(to)],
         timestamp,
-        group: 'planning',
+        group: selectedGroup.name,
       }),
     )
     onModalClose()
   }
   const watchedFields = watch()
+  const accentColor = selectedGroup ? colors[selectedGroup.colorId] : undefined
 
   useEffect(() => {
     dispatch(
@@ -69,15 +64,14 @@ const AddNewCalendarTask: FC<Props> = ({ timestamp, timeFrom, onModalClose }) =>
         errorMessage={errors.name?.type}
         inputRef={register({ required: true, maxLength: 80 })}
       />
-      {/* <Dropdown
+      <Dropdown
         isInForm
         theme="light"
         label="select group"
-        list={groups}
-        listKey="name"
+        activeGroup={selectedGroup}
         onSelect={group => setSelectedGroup(group)}
         inputRef={register({ required: true, maxLength: 80 })}
-      /> */}
+      />
       <TextField
         isInForm
         defaultValue={timeFrom}
@@ -95,13 +89,15 @@ const AddNewCalendarTask: FC<Props> = ({ timestamp, timeFrom, onModalClose }) =>
         errorMessage={errors.to?.type}
         inputRef={register({ required: true, maxLength: 80 })}
       />
-      <Button
-        isDisabled={Object.entries(errors).length > 0}
-        accentColor={selectedGroup?.group?.color.value}
-        type="submit"
-      >
-        Add new task
-      </Button>
+      <ModalFooter>
+        <Button
+          isDisabled={Object.entries(errors).length > 0}
+          accentColor={accentColor}
+          type="submit"
+        >
+          Add new task
+        </Button>
+      </ModalFooter>
     </Form>
   )
 }

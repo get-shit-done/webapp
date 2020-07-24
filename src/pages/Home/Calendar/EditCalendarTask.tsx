@@ -9,6 +9,7 @@ import binSvg from '../../../assets/svg/bin.svg'
 import Svg from '../../../components/Svg/component'
 import { actions, TaskWithMeta } from '../../../reducers/calendar'
 import { AppState, useAppDispatch } from '../../../Application/Root'
+import { ModalFooter } from '../../../components/Modal'
 
 const Form = styled.form``
 
@@ -21,11 +22,6 @@ type FormValues = {
   to: number
   from: number
 }
-const Footer = styled.div`
-  display: flex;
-  align-items: center;
-  margin-top: var(--size-xlg);
-`
 const Remove = styled(Svg)`
   margin-left: var(--size-xlg);
   width: 1.6rem;
@@ -36,18 +32,17 @@ const Remove = styled(Svg)`
 // TODO: timestamp should come from taskBeingEdited
 const EditCalendarTask: FC<Props> = ({ timestamp, taskBeingEdited }) => {
   const dispatch = useAppDispatch()
-  const [selectedGroup, setSelectedGroup] = useState(taskBeingEdited.group)
   const { groups, colors } = useSelector((state: AppState) => state.settings)
+  const [selectedGroup, setSelectedGroup] = useState(groups.find(x => x.name === taskBeingEdited.group))
   const { _id, time, name, group } = taskBeingEdited
-  const colorId = groups.find(x => x.name === taskBeingEdited.group).colorId
-  console.log('colorIdcolorId', colorId)
+  const accentColor = selectedGroup ? colors[selectedGroup.colorId] : undefined
   const onRemoveTask = () => dispatch(actions.removeTaskRequested({ _id, timestamp }))
 
   const onSubmit: SubmitHandler<FormValues> = (data): any =>
     dispatch(
       actions.saveTaskRequested({
         _id,
-        group: taskBeingEdited.group,
+        group: selectedGroup.name,
         time: [Number(data.from), Number(data.to)],
         timestamp,
       }),
@@ -74,18 +69,14 @@ const EditCalendarTask: FC<Props> = ({ timestamp, taskBeingEdited }) => {
         inputRef={register({ required: true, maxLength: 80 })}
       />
 
-      {/* hacked this hard. redo the group and coloring entirely */}
-      {/* <Dropdown
+      <Dropdown
         isInForm
         theme="light"
         label="select group"
-        list={groups}
-        listKey="name"
-        activeItem={groups.find(x => x.name === group)}
-        // @ts-ignore
+        activeGroup={selectedGroup}
         onSelect={group => setSelectedGroup(group)}
         inputRef={register({ required: true, maxLength: 80 })}
-      /> */}
+      />
       <TextField
         isInForm
         defaultValue={time[0]}
@@ -104,13 +95,13 @@ const EditCalendarTask: FC<Props> = ({ timestamp, taskBeingEdited }) => {
         errorMessage={errors.to?.type}
         inputRef={register({ required: true, maxLength: 80 })}
       />
-      <Footer>
-        <Button isDisabled={Object.entries(errors).length > 0} accentColor={colors[colorId]} type="submit">
+      <ModalFooter>
+        <Button isDisabled={Object.entries(errors).length > 0} accentColor={accentColor} type="submit">
           Save task
         </Button>
 
         <Remove isDanger theme="light" svg={binSvg} onClick={onRemoveTask} />
-      </Footer>
+      </ModalFooter>
     </Form>
   )
 }
