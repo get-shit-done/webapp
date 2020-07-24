@@ -38,7 +38,7 @@ const AddNewCalendarTask: FC<Props> = ({ timestamp, timeFrom, onModalClose }) =>
   const onSubmit = (data: any) => {
     console.log('data', data)
     dispatch(
-      actions.addTask({
+      actions.addTaskRequested({
         name: data.name,
         time: [Number(data.from), Number(data.to)],
         timestamp,

@@ -76,12 +76,12 @@ export const { reducer, actions } = createSlice({
       for (const x in task) { task[x] = payload[x] }
     },
     saveTaskFailed() {},
-    addTask(state, { payload: { name, timestamp, group, time } }: PayloadAction<NewTask>): void {
+    addTaskRequested(state, { payload: { name, timestamp, group, time } }: PayloadAction<NewTask>): void {
       state.allTasksByDay[timestamp] = state.allTasksByDay[timestamp] || { tasks: [] }
 
       state.taskBeingEdited = null
       state.allTasksByDay[timestamp].tasks.push({
-        _id: nanoid(),
+        _id: 'just-added',
         time,
         name,
         group,
@@ -93,6 +93,11 @@ export const { reducer, actions } = createSlice({
         return -1
       })
     },
+    addTaskSuccess(state, { payload: { _id, timestamp }}: PayloadAction<SavedTask>): void {
+      const taskAdded = state.allTasksByDay[timestamp].tasks.find(x => x._id === 'just-added')
+      taskAdded._id = _id
+    },
+    addTaskFailed() {},
     getTasksRequested() {},
     getTasksSuccess(state, { payload: { data } }) {
       state.allTasksByDay = data
