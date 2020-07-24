@@ -1,6 +1,7 @@
 import { createSlice, nanoid, PayloadAction } from '@reduxjs/toolkit'
 import format from 'date-fns/format'
 import { MONTH_DAYS, MONTH_DAYS_STRING, HOURS_IN_DAY } from '../constants'
+import { taskSort } from '../utils'
 
 export interface TaskBeingPrepared {
   // [key: string]: any,
@@ -72,7 +73,8 @@ export const { reducer, actions } = createSlice({
     },
     saveTaskRequested(state, action) {},
     saveTaskSuccess(state, { payload }: PayloadAction<SavedTask>): void {
-      const task: SavedTask = state.allTasksByDay[payload.timestamp].tasks.find(x => x._id === payload._id)
+      const { _id, timestamp } = payload
+      const task: SavedTask = state.allTasksByDay[timestamp].tasks.find(x => x._id === _id)
       for (const x in task) { task[x] = payload[x] }
     },
     saveTaskFailed() {},
@@ -87,11 +89,6 @@ export const { reducer, actions } = createSlice({
         group,
         timestamp,
       })
-      state.allTasksByDay[timestamp].tasks.sort((a, b) => {
-        if (a.time[0] > b.time[0]) return 1
-        if (a.time[0] < b.time[0]) return 0
-        return -1
-      })
     },
     addTaskSuccess(state, { payload: { _id, timestamp }}: PayloadAction<SavedTask>): void {
       const taskAdded = state.allTasksByDay[timestamp].tasks.find(x => x._id === 'just-added')
@@ -103,5 +100,14 @@ export const { reducer, actions } = createSlice({
       state.allTasksByDay = data
     },
     getTasksFail(state, action) {},
+    removeTaskRequested(state, { payload: { _id, timestamp }}):void {
+      state.allTasksByDay[timestamp].tasks = state.allTasksByDay[timestamp].tasks.filter(x => x._id !== _id)
+
+    },
+    removeTaskSucceeded() {},
+    removeTaskFailed() {},
+    sortTasks(state, { payload: { timestamp }}): void {
+      state.allTasksByDay[timestamp].tasks.sort(taskSort)
+    }
   },
 })

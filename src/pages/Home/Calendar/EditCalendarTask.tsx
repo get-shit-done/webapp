@@ -5,6 +5,8 @@ import styled from 'styled-components'
 import TextField from '../../../components/form/Field/component'
 import Button from '../../../components/Button/component'
 import Dropdown from '../../../components/form/Dropdown'
+import binSvg from '../../../assets/svg/bin.svg'
+import Svg from '../../../components/Svg/component'
 import { actions, TaskWithMeta } from '../../../reducers/calendar'
 import { AppState, useAppDispatch } from '../../../Application/Root'
 
@@ -19,7 +21,19 @@ type FormValues = {
   to: number
   from: number
 }
+const Footer = styled.div`
+  display: flex;
+  align-items: center;
+  margin-top: var(--size-xlg);
+`
+const Remove = styled(Svg)`
+  margin-left: var(--size-xlg);
+  width: 1.6rem;
+  height: 1.6rem;
+  cursor: pointer;
+`
 
+// TODO: timestamp should come from taskBeingEdited
 const EditCalendarTask: FC<Props> = ({ timestamp, taskBeingEdited }) => {
   const dispatch = useAppDispatch()
   const [selectedGroup, setSelectedGroup] = useState(taskBeingEdited.group)
@@ -27,12 +41,11 @@ const EditCalendarTask: FC<Props> = ({ timestamp, taskBeingEdited }) => {
   const { _id, time, name, group } = taskBeingEdited
   const colorId = groups.find(x => x.name === taskBeingEdited.group).colorId
   console.log('colorIdcolorId', colorId)
+  const onRemoveTask = () => dispatch(actions.removeTaskRequested({ _id, timestamp }))
 
   const onSubmit: SubmitHandler<FormValues> = (data): any =>
     dispatch(
       actions.saveTaskRequested({
-        // TODO: fix this
-        ...data,
         _id,
         group: taskBeingEdited.group,
         time: [Number(data.from), Number(data.to)],
@@ -91,9 +104,13 @@ const EditCalendarTask: FC<Props> = ({ timestamp, taskBeingEdited }) => {
         errorMessage={errors.to?.type}
         inputRef={register({ required: true, maxLength: 80 })}
       />
-      <Button isDisabled={Object.entries(errors).length > 0} isInForm accentColor={colors[colorId]} type="submit">
-        Save task
-      </Button>
+      <Footer>
+        <Button isDisabled={Object.entries(errors).length > 0} accentColor={colors[colorId]} type="submit">
+          Save task
+        </Button>
+
+        <Remove isDanger theme="light" svg={binSvg} onClick={onRemoveTask} />
+      </Footer>
     </Form>
   )
 }

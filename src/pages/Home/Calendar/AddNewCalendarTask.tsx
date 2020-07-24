@@ -97,7 +97,6 @@ const AddNewCalendarTask: FC<Props> = ({ timestamp, timeFrom, onModalClose }) =>
       />
       <Button
         isDisabled={Object.entries(errors).length > 0}
-        isInForm
         accentColor={selectedGroup?.group?.color.value}
         type="submit"
       >

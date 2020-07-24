@@ -2,7 +2,7 @@ import React, { FC } from 'react'
 import styled from 'styled-components'
 import { rgbAdjust } from '../../styles'
 
-const Wrap = styled.button<{ isInForm: boolean; accentColor: string }>`
+const Wrap = styled.button<{ accentColor: string }>`
   display: flex;
   justify-content: center;
   align-items: center;
@@ -15,12 +15,6 @@ const Wrap = styled.button<{ isInForm: boolean; accentColor: string }>`
   font-size: var(--font-size-md);
   text-transform: uppercase;
   cursor: pointer;
-
-  ${p =>
-    p.isInForm &&
-    `
-    margin-top: var(--size-xlg);
-  `};
 
   &:hover {
     background-color: #58cbff;
@@ -48,15 +42,14 @@ const Wrap = styled.button<{ isInForm: boolean; accentColor: string }>`
 
 interface Props {
   isDisabled?: boolean
-  isInForm?: boolean
   accentColor?: string
   type: 'submit' | 'button' | 'reset'
   children: React.ReactNode
   onClick?: (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => void
 }
 
-const Button: FC<Props> = ({ isDisabled, isInForm, accentColor, type, children, onClick }) => (
-  <Wrap disabled={isDisabled} isInForm={isInForm} accentColor={accentColor} type={type} onClick={onClick}>
+const Button: FC<Props> = ({ isDisabled, accentColor, type, children, onClick }) => (
+  <Wrap disabled={isDisabled} accentColor={accentColor} type={type} onClick={onClick}>
     {children}
   </Wrap>
 )
