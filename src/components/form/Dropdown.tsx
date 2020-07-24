@@ -51,18 +51,18 @@ const After = styled.div`
 interface IProps {
   theme: string
   isInForm?: boolean
-  activeItem?: any
+  activeGroup?: any
   label: string
   name?: string
   onSelect(item: any): void
   inputRef(instance: HTMLInputElement): void
 }
 
-const Dropdown: FC<IProps> = ({ theme, isInForm, activeItem = {}, label, name, onSelect, inputRef }) => {
+const Dropdown: FC<IProps> = ({ theme, isInForm, activeGroup = {}, label, name, onSelect, inputRef }) => {
   const { groups, colors } = useSelector((state: AppState) => state.settings)
   const [isOpen, setIsOpen] = useState(false)
-
-  const accentColor = colors[activeItem.colorId]
+  // const activeGroup = groups.find(x => x.name === activeGroup)
+  const accentColor = activeGroup.colorId ? colors[activeGroup.colorId] : undefined
   console.log(accentColor)
 
   function onItemSelect(item: any): void {
@@ -72,17 +72,17 @@ const Dropdown: FC<IProps> = ({ theme, isInForm, activeItem = {}, label, name, o
   return (
     <Wrap theme={theme} isInForm={isInForm} tabIndex={0} onBlur={() => setIsOpen(false)}>
       <Header color={accentColor} onClick={() => setIsOpen(!isOpen)}>
-        <Placeholder theme={theme} hasValue={activeItem.id!!}>
+        <Placeholder theme={theme} hasValue={activeGroup.id!!}>
           {label}
         </Placeholder>
-        <Input as="div">{activeItem.name}</Input>
-        {name && <InputHidden name={name} type="text" ref={inputRef} value={activeItem.name || ''} />}
+        <Input as="div">{activeGroup.name}</Input>
+        {name && <InputHidden name={name} type="text" ref={inputRef} value={activeGroup.name || ''} />}
         <SvgStyled theme="light" svg={chevronDownSvg} />
       </Header>
       <List isOpen={isOpen}>
         {groups.map((item: IGroup) => (
           <Item
-            isActive={item.id === activeItem.id}
+            isActive={item.id === activeGroup.id}
             color={accentColor}
             onClick={() => onItemSelect(item)}
             key={item.id}

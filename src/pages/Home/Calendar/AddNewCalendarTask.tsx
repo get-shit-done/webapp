@@ -69,15 +69,14 @@ const AddNewCalendarTask: FC<Props> = ({ timestamp, timeFrom, onModalClose }) =>
         errorMessage={errors.name?.type}
         inputRef={register({ required: true, maxLength: 80 })}
       />
-      {/* <Dropdown
+      <Dropdown
         isInForm
         theme="light"
         label="select group"
-        list={groups}
-        listKey="name"
+        activeGroup={selectedGroup}
         onSelect={group => setSelectedGroup(group)}
         inputRef={register({ required: true, maxLength: 80 })}
-      /> */}
+      />
       <TextField
         isInForm
         defaultValue={timeFrom}
@@ -97,7 +96,7 @@ const AddNewCalendarTask: FC<Props> = ({ timestamp, timeFrom, onModalClose }) =>
       />
       <Button
         isDisabled={Object.entries(errors).length > 0}
-        accentColor={selectedGroup?.group?.color.value}
+        // accentColor={selectedGroup?.group?.color.value}
         type="submit"
       >
         Add new task

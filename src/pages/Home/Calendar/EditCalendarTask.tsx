@@ -36,8 +36,8 @@ const Remove = styled(Svg)`
 // TODO: timestamp should come from taskBeingEdited
 const EditCalendarTask: FC<Props> = ({ timestamp, taskBeingEdited }) => {
   const dispatch = useAppDispatch()
-  const [selectedGroupName, setSelectedGroup] = useState(taskBeingEdited.group)
   const { groups, colors } = useSelector((state: AppState) => state.settings)
+  const [selectedGroup, setSelectedGroup] = useState(groups.find(x => x.name === taskBeingEdited.group))
   const { _id, time, name, group } = taskBeingEdited
   const colorId = groups.find(x => x.name === taskBeingEdited.group).colorId
   console.log('colorIdcolorId', colorId)
@@ -78,8 +78,8 @@ const EditCalendarTask: FC<Props> = ({ timestamp, taskBeingEdited }) => {
         isInForm
         theme="light"
         label="select group"
-        activeItem={groups.find(x => x.name === selectedGroupName)}
-        onSelect={group => setSelectedGroup(group.name)}
+        activeGroup={selectedGroup}
+        onSelect={group => setSelectedGroup(group)}
         inputRef={register({ required: true, maxLength: 80 })}
       />
       <TextField
