@@ -8,6 +8,7 @@ import Dropdown from '../../../components/form/Dropdown'
 import { actions } from '../../../reducers/calendar'
 import { AppState, useAppDispatch } from '../../../Application/Root'
 import { IGroup } from '../../../reducers/settings'
+import { ModalFooter } from '../../../components/Modal'
 
 const Form = styled.form``
 
@@ -88,13 +89,15 @@ const AddNewCalendarTask: FC<Props> = ({ timestamp, timeFrom, onModalClose }) =>
         errorMessage={errors.to?.type}
         inputRef={register({ required: true, maxLength: 80 })}
       />
-      <Button
-        isDisabled={Object.entries(errors).length > 0}
-        accentColor={accentColor}
-        type="submit"
-      >
-        Add new task
-      </Button>
+      <ModalFooter>
+        <Button
+          isDisabled={Object.entries(errors).length > 0}
+          accentColor={accentColor}
+          type="submit"
+        >
+          Add new task
+        </Button>
+      </ModalFooter>
     </Form>
   )
 }

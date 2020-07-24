@@ -6,7 +6,7 @@ import { rgbAdjust, ellipsis } from '../../../styles'
 import CurrentTime from './CurrentTime'
 import PlaceholderTask from './PlaceholderTask'
 import { actions, TaskWithMeta } from '../../../reducers/calendar'
-import Modal from '../../../components/Modal/component'
+import { Modal } from '../../../components/Modal'
 import EditCalendarTask from './EditCalendarTask'
 import { AppState, useAppDispatch } from '../../../Application/Root'
 

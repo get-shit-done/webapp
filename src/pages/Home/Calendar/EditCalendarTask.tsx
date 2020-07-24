@@ -9,6 +9,7 @@ import binSvg from '../../../assets/svg/bin.svg'
 import Svg from '../../../components/Svg/component'
 import { actions, TaskWithMeta } from '../../../reducers/calendar'
 import { AppState, useAppDispatch } from '../../../Application/Root'
+import { ModalFooter } from '../../../components/Modal'
 
 const Form = styled.form``
 
@@ -21,11 +22,6 @@ type FormValues = {
   to: number
   from: number
 }
-const Footer = styled.div`
-  display: flex;
-  align-items: center;
-  margin-top: var(--size-xlg);
-`
 const Remove = styled(Svg)`
   margin-left: var(--size-xlg);
   width: 1.6rem;
@@ -100,13 +96,13 @@ const EditCalendarTask: FC<Props> = ({ timestamp, taskBeingEdited }) => {
         errorMessage={errors.to?.type}
         inputRef={register({ required: true, maxLength: 80 })}
       />
-      <Footer>
+      <ModalFooter>
         <Button isDisabled={Object.entries(errors).length > 0} accentColor={colors[colorId]} type="submit">
           Save task
         </Button>
 
         <Remove isDanger theme="light" svg={binSvg} onClick={onRemoveTask} />
-      </Footer>
+      </ModalFooter>
     </Form>
   )
 }
