@@ -7,7 +7,7 @@ import AddNewCalendarTask from './AddNewCalendarTask'
 import { rgbAdjust, ellipsis } from '../../../styles'
 import { AppState, useAppDispatch } from '../../../Application/Root'
 
-const PlaceholderTaskWrap = styled.div<{ isBeingPrepared: boolean; accentColor: string; top: number }>`
+const PlaceholderTaskWrap = styled.div<{ isBeingPrepared: boolean; accentColor: string; top: number, height: number }>`
   ${ellipsis()};
   display: ${p => (p.isBeingPrepared ? 'block' : 'none')};
   position: absolute;
@@ -21,20 +21,44 @@ const PlaceholderTaskWrap = styled.div<{ isBeingPrepared: boolean; accentColor: 
   box-shadow: inset 4px 1px 0 0px var(--white), inset -4px -1px 0 0px var(--white), 0px 1px 0 0px var(--white),
     0px -1px 0 0px var(--white);
   border-radius: 2px;
-  height: 19.4px;
+  height: ${p => p.height}px;
 
   .hour-slots:hover & {
     display: flex;
   }
+
+  /* z-index: 2;
+  &::before, &::after {
+    content: '';
+    position: absolute;
+    background-color: red;
+  };
+
+  &::before {
+    top: 100%;
+    right: 100%;
+    width: 100vw;
+    height: 1px;
+  };
+
+  &::after {
+    right: 100%;
+    width: 1px;
+    height: 100vh;
+    bottom: 100%;
+  }; */
 `
 
 interface Props {
   timestamp: string
   hourSlotsRef: any
   y: number
+  height: number
+  hoursToShow: number
 }
 
-const PlaceholderTask: FC<Props> = ({ timestamp, hourSlotsRef, y }) => {
+// TODO: get this calculation working - setting correct start time on different hours and zoom
+const PlaceholderTask: FC<Props> = ({ timestamp, hourSlotsRef, y, height, hoursToShow }) => {
   const { taskBeingPrepared } = useSelector((state: AppState) => state.calendar)
   const { groups, colors } = useSelector((state: AppState) => state.settings)
   const [{ isTaskBeingPrepared, timeFrom }, setState] = useState({ isTaskBeingPrepared: false, timeFrom: undefined })
@@ -58,6 +82,7 @@ const PlaceholderTask: FC<Props> = ({ timestamp, hourSlotsRef, y }) => {
         isBeingPrepared={isTaskBeingPrepared}
         top={y}
         accentColor={colors[colorId]}
+        height={height}
         onClick={onPrepareNewTask}
       >
         {taskBeingPrepared?.name}

@@ -87,9 +87,10 @@ interface Props {
   timestamp: string
   isCurrentDay: boolean
   tasksFiltered: TaskWithMeta[]
+  placeholderHeightPx: number
 }
 
-const CalendarColumn: FC<Props> = ({ timestamp, isCurrentDay, tasksFiltered }) => {
+const CalendarColumn: FC<Props> = ({ timestamp, isCurrentDay, tasksFiltered, placeholderHeightPx }) => {
   const { hoursAxis, taskBeingEdited, taskBeingPrepared } = useSelector((state: AppState) => state.calendar)
   const { groups, colors } = useSelector((state: AppState) => state.settings)
   const dispatch = useAppDispatch()
@@ -100,16 +101,14 @@ const CalendarColumn: FC<Props> = ({ timestamp, isCurrentDay, tasksFiltered }) =
 
   function updatePlaceholderTask(event: React.MouseEvent<HTMLDivElement, MouseEvent>) {
     if (Object.values(taskBeingPrepared).length > 0) return
-    const HALF_HOUR_PX = 19.4
     const columnTopPx = event.currentTarget.getBoundingClientRect().top
     const placeholderY = event.clientY - columnTopPx
-    const nearest25 = Math.floor(placeholderY / HALF_HOUR_PX) * HALF_HOUR_PX
-    const isNewNearest = nearest25 !== y
-    if (isNewNearest) setY(nearest25)
+    const nearestSegment = Math.floor(placeholderY / placeholderHeightPx) * placeholderHeightPx
+    const isNewNearest = nearestSegment !== y
+    if (isNewNearest) setY(nearestSegment)
   }
 
   function onEditTask(_id: string) {
-    console.log('edit task', _id)
     setIsEditModalOpen(true)
     dispatch(actions.editTask({ _id, timestamp }))
   }
@@ -137,7 +136,13 @@ const CalendarColumn: FC<Props> = ({ timestamp, isCurrentDay, tasksFiltered }) =
             </Fragment>
           )
         })}
-        <PlaceholderTask timestamp={timestamp} hourSlotsRef={hourSlotsRef} y={y} />
+        <PlaceholderTask
+          timestamp={timestamp}
+          hourSlotsRef={hourSlotsRef}
+          y={y}
+          height={placeholderHeightPx}
+          hoursToShow={hoursAxis.length}
+        />
 
         {isEditModalOpen && (
           <Modal title="task details" width={17} onOverlayToggle={() => setIsEditModalOpen(false)}>

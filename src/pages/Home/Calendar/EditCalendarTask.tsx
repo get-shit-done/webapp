@@ -38,15 +38,19 @@ const EditCalendarTask: FC<Props> = ({ timestamp, taskBeingEdited }) => {
   const accentColor = selectedGroup ? colors[selectedGroup.colorId] : undefined
   const onRemoveTask = () => dispatch(actions.removeTaskRequested({ _id, timestamp }))
 
-  const onSubmit: SubmitHandler<FormValues> = (data): any =>
-    dispatch(
+  const onSubmit: SubmitHandler<FormValues> = (data): any => {
+    const { name, from, to } = data
+    return dispatch(
+      // TODO: name being redeclared but linter not complaining. FIX LINTING
       actions.saveTaskRequested({
         _id,
+        name,
         group: selectedGroup.name,
-        time: [Number(data.from), Number(data.to)],
+        time: [Number(from), Number(to)],
         timestamp,
       }),
     )
+  }
 
   const { register, handleSubmit, errors } = useForm({
     defaultValues: {
