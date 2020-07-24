@@ -7,6 +7,7 @@ import Button from '../../../components/Button/component'
 import Dropdown from '../../../components/form/Dropdown'
 import { actions } from '../../../reducers/calendar'
 import { AppState, useAppDispatch } from '../../../Application/Root'
+import { IGroup } from '../../../reducers/settings'
 
 const Form = styled.form``
 
@@ -16,24 +17,16 @@ interface Props {
   onModalClose(): void
 }
 
-interface ISelectedGroup {
+interface ISelectedGroup extends IGroup {
   name: string
   from: string
   to: string
-  group: {
-    id: string
-    name: string
-    color: {
-      name: string
-      value: string
-    }
-  }
 }
 
 const AddNewCalendarTask: FC<Props> = ({ timestamp, timeFrom, onModalClose }) => {
   const dispatch = useAppDispatch()
   const [selectedGroup, setSelectedGroup] = useState<ISelectedGroup>()
-  // const { groups } = useSelector((state: AppState) => state.settings)
+  const { colors } = useSelector((state: AppState) => state.settings)
   const { register, handleSubmit, errors, watch } = useForm({ defaultValues: { from: timeFrom, to: 16, name: '' } }) // fix this. is not correct shape
   const onSubmit = (data: any) => {
     console.log('data', data)
@@ -48,6 +41,7 @@ const AddNewCalendarTask: FC<Props> = ({ timestamp, timeFrom, onModalClose }) =>
     onModalClose()
   }
   const watchedFields = watch()
+  const accentColor = selectedGroup ? colors[selectedGroup.colorId] : undefined
 
   useEffect(() => {
     dispatch(
@@ -96,7 +90,7 @@ const AddNewCalendarTask: FC<Props> = ({ timestamp, timeFrom, onModalClose }) =>
       />
       <Button
         isDisabled={Object.entries(errors).length > 0}
-        // accentColor={selectedGroup?.group?.color.value}
+        accentColor={accentColor}
         type="submit"
       >
         Add new task
