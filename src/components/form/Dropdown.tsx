@@ -3,8 +3,11 @@ import styled from 'styled-components'
 import chevronDownSvg from '../../assets/svg/chevron-down.svg'
 import Placeholder from './Placeholder/component'
 import { SvgStyled, Input, Wrap } from './shared'
+import { useSelector } from 'react-redux'
+import { AppState } from '../../Application/Root'
+import { IGroup } from '../../reducers/settings'
 
-const Header = styled.div`
+const Header = styled.div<{ color: string }>`
   width: 100%;
   color: ${p => p.color};
 `
@@ -45,59 +48,49 @@ const After = styled.div`
   right: 0;
 `
 
-interface IItem {
-  id: string
-  color?: { value: string }
-  [key: string]: any
-}
 interface IProps {
   theme: string
   isInForm?: boolean
   activeItem?: any
   label: string
   name?: string
-  list: IItem[]
-  listKey: string
-  onSelect<T>(arg: T): void
+  onSelect(item: any): void
   inputRef(instance: HTMLInputElement): void
 }
 
-const Dropdown: FC<IProps> = ({ theme, isInForm, activeItem = {}, label, name, list, listKey, onSelect, inputRef }) => {
+const Dropdown: FC<IProps> = ({ theme, isInForm, activeItem = {}, label, name, onSelect, inputRef }) => {
+  const { groups, colors } = useSelector((state: AppState) => state.settings)
   const [isOpen, setIsOpen] = useState(false)
-  const [activeItemUpdated, setActiveItem] = useState(activeItem)
 
-  function onItemSelect<T>(item: T): void {
-    setActiveItem(item)
+  const accentColor = colors[activeItem.colorId]
+  console.log(accentColor)
+
+  function onItemSelect(item: any): void {
     onSelect(item)
     setIsOpen(false)
   }
   return (
     <Wrap theme={theme} isInForm={isInForm} tabIndex={0} onBlur={() => setIsOpen(false)}>
-      {/* <Wrap theme={theme} isInForm={isInForm}> */}
-      <Header color={activeItemUpdated.color?.value} onClick={() => setIsOpen(!isOpen)}>
-        <Placeholder theme={theme} hasValue={activeItemUpdated.id !== undefined && activeItemUpdated.id !== ''}>
+      <Header color={accentColor} onClick={() => setIsOpen(!isOpen)}>
+        <Placeholder theme={theme} hasValue={activeItem.id!!}>
           {label}
         </Placeholder>
-        <Input as="div">{activeItemUpdated[listKey]}</Input>
-        {name && <InputHidden name={name} type="text" ref={inputRef} value={activeItemUpdated[listKey] || ''} />}
+        <Input as="div">{activeItem.name}</Input>
+        {name && <InputHidden name={name} type="text" ref={inputRef} value={activeItem.name || ''} />}
         <SvgStyled theme="light" svg={chevronDownSvg} />
       </Header>
       <List isOpen={isOpen}>
-        {list.map((item: IItem) => {
-          const { id, color } = item
-
-          return (
-            <Item
-              isActive={id === activeItemUpdated.id}
-              color={activeItemUpdated.color?.value}
-              onClick={() => onItemSelect(item)}
-              key={id}
-            >
-              {item[listKey]}
-              <After color={color.value} />
-            </Item>
-          )
-        })}
+        {groups.map((item: IGroup) => (
+          <Item
+            isActive={item.id === activeItem.id}
+            color={accentColor}
+            onClick={() => onItemSelect(item)}
+            key={item.id}
+          >
+            {item.name}
+            <After color={colors[item.colorId]} />
+          </Item>
+        ))}
       </List>
     </Wrap>
   )

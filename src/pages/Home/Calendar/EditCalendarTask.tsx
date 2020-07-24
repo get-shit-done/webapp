@@ -36,7 +36,7 @@ const Remove = styled(Svg)`
 // TODO: timestamp should come from taskBeingEdited
 const EditCalendarTask: FC<Props> = ({ timestamp, taskBeingEdited }) => {
   const dispatch = useAppDispatch()
-  const [selectedGroup, setSelectedGroup] = useState(taskBeingEdited.group)
+  const [selectedGroupName, setSelectedGroup] = useState(taskBeingEdited.group)
   const { groups, colors } = useSelector((state: AppState) => state.settings)
   const { _id, time, name, group } = taskBeingEdited
   const colorId = groups.find(x => x.name === taskBeingEdited.group).colorId
@@ -74,18 +74,14 @@ const EditCalendarTask: FC<Props> = ({ timestamp, taskBeingEdited }) => {
         inputRef={register({ required: true, maxLength: 80 })}
       />
 
-      {/* hacked this hard. redo the group and coloring entirely */}
-      {/* <Dropdown
+      <Dropdown
         isInForm
         theme="light"
         label="select group"
-        list={groups}
-        listKey="name"
-        activeItem={groups.find(x => x.name === group)}
-        // @ts-ignore
-        onSelect={group => setSelectedGroup(group)}
+        activeItem={groups.find(x => x.name === selectedGroupName)}
+        onSelect={group => setSelectedGroup(group.name)}
         inputRef={register({ required: true, maxLength: 80 })}
-      /> */}
+      />
       <TextField
         isInForm
         defaultValue={time[0]}
