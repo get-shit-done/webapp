@@ -1,7 +1,7 @@
 import React, { FC } from 'react'
 import { useForm } from 'react-hook-form'
 import styled from 'styled-components'
-import TextField from '../../components/form/Field/component'
+import TextField from '../../../components/form/Field/component'
 
 const Form = styled.form`
   margin-bottom: var(--size-md);

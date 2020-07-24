@@ -1,11 +1,11 @@
 import React, { FC } from 'react'
 import styled from 'styled-components'
-
-import UseFilterRange from '../../hooks/useFilterRange'
-import UseHighlightFilteredRange from '../../hooks/useHighlightFIlteredRange'
 import { useSelector } from 'react-redux'
-import { actions } from '../../reducers/calendar'
-import { AppState } from '../../Application/Root'
+
+import UseFilterRange from '../../../hooks/useFilterRange'
+import UseHighlightFilteredRange from '../../../hooks/useHighlightFIlteredRange'
+import { actions } from '../../../reducers/calendar'
+import { AppState } from '../../../Application/Root'
 
 const Wrap = styled.div<{ isBeingFiltered: boolean }>`
   z-index: 2;

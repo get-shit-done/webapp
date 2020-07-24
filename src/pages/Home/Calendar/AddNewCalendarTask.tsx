@@ -2,11 +2,11 @@ import React, { useState, useEffect, memo, FC } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 import { useForm } from 'react-hook-form'
 import styled from 'styled-components'
-import TextField from '../../components/form/Field/component'
-import Button from '../../components/Button/component'
-import Dropdown from '../../components/form/Dropdown'
-import { actions } from '../../reducers/calendar'
-import { AppState, useAppDispatch } from '../../Application/Root'
+import TextField from '../../../components/form/Field/component'
+import Button from '../../../components/Button/component'
+import Dropdown from '../../../components/form/Dropdown'
+import { actions } from '../../../reducers/calendar'
+import { AppState, useAppDispatch } from '../../../Application/Root'
 
 const Form = styled.form``
 
@@ -33,10 +33,18 @@ interface ISelectedGroup {
 const AddNewCalendarTask: FC<Props> = ({ timestamp, timeFrom, onModalClose }) => {
   const dispatch = useAppDispatch()
   const [selectedGroup, setSelectedGroup] = useState<ISelectedGroup>()
-  const { groups } = useSelector((state: AppState) => state.settings)
+  // const { groups } = useSelector((state: AppState) => state.settings)
   const { register, handleSubmit, errors, watch } = useForm({ defaultValues: { from: timeFrom, to: 16, name: '' } }) // fix this. is not correct shape
   const onSubmit = (data: any) => {
-    dispatch(actions.addTask({ ...data, timestamp, group: selectedGroup }))
+    console.log('data', data)
+    dispatch(
+      actions.addTaskRequested({
+        name: data.name,
+        time: [Number(data.from), Number(data.to)],
+        timestamp,
+        group: 'planning',
+      }),
+    )
     onModalClose()
   }
   const watchedFields = watch()
@@ -89,7 +97,6 @@ const AddNewCalendarTask: FC<Props> = ({ timestamp, timeFrom, onModalClose }) =>
       />
       <Button
         isDisabled={Object.entries(errors).length > 0}
-        isInForm
         accentColor={selectedGroup?.group?.color.value}
         type="submit"
       >
