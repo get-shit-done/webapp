@@ -2,11 +2,11 @@ import React, { useState, memo, FC } from 'react'
 import { useSelector } from 'react-redux'
 import { useForm, SubmitHandler } from 'react-hook-form'
 import styled from 'styled-components'
-import TextField from '../../components/form/Field/component'
-import Button from '../../components/Button/component'
-import Dropdown from '../../components/form/Dropdown'
-import { actions, TaskWithMeta } from '../../reducers/calendar'
-import { AppState, useAppDispatch } from '../../Application/Root'
+import TextField from '../../../components/form/Field/component'
+import Button from '../../../components/Button/component'
+import Dropdown from '../../../components/form/Dropdown'
+import { actions, TaskWithMeta } from '../../../reducers/calendar'
+import { AppState, useAppDispatch } from '../../../Application/Root'
 
 const Form = styled.form``
 

@@ -1,14 +1,14 @@
 import React, { Fragment, useState, useRef, memo, FC } from 'react'
 import styled from 'styled-components'
-
-import { rgbAdjust, ellipsis } from '../../styles'
-import CurrentTime from './CurrentTime'
 import { useSelector } from 'react-redux'
+
+import { rgbAdjust, ellipsis } from '../../../styles'
+import CurrentTime from './CurrentTime'
 import PlaceholderTask from './PlaceholderTask'
-import { actions, TaskWithMeta } from '../../reducers/calendar'
-import Modal from '../../components/Modal/component'
+import { actions, TaskWithMeta } from '../../../reducers/calendar'
+import Modal from '../../../components/Modal/component'
 import EditCalendarTask from './EditCalendarTask'
-import { AppState, useAppDispatch } from '../../Application/Root'
+import { AppState, useAppDispatch } from '../../../Application/Root'
 
 const CN_HOUR_SLOTS = 'hour-slots'
 

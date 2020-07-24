@@ -1,11 +1,11 @@
 import React, { FC } from 'react'
 import styled from 'styled-components'
-import { STYLE_SIDEBAR_WIDTH_UNIT } from '../../styles'
-import lisSvg from '../../assets/svg/list.svg'
-import fullscreenSvg from '../../assets/svg/fullscreen.svg'
-import Svg from '../../components/Svg/component'
-import UseFullscreenToggle from '../../hooks/useFullscreenToggle'
-import { actions as todoActions } from '../../reducers/todos'
+import { STYLE_SIDEBAR_WIDTH_UNIT } from '../../../styles'
+import lisSvg from '../../../assets/svg/list.svg'
+import fullscreenSvg from '../../../assets/svg/fullscreen.svg'
+import Svg from '../../../components/Svg/component'
+import UseFullscreenToggle from '../../../hooks/useFullscreenToggle'
+import { actions as todoActions } from '../../../reducers/todos'
 
 const Wrap = styled.div`
   z-index: 2;

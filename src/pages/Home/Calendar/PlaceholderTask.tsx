@@ -1,11 +1,11 @@
 import React, { FC, useState, useCallback } from 'react'
 import styled from 'styled-components'
 import { useSelector } from 'react-redux'
-import { actions } from '../../reducers/calendar'
-import Modal from '../../components/Modal/component'
+import { actions } from '../../../reducers/calendar'
+import Modal from '../../../components/Modal/component'
 import AddNewCalendarTask from './AddNewCalendarTask'
-import { rgbAdjust, ellipsis } from '../../styles'
-import { AppState, useAppDispatch } from '../../Application/Root'
+import { rgbAdjust, ellipsis } from '../../../styles'
+import { AppState, useAppDispatch } from '../../../Application/Root'
 
 const PlaceholderTaskWrap = styled.div<{ isBeingPrepared: boolean; accentColor: string; top: number }>`
   ${ellipsis()};

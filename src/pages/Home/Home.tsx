@@ -4,11 +4,11 @@ import styled from 'styled-components'
 import { STYLE_SIDEBAR_WIDTH_UNIT } from '../../styles'
 import Toast from '../../components/Toast/component'
 
-const Todos = React.lazy(() => import('./Todos'))
-import Sidebar from './Sidebar'
-import HourLabels from './HourLabels'
-import DayLabels from './DayLabels'
-import Calendar from './Calendar'
+const Todos = React.lazy(() => import('./Sidebar/Todos'))
+import Sidebar from './Sidebar/Sidebar'
+import HourLabels from './Axis/HourLabels'
+import DayLabels from './Axis/DayLabels'
+import Calendar from './Calendar/Calendar'
 import useScaleForTransition from '../../hooks/useScaleForTransition'
 
 const PageWrap = styled.div`

@@ -1,13 +1,13 @@
 import React from 'react'
 import styled from 'styled-components'
 import { useSelector } from 'react-redux'
-import { actions as todoActions, Todo } from '../../reducers/todos'
-import { actions as toastActions } from '../../components/Toast/reducer'
-import binSvg from '../../assets/svg/bin.svg'
-import Svg from '../../components/Svg/component'
+import { actions as todoActions, Todo } from '../../../reducers/todos'
+import { actions as toastActions } from '../../../components/Toast/reducer'
+import binSvg from '../../../assets/svg/bin.svg'
+import Svg from '../../../components/Svg/component'
+import { AppState, useAppDispatch } from '../../../Application/Root'
 
 import AddNewTodo from './AddNewTodo'
-import { AppState, useAppDispatch } from '../../Application/Root'
 
 const Title = styled.div`
   font-weight: bold;

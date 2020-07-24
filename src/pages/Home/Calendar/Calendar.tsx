@@ -5,7 +5,7 @@ import format from 'date-fns/format'
 
 import { useSelector } from 'react-redux'
 import CalendarColumn from './CalendarColumn'
-import { AppState } from '../../Application/Root'
+import { AppState } from '../../../Application/Root'
 
 const Wrap = styled.div<{ x: number; y: number }>`
   display: flex;
