@@ -33,10 +33,18 @@ interface ISelectedGroup {
 const AddNewCalendarTask: FC<Props> = ({ timestamp, timeFrom, onModalClose }) => {
   const dispatch = useAppDispatch()
   const [selectedGroup, setSelectedGroup] = useState<ISelectedGroup>()
-  const { groups } = useSelector((state: AppState) => state.settings)
+  // const { groups } = useSelector((state: AppState) => state.settings)
   const { register, handleSubmit, errors, watch } = useForm({ defaultValues: { from: timeFrom, to: 16, name: '' } }) // fix this. is not correct shape
   const onSubmit = (data: any) => {
-    dispatch(actions.addTask({ ...data, timestamp, group: selectedGroup }))
+    console.log('data', data)
+    dispatch(
+      actions.addTask({
+        name: data.name,
+        time: [Number(data.from), Number(data.to)],
+        timestamp,
+        group: 'planning',
+      }),
+    )
     onModalClose()
   }
   const watchedFields = watch()

@@ -73,17 +73,22 @@ export const { reducer, actions } = createSlice({
       for (const x in task) { task[x] = payload[x] }
     },
     saveTaskFailed() {},
-    addTask(state, { payload: { name, timestamp, group, from, to } }: PayloadAction<any>): void {
-      // Todo: need to extend taskbeingprepared
-      console.log(name, timestamp, group, from, to)
+    addTask(state, { payload: { name, timestamp, group, time } }: PayloadAction<any>): void {
+      console.log(name, timestamp, group, time)
+      state.allTasksByDay[timestamp] = state.allTasksByDay[timestamp] || { tasks: [] }
 
       state.taskBeingEdited = null
       state.allTasksByDay[timestamp].tasks.push({
         _id: nanoid(),
-        time: [from, to],
+        time,
         name,
-        group: group.name,
+        group,
         timestamp,
+      })
+      state.allTasksByDay[timestamp].tasks.sort((a, b) => {
+        if (a.time[0] > b.time[0]) return 1
+        if (a.time[0] < b.time[0]) return 0
+        return -1
       })
     },
     getTasksRequested() {},
