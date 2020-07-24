@@ -35,15 +35,14 @@ const EditCalendarTask: FC<Props> = ({ timestamp, taskBeingEdited }) => {
   const { groups, colors } = useSelector((state: AppState) => state.settings)
   const [selectedGroup, setSelectedGroup] = useState(groups.find(x => x.name === taskBeingEdited.group))
   const { _id, time, name, group } = taskBeingEdited
-  const colorId = groups.find(x => x.name === taskBeingEdited.group).colorId
-  console.log('colorIdcolorId', colorId)
+  const accentColor = selectedGroup ? colors[selectedGroup.colorId] : undefined
   const onRemoveTask = () => dispatch(actions.removeTaskRequested({ _id, timestamp }))
 
   const onSubmit: SubmitHandler<FormValues> = (data): any =>
     dispatch(
       actions.saveTaskRequested({
         _id,
-        group: taskBeingEdited.group,
+        group: selectedGroup.name,
         time: [Number(data.from), Number(data.to)],
         timestamp,
       }),
@@ -97,7 +96,7 @@ const EditCalendarTask: FC<Props> = ({ timestamp, taskBeingEdited }) => {
         inputRef={register({ required: true, maxLength: 80 })}
       />
       <ModalFooter>
-        <Button isDisabled={Object.entries(errors).length > 0} accentColor={colors[colorId]} type="submit">
+        <Button isDisabled={Object.entries(errors).length > 0} accentColor={accentColor} type="submit">
           Save task
         </Button>
 

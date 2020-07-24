@@ -30,13 +30,13 @@ const AddNewCalendarTask: FC<Props> = ({ timestamp, timeFrom, onModalClose }) =>
   const { colors } = useSelector((state: AppState) => state.settings)
   const { register, handleSubmit, errors, watch } = useForm({ defaultValues: { from: timeFrom, to: 16, name: '' } }) // fix this. is not correct shape
   const onSubmit = (data: any) => {
-    console.log('data', data)
+    const { name, from, to } = data
     dispatch(
       actions.addTaskRequested({
-        name: data.name,
-        time: [Number(data.from), Number(data.to)],
+        name,
+        time: [Number(from), Number(to)],
         timestamp,
-        group: 'planning',
+        group: selectedGroup.name,
       }),
     )
     onModalClose()
