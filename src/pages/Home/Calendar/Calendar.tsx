@@ -8,6 +8,7 @@ import CalendarColumn from './CalendarColumn'
 import { AppState } from '../../../Application/Root'
 
 const Wrap = styled.div<{ x: number; y: number }>`
+  position: relative;
   display: flex;
   flex-grow: 1;
   transform-origin: bottom right;
@@ -15,18 +16,57 @@ const Wrap = styled.div<{ x: number; y: number }>`
   transform: ${p => `scale(${p.x}, ${p.y})`};
 `
 
+// const Time = styled.div`
+//   position: absolute;
+//   z-index: 2;
+//   left: 300px;
+//   top: 400px;
+//   color: red;
+//   background-color: red;
+
+//   &::before, &::after {
+//     content: '';
+//     position: absolute;
+//     background-color: red;
+//   };
+
+//   &::before {
+//     top: 100%;
+//     right: 100%;
+//     width: 100vw;
+//     height: 1px;
+//   };
+
+//   &::after {
+//     right: 100%;
+//     width: 1px;
+//     height: 100vh;
+//     bottom: 100%;
+//   };
+// `
+
 interface Props {
   scale: {
     x: number
     y: number
-  }
+  },
+  calendarRef: any,
 }
 
-const Calendar: FC<Props> = ({ scale: { x, y } }) => {
+const Calendar: FC<Props> = ({ scale: { x, y }, calendarRef }) => {
   const { hoursAxis, daysAxis, allTasksByDay } = useSelector((state: AppState) => state.calendar)
+  const placeholderHeightPx = calendarRef.current
+    ? (calendarRef.current.getBoundingClientRect().height - 24) / (hoursAxis.length * 2)
+    : 20
+  console.log(placeholderHeightPx)
 
   return (
     <Wrap x={x} y={y}>
+      {/* <Time>
+        time
+      </Time> */}
+
+      {/* calculate height of hour based on hours visible and px height */}
       {daysAxis.map(timestamp => {
         const date = new Date(timestamp)
         const day = format(date, 'd')
@@ -56,7 +96,13 @@ const Calendar: FC<Props> = ({ scale: { x, y } }) => {
         })
 
         return (
-          <CalendarColumn key={day} isCurrentDay={isCurrentDay} timestamp={timestamp} tasksFiltered={tasksFiltered} />
+          <CalendarColumn
+            key={day}
+            isCurrentDay={isCurrentDay}
+            timestamp={timestamp}
+            tasksFiltered={tasksFiltered}
+            placeholderHeightPx={placeholderHeightPx}
+          />
         )
       })}
     </Wrap>
