@@ -64,11 +64,11 @@ const PlaceholderTask: FC<Props> = ({ timestamp, hourSlotsRef, y, height30 }) =>
   const { hoursAxis, taskBeingPrepared = { time: [] } } = useSelector((state: AppState) => state.calendar)
   const { groups, colors } = useSelector((state: AppState) => state.settings)
 
+  // needs a general refactor here
   const [defaultTime, setDefaultTime] = useState([])
   const [updatedY, setPlaceholderY] = useState(y)
   const [updatedHeight, setUpdatedHeight] = useState(height30)
 
-  // what is this time
   const [{ isTaskBeingPrepared, time }, setState] = useState({ isTaskBeingPrepared: false, time: [] })
   const dispatch = useAppDispatch()
   const colorId = groups.find(x => x.name === taskBeingPrepared.group)?.colorId
