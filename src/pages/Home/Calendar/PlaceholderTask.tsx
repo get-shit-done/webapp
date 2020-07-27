@@ -1,4 +1,4 @@
-import React, { FC, useState, useCallback } from 'react'
+import React, { FC, useState, useCallback, useEffect } from 'react'
 import styled from 'styled-components'
 import { useSelector } from 'react-redux'
 import { actions } from '../../../reducers/calendar'
@@ -56,13 +56,19 @@ interface Props {
   timestamp: string
   hourSlotsRef: any
   y: number
-  height: number
+  height30: number
 }
 
 // TODO: get this calculation working - setting correct start time on different hours and zoom
-const PlaceholderTask: FC<Props> = ({ timestamp, hourSlotsRef, y, height }) => {
+const PlaceholderTask: FC<Props> = ({ timestamp, hourSlotsRef, y, height30 }) => {
   const { hoursAxis, taskBeingPrepared } = useSelector((state: AppState) => state.calendar)
   const { groups, colors } = useSelector((state: AppState) => state.settings)
+
+  const [updatedY, setPlaceholderY] = useState(y)
+  const [previousTime, setPreviousTime] = useState(taskBeingPrepared.time)
+  const [updatedHeight, setUpdatedHeight] = useState(height30)
+
+  // what is this time
   const [{ isTaskBeingPrepared, time }, setState] = useState({ isTaskBeingPrepared: false, time: [] })
   const dispatch = useAppDispatch()
   const colorId = groups.find(x => x.name === taskBeingPrepared.group)?.colorId
@@ -77,6 +83,20 @@ const PlaceholderTask: FC<Props> = ({ timestamp, hourSlotsRef, y, height }) => {
     setState({ isTaskBeingPrepared: true, time: [selectedHalfHour, selectedHalfHour + 0.5] })
   }
 
+  useEffect(() => {
+    isTaskBeingPrepared && setPreviousTime(taskBeingPrepared.time)
+    isTaskBeingPrepared && updateTime()
+  }, [taskBeingPrepared])
+
+  function updateTime() {
+    const yUpdated = y - (time[0] - (previousTime || time)[0]) * height30 * 2
+    const heightUpdated = (taskBeingPrepared.time[1] - taskBeingPrepared.time[0]) * height30 * 2
+    setPlaceholderY(yUpdated)
+    setUpdatedHeight(heightUpdated)
+  }
+
+  console.log(y, updatedY)
+
   const onModalClose = useCallback(() => {
     setState({ isTaskBeingPrepared: false, time: [] })
     dispatch(actions.removePreparedTask())
@@ -86,9 +106,9 @@ const PlaceholderTask: FC<Props> = ({ timestamp, hourSlotsRef, y, height }) => {
     <>
       <PlaceholderTaskWrap
         isBeingPrepared={isTaskBeingPrepared}
-        top={y}
+        top={updatedY || y}
         accentColor={colors[colorId]}
-        height={height}
+        height={updatedHeight}
         onClick={onPrepareNewTask}
       >
         {taskBeingPrepared?.name}

@@ -140,7 +140,7 @@ const CalendarColumn: FC<Props> = ({ timestamp, isCurrentDay, tasksFiltered, pla
           timestamp={timestamp}
           hourSlotsRef={hourSlotsRef}
           y={y}
-          height={placeholderHeightPx}
+          height30={placeholderHeightPx}
         />
 
         {isEditModalOpen && (
