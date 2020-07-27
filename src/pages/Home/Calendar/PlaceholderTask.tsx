@@ -61,11 +61,11 @@ interface Props {
 
 // TODO: get this calculation working - setting correct start time on different hours and zoom
 const PlaceholderTask: FC<Props> = ({ timestamp, hourSlotsRef, y, height30 }) => {
-  const { hoursAxis, taskBeingPrepared } = useSelector((state: AppState) => state.calendar)
+  const { hoursAxis, taskBeingPrepared = { time: [] } } = useSelector((state: AppState) => state.calendar)
   const { groups, colors } = useSelector((state: AppState) => state.settings)
 
+  const [defaultTime, setDefaultTime] = useState([])
   const [updatedY, setPlaceholderY] = useState(y)
-  const [previousTime, setPreviousTime] = useState(taskBeingPrepared.time)
   const [updatedHeight, setUpdatedHeight] = useState(height30)
 
   // what is this time
@@ -84,18 +84,16 @@ const PlaceholderTask: FC<Props> = ({ timestamp, hourSlotsRef, y, height30 }) =>
   }
 
   useEffect(() => {
-    isTaskBeingPrepared && setPreviousTime(taskBeingPrepared.time)
-    isTaskBeingPrepared && updateTime()
-  }, [taskBeingPrepared])
+    !defaultTime.length && setDefaultTime(taskBeingPrepared.time)
+    defaultTime && isTaskBeingPrepared && taskBeingPrepared.time.toString() !== defaultTime.toString() && updateTime()
+  }, [taskBeingPrepared.time[0], taskBeingPrepared.time[1]])
 
   function updateTime() {
-    const yUpdated = y - (time[0] - (previousTime || time)[0]) * height30 * 2
+    const yUpdated = y - (defaultTime[0] - taskBeingPrepared.time[0]) * height30 * 2
     const heightUpdated = (taskBeingPrepared.time[1] - taskBeingPrepared.time[0]) * height30 * 2
     setPlaceholderY(yUpdated)
     setUpdatedHeight(heightUpdated)
   }
-
-  console.log(y, updatedY)
 
   const onModalClose = useCallback(() => {
     setState({ isTaskBeingPrepared: false, time: [] })

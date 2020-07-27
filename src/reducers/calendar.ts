@@ -37,7 +37,7 @@ interface IInitialState {
   daysAxis: string[]
 }
 const initialState: IInitialState = {
-  taskBeingPrepared: {},
+  taskBeingPrepared: undefined,
   taskBeingEdited: null,
   allTasksByDay: {},
   hoursAxis: HOURS_IN_DAY,
@@ -60,7 +60,7 @@ export const { reducer, actions } = createSlice({
       state.taskBeingPrepared = payload
     },
     removePreparedTask(state) {
-      state.taskBeingPrepared = {}
+      state.taskBeingPrepared = undefined
     },
     editTask(state, { payload: { _id, timestamp } }: PayloadAction<{ _id: string; timestamp: string }>): void {
       state.taskBeingEdited = state.allTasksByDay[timestamp].tasks.find(x => x._id === _id)

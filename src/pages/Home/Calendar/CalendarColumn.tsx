@@ -100,7 +100,7 @@ const CalendarColumn: FC<Props> = ({ timestamp, isCurrentDay, tasksFiltered, pla
   const hourSlotsRef = useRef(null)
 
   function updatePlaceholderTask(event: React.MouseEvent<HTMLDivElement, MouseEvent>) {
-    if (Object.values(taskBeingPrepared).length > 0) return
+    if (taskBeingPrepared) return
     const columnTopPx = event.currentTarget.getBoundingClientRect().top
     const placeholderY = event.clientY - columnTopPx
     const nearestSegment = Math.floor(placeholderY / placeholderHeightPx) * placeholderHeightPx
