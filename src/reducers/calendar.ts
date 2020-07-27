@@ -56,14 +56,8 @@ export const { reducer, actions } = createSlice({
         day.toString(),
       )
     },
-    prepareTask(state, { payload: { name, group, time } }: PayloadAction<TaskBeingPrepared>): void {
-      // console.log('being prepared', { name, group, time })
-      const taskBeingPrepared = {
-        time,
-        name,
-        group,
-      }
-      state.taskBeingPrepared = taskBeingPrepared
+    prepareTask(state, { payload }: PayloadAction<TaskBeingPrepared>): void {
+      state.taskBeingPrepared = payload
     },
     removePreparedTask(state) {
       state.taskBeingPrepared = {}

@@ -47,8 +47,8 @@ const AddNewCalendarTask: FC<Props> = ({ timestamp, time, onModalClose }) => {
   useEffect(() => {
     dispatch(
       actions.prepareTask({
-        ...watchedFields,
-        time: [watchedFields.from, watchedFields.to],
+        name: watchedFields.name,
+        time: [Number(watchedFields.from), Number(watchedFields.to)],
         group: selectedGroup?.name,
       }),
     )
