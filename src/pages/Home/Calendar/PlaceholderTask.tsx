@@ -1,4 +1,4 @@
-import React, { FC, useState, useCallback } from 'react'
+import React, { FC, useState, useCallback, useEffect } from 'react'
 import styled from 'styled-components'
 import { useSelector } from 'react-redux'
 import { actions } from '../../../reducers/calendar'
@@ -18,7 +18,10 @@ const PlaceholderTaskWrap = styled.div<{ isBeingPrepared: boolean; accentColor: 
   line-height: 1.5;
   color: ${p => (p.accentColor ? rgbAdjust(p.accentColor, -80) : 'red')};
   background-color: ${p => p.accentColor || '#eee'};
-  box-shadow: inset 4px 1px 0 0px var(--white), inset -4px -1px 0 0px var(--white), 0px 1px 0 0px var(--white),
+  box-shadow:
+    inset 4px 1px 0 0px var(--white),
+    inset -4px -1px 0 0px var(--white),
+    0px 1px 0 0px var(--white),
     0px -1px 0 0px var(--white);
   border-radius: 2px;
   height: ${p => p.height}px;
@@ -53,26 +56,47 @@ interface Props {
   timestamp: string
   hourSlotsRef: any
   y: number
-  height: number
-  hoursToShow: number
+  height30: number
 }
 
 // TODO: get this calculation working - setting correct start time on different hours and zoom
-const PlaceholderTask: FC<Props> = ({ timestamp, hourSlotsRef, y, height, hoursToShow }) => {
-  const { taskBeingPrepared } = useSelector((state: AppState) => state.calendar)
+const PlaceholderTask: FC<Props> = ({ timestamp, hourSlotsRef, y, height30 }) => {
+  const { hoursAxis, taskBeingPrepared = { time: [] } } = useSelector((state: AppState) => state.calendar)
   const { groups, colors } = useSelector((state: AppState) => state.settings)
-  const [{ isTaskBeingPrepared, timeFrom }, setState] = useState({ isTaskBeingPrepared: false, timeFrom: undefined })
+
+  // functionality needs to be extracted into hooks for reuse in edit modal
+  const [defaultTime, setDefaultTime] = useState([])
+  const [updatedY, setPlaceholderY] = useState(y)
+  const [updatedHeight, setUpdatedHeight] = useState(height30)
+
+  const [{ isTaskBeingPrepared, time }, setState] = useState({ isTaskBeingPrepared: false, time: [] })
   const dispatch = useAppDispatch()
   const colorId = groups.find(x => x.name === taskBeingPrepared.group)?.colorId
 
   function onPrepareNewTask() {
-    const timeStart = 24 / (hourSlotsRef.current.getBoundingClientRect().height / y)
-    const timeStartRounded = Number(timeStart.toFixed(1))
-    setState({ isTaskBeingPrepared: true, timeFrom: timeStartRounded })
+    const halfHoursToShow = [...hoursAxis.map(x => x), ...hoursAxis.map(x => x + 0.5)].sort((a, b) => a - b)
+    const visibleHalfHours = halfHoursToShow.length
+    const percentage = (y / hourSlotsRef.current.getBoundingClientRect().height) * 100
+    const index = Math.round(visibleHalfHours / (100 / (percentage)))
+    const selectedHalfHour = halfHoursToShow[index]
+
+    setState({ isTaskBeingPrepared: true, time: [selectedHalfHour, selectedHalfHour + 0.5] })
+  }
+
+  useEffect(() => {
+    !defaultTime.length && setDefaultTime(taskBeingPrepared.time)
+    defaultTime && isTaskBeingPrepared && taskBeingPrepared.time.toString() !== defaultTime.toString() && updateTime()
+  }, [taskBeingPrepared.time[0], taskBeingPrepared.time[1]])
+
+  function updateTime() {
+    const yUpdated = y - (defaultTime[0] - taskBeingPrepared.time[0]) * height30 * 2
+    const heightUpdated = (taskBeingPrepared.time[1] - taskBeingPrepared.time[0]) * height30 * 2
+    setPlaceholderY(yUpdated)
+    setUpdatedHeight(heightUpdated)
   }
 
   const onModalClose = useCallback(() => {
-    setState({ isTaskBeingPrepared: false, timeFrom: undefined })
+    setState({ isTaskBeingPrepared: false, time: [] })
     dispatch(actions.removePreparedTask())
   }, [])
 
@@ -80,9 +104,9 @@ const PlaceholderTask: FC<Props> = ({ timestamp, hourSlotsRef, y, height, hoursT
     <>
       <PlaceholderTaskWrap
         isBeingPrepared={isTaskBeingPrepared}
-        top={y}
+        top={updatedY || y}
         accentColor={colors[colorId]}
-        height={height}
+        height={updatedHeight}
         onClick={onPrepareNewTask}
       >
         {taskBeingPrepared?.name}
@@ -90,7 +114,7 @@ const PlaceholderTask: FC<Props> = ({ timestamp, hourSlotsRef, y, height, hoursT
 
       {isTaskBeingPrepared && (
         <Modal title="task details" width={17} onOverlayToggle={onModalClose}>
-          <AddNewCalendarTask timestamp={timestamp} timeFrom={timeFrom} onModalClose={onModalClose} />
+          <AddNewCalendarTask timestamp={timestamp} time={time} onModalClose={onModalClose} />
         </Modal>
       )}
     </>

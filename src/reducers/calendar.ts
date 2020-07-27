@@ -10,11 +10,11 @@ export interface TaskBeingPrepared {
   group?: string
 }
 export interface NewTask {
-  [key: string]: any, // TODO: is this really necessary? wtf
+  [key: string]: any // TODO: is this really necessary? wtf
   time: number[]
   name: string
   group: string
-  timestamp: string,
+  timestamp: string
 }
 export interface SavedTask extends NewTask {
   _id: string
@@ -32,12 +32,12 @@ interface IInitialState {
     [key: string]: {
       tasks: SavedTask[]
     }
-  },
+  }
   hoursAxis: number[]
   daysAxis: string[]
 }
 const initialState: IInitialState = {
-  taskBeingPrepared: {},
+  taskBeingPrepared: undefined,
   taskBeingEdited: null,
   allTasksByDay: {},
   hoursAxis: HOURS_IN_DAY,
@@ -56,17 +56,11 @@ export const { reducer, actions } = createSlice({
         day.toString(),
       )
     },
-    prepareTask(state, { payload: { name, group, time } }: PayloadAction<TaskBeingPrepared>): void {
-      console.log('being prepared', { name, group, time })
-      const taskBeingPrepared = {
-        time,
-        name,
-        group,
-      }
-      state.taskBeingPrepared = taskBeingPrepared
+    prepareTask(state, { payload }: PayloadAction<TaskBeingPrepared>): void {
+      state.taskBeingPrepared = payload
     },
     removePreparedTask(state) {
-      state.taskBeingPrepared = {}
+      state.taskBeingPrepared = undefined
     },
     editTask(state, { payload: { _id, timestamp } }: PayloadAction<{ _id: string; timestamp: string }>): void {
       state.taskBeingEdited = state.allTasksByDay[timestamp].tasks.find(x => x._id === _id)
@@ -75,7 +69,9 @@ export const { reducer, actions } = createSlice({
     saveTaskSuccess(state, { payload }: PayloadAction<SavedTask>): void {
       const { _id, timestamp } = payload
       const task: SavedTask = state.allTasksByDay[timestamp].tasks.find(x => x._id === _id)
-      for (const x in task) { task[x] = payload[x] }
+      for (const x in task) {
+        task[x] = payload[x]
+      }
     },
     saveTaskFailed() {},
     addTaskRequested(state, { payload: { name, timestamp, group, time } }: PayloadAction<NewTask>): void {
@@ -90,7 +86,7 @@ export const { reducer, actions } = createSlice({
         timestamp,
       })
     },
-    addTaskSuccess(state, { payload: { _id, timestamp }}: PayloadAction<SavedTask>): void {
+    addTaskSuccess(state, { payload: { _id, timestamp } }: PayloadAction<SavedTask>): void {
       const taskAdded = state.allTasksByDay[timestamp].tasks.find(x => x._id === 'just-added')
       taskAdded._id = _id
     },
@@ -100,14 +96,13 @@ export const { reducer, actions } = createSlice({
       state.allTasksByDay = data
     },
     getTasksFail(state, action) {},
-    removeTaskRequested(state, { payload: { _id, timestamp }}):void {
+    removeTaskRequested(state, { payload: { _id, timestamp } }): void {
       state.allTasksByDay[timestamp].tasks = state.allTasksByDay[timestamp].tasks.filter(x => x._id !== _id)
-
     },
     removeTaskSucceeded() {},
     removeTaskFailed() {},
-    sortTasks(state, { payload: { timestamp }}): void {
+    sortTasks(state, { payload: { timestamp } }): void {
       state.allTasksByDay[timestamp].tasks.sort(taskSort)
-    }
+    },
   },
 })
