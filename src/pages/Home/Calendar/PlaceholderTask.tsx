@@ -63,7 +63,7 @@ interface Props {
 const PlaceholderTask: FC<Props> = ({ timestamp, hourSlotsRef, y, height }) => {
   const { hoursAxis, taskBeingPrepared } = useSelector((state: AppState) => state.calendar)
   const { groups, colors } = useSelector((state: AppState) => state.settings)
-  const [{ isTaskBeingPrepared, timeFrom }, setState] = useState({ isTaskBeingPrepared: false, timeFrom: undefined })
+  const [{ isTaskBeingPrepared, time }, setState] = useState({ isTaskBeingPrepared: false, time: [] })
   const dispatch = useAppDispatch()
   const colorId = groups.find(x => x.name === taskBeingPrepared.group)?.colorId
 
@@ -74,11 +74,11 @@ const PlaceholderTask: FC<Props> = ({ timestamp, hourSlotsRef, y, height }) => {
     const index = Math.round(visibleHalfHours / (100 / (percentage)))
     const selectedHalfHour = halfHoursToShow[index]
 
-    setState({ isTaskBeingPrepared: true, timeFrom: selectedHalfHour })
+    setState({ isTaskBeingPrepared: true, time: [selectedHalfHour, selectedHalfHour + 0.5] })
   }
 
   const onModalClose = useCallback(() => {
-    setState({ isTaskBeingPrepared: false, timeFrom: undefined })
+    setState({ isTaskBeingPrepared: false, time: [] })
     dispatch(actions.removePreparedTask())
   }, [])
 
@@ -96,7 +96,7 @@ const PlaceholderTask: FC<Props> = ({ timestamp, hourSlotsRef, y, height }) => {
 
       {isTaskBeingPrepared && (
         <Modal title="task details" width={17} onOverlayToggle={onModalClose}>
-          <AddNewCalendarTask timestamp={timestamp} timeFrom={timeFrom} onModalClose={onModalClose} />
+          <AddNewCalendarTask timestamp={timestamp} time={time} onModalClose={onModalClose} />
         </Modal>
       )}
     </>

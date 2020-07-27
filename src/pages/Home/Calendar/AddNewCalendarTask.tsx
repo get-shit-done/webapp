@@ -14,7 +14,7 @@ const Form = styled.form``
 
 interface Props {
   timestamp: string
-  timeFrom: number
+  time: number[]
   onModalClose(): void
 }
 
@@ -24,11 +24,11 @@ interface ISelectedGroup extends IGroup {
   to: string
 }
 
-const AddNewCalendarTask: FC<Props> = ({ timestamp, timeFrom, onModalClose }) => {
+const AddNewCalendarTask: FC<Props> = ({ timestamp, time, onModalClose }) => {
   const dispatch = useAppDispatch()
   const [selectedGroup, setSelectedGroup] = useState<ISelectedGroup>()
   const { colors } = useSelector((state: AppState) => state.settings)
-  const { register, handleSubmit, errors, watch } = useForm({ defaultValues: { from: timeFrom, to: 16, name: '' } }) // fix this. is not correct shape
+  const { register, handleSubmit, errors, watch } = useForm({ defaultValues: { from: time[0], to: time[1], name: '' } }) // fix this. is not correct shape
   const onSubmit = (data: any) => {
     const { name, from, to } = data
     dispatch(
@@ -74,7 +74,7 @@ const AddNewCalendarTask: FC<Props> = ({ timestamp, timeFrom, onModalClose }) =>
       />
       <TextField
         isInForm
-        defaultValue={timeFrom}
+        defaultValue={time[0]}
         theme="light"
         name="from"
         placeholder="time from"
@@ -83,6 +83,7 @@ const AddNewCalendarTask: FC<Props> = ({ timestamp, timeFrom, onModalClose }) =>
       />
       <TextField
         isInForm
+        defaultValue={time[1]}
         theme="light"
         name="to"
         placeholder="time to"
