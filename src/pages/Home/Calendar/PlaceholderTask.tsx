@@ -64,7 +64,7 @@ const PlaceholderTask: FC<Props> = ({ timestamp, hourSlotsRef, y, height30 }) =>
   const { hoursAxis, taskBeingPrepared = { time: [] } } = useSelector((state: AppState) => state.calendar)
   const { groups, colors } = useSelector((state: AppState) => state.settings)
 
-  // needs a general refactor here
+  // functionality needs to be extracted into hooks for reuse in edit modal
   const [defaultTime, setDefaultTime] = useState([])
   const [updatedY, setPlaceholderY] = useState(y)
   const [updatedHeight, setUpdatedHeight] = useState(height30)
