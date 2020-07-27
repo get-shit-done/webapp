@@ -8,7 +8,7 @@ import { rgbAdjust, ellipsis } from '../../../styles'
 import { AppState, useAppDispatch } from '../../../Application/Root'
 
 const PlaceholderTaskWrap = styled.div<{ isBeingPrepared: boolean; accentColor: string; top: number, height: number }>`
-  ${ellipsis()};
+  /* ${ellipsis()}; */
   display: ${p => (p.isBeingPrepared ? 'block' : 'none')};
   position: absolute;
   top: ${p => p.top}px;
@@ -30,26 +30,27 @@ const PlaceholderTaskWrap = styled.div<{ isBeingPrepared: boolean; accentColor: 
     display: flex;
   }
 
-  /* z-index: 2;
+  z-index: 22;
   &::before, &::after {
     content: '';
     position: absolute;
-    background-color: red;
   };
 
   &::before {
-    top: 100%;
+    border-bottom: 1px dashed #3d4150;
+    /* top: 100%; */
     right: 100%;
     width: 100vw;
     height: 1px;
   };
 
   &::after {
+    border-right: 1px dashed #3d4150;
     right: 100%;
     width: 1px;
     height: 100vh;
     bottom: 100%;
-  }; */
+  };
 `
 
 interface Props {
