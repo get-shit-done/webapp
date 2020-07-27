@@ -7,13 +7,12 @@ import AddNewCalendarTask from './AddNewCalendarTask'
 import { rgbAdjust, ellipsis } from '../../../styles'
 import { AppState, useAppDispatch } from '../../../Application/Root'
 
-const Test = styled.div<{ isBeingPrepared: boolean, top: number, height: number }>`
+const Lines = styled.div<{ top: number, isBeingPrepared: boolean, height: number }>`
   display: ${p => (p.isBeingPrepared ? 'block' : 'none')};
   position: absolute;
   top: ${p => p.top}px;
   right: 0;
   left: 0;
-  height: ${p => p.height}px;
 
   .hour-slots:hover & {
     display: flex;
@@ -23,35 +22,44 @@ const Test = styled.div<{ isBeingPrepared: boolean, top: number, height: number 
   &::before, &::after {
     content: '';
     position: fixed;
-  };
-
-  &::before {
-    border-bottom: 1px dashed #3d4150;
     right: 0;
     left: 0;
     height: 1px;
   };
 
+  &::before {
+    border-top: 1px dashed #3d41503d;
+    height: 1px;
+  };
+
   &::after {
-    border-right: 1px dashed #3d4150;
-    top: 0;
-    bottom: 0;
-    width: 1px;
+    border-bottom: 1px dashed #3d41503d;
+    transform: translateY(${p => p.height}px);
   };
 `
-const PlaceholderTaskWrap = styled.div<{ accentColor: string }>`
+const PlaceholderTaskWrap = styled.div<{ isBeingPrepared: boolean, top: number, height: number, accentColor: string }>`
   ${ellipsis()};
+  display: ${p => (p.isBeingPrepared ? 'block' : 'none')};
+  position: absolute;
+  top: ${p => p.top}px;
+  right: 0;
+  left: 0;
   padding: 0 var(--size-sm);
+  height: ${p => p.height}px;
   width: 100%;
   line-height: 1.5;
   color: ${p => (p.accentColor ? rgbAdjust(p.accentColor, -80) : 'red')};
   background-color: ${p => p.accentColor || '#eee'};
   box-shadow:
-    inset 4px 1px 0 0px var(--white),
-    inset -4px -1px 0 0px var(--white),
+    inset 4px 2px 0 0px var(--white),
+    inset -4px -2px 0 0px var(--white),
     0px 1px 0 0px var(--white),
     0px -1px 0 0px var(--white);
   border-radius: 2px;
+
+  .hour-slots:hover & {
+    display: flex;
+  }
 `
 
 interface Props {
@@ -103,19 +111,26 @@ const PlaceholderTask: FC<Props> = ({ timestamp, hourSlotsRef, y, height30 }) =>
   }, [])
 
   return (
-    <Test top={updatedY || y} isBeingPrepared={isTaskBeingPrepared} height={updatedHeight} onClick={onPrepareNewTask}>
-      <PlaceholderTaskWrap
-        accentColor={colors[colorId]}
-      >
-        {taskBeingPrepared?.name}
-      </PlaceholderTaskWrap>
+    <>
+      <Lines top={updatedY || y} isBeingPrepared={isTaskBeingPrepared} height={updatedHeight} />
+      <>
+        <PlaceholderTaskWrap
+          isBeingPrepared={isTaskBeingPrepared}
+          top={updatedY || y}
+          height={updatedHeight}
+          onClick={onPrepareNewTask}
+          accentColor={colors[colorId]}
+        >
+          {taskBeingPrepared?.name}
+        </PlaceholderTaskWrap>
 
-      {isTaskBeingPrepared && (
-        <Modal title="task details" width={17} onOverlayToggle={onModalClose}>
-          <AddNewCalendarTask timestamp={timestamp} time={time} onModalClose={onModalClose} />
-        </Modal>
-      )}
-    </Test>
+        {isTaskBeingPrepared && (
+          <Modal title="task details" width={17} onOverlayToggle={onModalClose}>
+            <AddNewCalendarTask timestamp={timestamp} time={time} onModalClose={onModalClose} />
+          </Modal>
+        )}
+      </>
+    </>
   )
 }
 
