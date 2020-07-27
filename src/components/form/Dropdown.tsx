@@ -63,7 +63,7 @@ const Dropdown: FC<IProps> = ({ theme, isInForm, activeGroup = {}, label, name, 
   const [isOpen, setIsOpen] = useState(false)
   // const activeGroup = groups.find(x => x.name === activeGroup)
   const accentColor = activeGroup.colorId ? colors[activeGroup.colorId] : undefined
-  console.log(accentColor)
+  // console.log(accentColor)
 
   function onItemSelect(item: any): void {
     onSelect(item)

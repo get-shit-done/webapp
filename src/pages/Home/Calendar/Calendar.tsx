@@ -58,7 +58,7 @@ const Calendar: FC<Props> = ({ scale: { x, y }, calendarRef }) => {
   const placeholderHeightPx = calendarRef.current
     ? (calendarRef.current.getBoundingClientRect().height - 24) / (hoursAxis.length * 2)
     : 20
-  console.log(placeholderHeightPx)
+  // console.log(placeholderHeightPx)
 
   return (
     <Wrap x={x} y={y}>
