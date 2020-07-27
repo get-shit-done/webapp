@@ -18,7 +18,10 @@ const PlaceholderTaskWrap = styled.div<{ isBeingPrepared: boolean; accentColor: 
   line-height: 1.5;
   color: ${p => (p.accentColor ? rgbAdjust(p.accentColor, -80) : 'red')};
   background-color: ${p => p.accentColor || '#eee'};
-  box-shadow: inset 4px 1px 0 0px var(--white), inset -4px -1px 0 0px var(--white), 0px 1px 0 0px var(--white),
+  box-shadow:
+    inset 4px 1px 0 0px var(--white),
+    inset -4px -1px 0 0px var(--white),
+    0px 1px 0 0px var(--white),
     0px -1px 0 0px var(--white);
   border-radius: 2px;
   height: ${p => p.height}px;
@@ -54,21 +57,24 @@ interface Props {
   hourSlotsRef: any
   y: number
   height: number
-  hoursToShow: number
 }
 
 // TODO: get this calculation working - setting correct start time on different hours and zoom
-const PlaceholderTask: FC<Props> = ({ timestamp, hourSlotsRef, y, height, hoursToShow }) => {
-  const { taskBeingPrepared } = useSelector((state: AppState) => state.calendar)
+const PlaceholderTask: FC<Props> = ({ timestamp, hourSlotsRef, y, height }) => {
+  const { hoursAxis, taskBeingPrepared } = useSelector((state: AppState) => state.calendar)
   const { groups, colors } = useSelector((state: AppState) => state.settings)
   const [{ isTaskBeingPrepared, timeFrom }, setState] = useState({ isTaskBeingPrepared: false, timeFrom: undefined })
   const dispatch = useAppDispatch()
   const colorId = groups.find(x => x.name === taskBeingPrepared.group)?.colorId
 
   function onPrepareNewTask() {
-    const timeStart = 24 / (hourSlotsRef.current.getBoundingClientRect().height / y)
-    const timeStartRounded = Number(timeStart.toFixed(1))
-    setState({ isTaskBeingPrepared: true, timeFrom: timeStartRounded })
+    const halfHoursToShow = [...hoursAxis.map(x => x), ...hoursAxis.map(x => x + 0.5)].sort((a, b) => a - b)
+    const visibleHalfHours = halfHoursToShow.length
+    const percentage = (y / hourSlotsRef.current.getBoundingClientRect().height) * 100
+    const index = Math.round(visibleHalfHours / (100 / (percentage)))
+    const selectedHalfHour = halfHoursToShow[index]
+
+    setState({ isTaskBeingPrepared: true, timeFrom: selectedHalfHour })
   }
 
   const onModalClose = useCallback(() => {
