@@ -22,7 +22,7 @@ const Wrap = styled.div<{ isBeingFiltered: boolean }>`
   font-size: 10px;
   color: var(--pastel-gray);
   background: var(--jet);
-  transition: height var(--transition), padding var(--transition);
+  transition: height 0.1s var(--transition-type), padding 0.1s var(--transition-type);
 
   ${p =>
     p.isBeingFiltered &&
@@ -47,7 +47,7 @@ const DayLabel = styled.div<{
   border-left: 1px solid transparent;
   padding-top: 8px;
   cursor: pointer;
-  transition: padding var(--transition);
+  transition: padding 0.1s var(--transition-type);
 
   &:last-child {
     &:after {
@@ -119,8 +119,8 @@ const DayLabel = styled.div<{
     background-color: var(--arsenic);
 
     ${p =>
-      p.isFiltered &&
-      `
+    p.isFiltered &&
+    `
       background-color: inherit;
       color: inherit;
       cursor: inherit;
@@ -147,7 +147,7 @@ const DayLabel = styled.div<{
   }
 `
 interface Props {
-  onHover({}: { axis: string; isReset?: boolean }): void
+  onHover({ }: { axis: string; isReset?: boolean }): void
 }
 
 const DayLabels: FC<Props> = ({ onHover }) => {

@@ -54,7 +54,7 @@ const Tasks = styled.div<{ isOpen: boolean }>`
     };
   `};
 `
-const Toggle = styled(Svg)<{ isActive: boolean }>`
+const Toggle = styled(Svg) <{ isActive: boolean }>`
   width: 2rem;
   height: 2rem;
   cursor: pointer;
@@ -84,7 +84,7 @@ const Content = styled.div<{ isOpen: boolean }>`
   background-color: var(--charcoal);
   box-shadow: inset -1px 0 0 0px var(--independence);
   transform: translateX(100%);
-  transition: transform var(--transition);
+  transition: transform 0.2s var(--transition-type);
 
   ${p =>
     p.isOpen &&

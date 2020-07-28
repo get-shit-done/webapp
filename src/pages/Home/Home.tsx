@@ -27,7 +27,7 @@ const Wrap = styled.div<{ isOpen: boolean; scaleTest: any }>`
   background-color: var(--jet);
   will-change: padding;
   transform-origin: left;
-  transition: transform var(--transition);
+  transition: transform ${p => p.scaleTest.duration}s var(--transition-type);
   ${p =>
     p.isOpen &&
     `
@@ -51,11 +51,11 @@ const Home = () => {
   const calendarRef = useRef(null)
 
   const onSetCalendarScale = ({ isReset, axis }: { isReset?: boolean; axis: string }) => {
-    setCalendarScale({ ref: calendarRef, inPixels: 26, isReset, axis })
+    setCalendarScale({ ref: calendarRef, inPixels: 26, isReset, axis, duration: 0.1 })
   }
   const onSidebarToggle = () => {
     setIsOpen(o => !o)
-    setWrapScale({ ref: wrapRef, inPixels: Number(STYLE_SIDEBAR_WIDTH_UNIT) * 10, axis: 'x' })
+    setWrapScale({ ref: wrapRef, inPixels: Number(STYLE_SIDEBAR_WIDTH_UNIT) * 10, axis: 'x', duration: 0.2 })
   }
 
   return (
