@@ -75,11 +75,9 @@ const PlaceholderTask: FC<Props> = ({ timestamp, hourSlotsRef, y, height30 }) =>
   const { groups, colors } = useSelector((state: AppState) => state.settings)
 
   // functionality needs to be extracted into hooks for reuse in edit modal
-  const [defaultTime, setDefaultTime] = useState([])
-  const [updatedY, setPlaceholderY] = useState(y)
-  const [updatedHeight, setUpdatedHeight] = useState(height30)
+  const [{ yFromTime, heightFromTime }, setYAndHeightFromTime] = useState({ yFromTime: undefined, heightFromTime: height30 })
+  const [{ isBeingEdited, time }, setTaskDetails] = useState({ isBeingEdited: false, time: [] })
 
-  const [{ isTaskBeingPrepared, time }, setState] = useState({ isTaskBeingPrepared: false, time: [] })
   const dispatch = useAppDispatch()
   const colorId = groups.find(x => x.name === taskBeingPrepared.group)?.colorId
 
@@ -89,43 +87,41 @@ const PlaceholderTask: FC<Props> = ({ timestamp, hourSlotsRef, y, height30 }) =>
     const hourMax = hoursAxis[hoursAxis.length - 1] + 1
     const alg = hourMin + (hourMax - hourMin) / 100 * percentage
     const rounded = Math.round(alg / 0.25) * 0.25
-    setState({ isTaskBeingPrepared: true, time: [rounded, rounded + 0.5] })
+    setTaskDetails({ isBeingEdited: true, time: [rounded, rounded + 0.5] })
   }
 
   useEffect(() => {
-    !defaultTime.length && setDefaultTime(taskBeingPrepared.time)
-    defaultTime && isTaskBeingPrepared && taskBeingPrepared.time.toString() !== defaultTime.toString() && updateTime()
+    isBeingEdited && updateTaskFromTime()
   }, [taskBeingPrepared.time[0], taskBeingPrepared.time[1]])
 
-  function updateTime() {
-    const yUpdated = y - (defaultTime[0] - taskBeingPrepared.time[0]) * height30 * 2
-    const heightUpdated = (taskBeingPrepared.time[1] - taskBeingPrepared.time[0]) * height30 * 2
-    setPlaceholderY(yUpdated)
-    setUpdatedHeight(heightUpdated)
+  function updateTaskFromTime() {
+    const timeFrom = taskBeingPrepared.time[0]
+    const yAlg = timeFrom * (height30 * 2) - hoursAxis[0] * (height30 * 2)
+    const heightAlg = (taskBeingPrepared.time[1] - taskBeingPrepared.time[0]) * height30 * 2
+    setYAndHeightFromTime({ yFromTime: yAlg, heightFromTime: heightAlg })
   }
 
   const onModalClose = useCallback(() => {
-    setState({ isTaskBeingPrepared: false, time: [] })
-    setPlaceholderY(undefined)
-    setDefaultTime([])
+    setTaskDetails({ isBeingEdited: false, time: [] })
+    setYAndHeightFromTime({ yFromTime: undefined, heightFromTime: height30 })
     dispatch(actions.removePreparedTask())
   }, [])
 
   return (
     <>
-      <Lines top={updatedY || y} isBeingPrepared={isTaskBeingPrepared} height={updatedHeight} />
+      <Lines top={yFromTime ?? y} isBeingPrepared={isBeingEdited} height={heightFromTime} />
       <>
         <PlaceholderTaskWrap
-          isBeingPrepared={isTaskBeingPrepared}
-          top={updatedY || y}
-          height={updatedHeight}
+          isBeingPrepared={isBeingEdited}
+          top={yFromTime ?? y}
+          height={heightFromTime}
           onClick={onPrepareNewTask}
           accentColor={colors[colorId]}
         >
           {taskBeingPrepared?.name}
         </PlaceholderTaskWrap>
 
-        {isTaskBeingPrepared && (
+        {isBeingEdited && (
           <Modal title="task details" width={17} onOverlayToggle={onModalClose}>
             <AddNewCalendarTask timestamp={timestamp} time={time} onModalClose={onModalClose} />
           </Modal>
