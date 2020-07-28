@@ -1,11 +1,14 @@
-import React, { FC } from 'react'
+import React, { Suspense, FC, useState } from 'react'
 import styled from 'styled-components'
 import { STYLE_SIDEBAR_WIDTH_UNIT } from '../../../styles'
-import lisSvg from '../../../assets/svg/list.svg'
+import listSvg from '../../../assets/svg/list.svg'
+import cogSvg from '../../../assets/svg/cog.svg'
 import fullscreenSvg from '../../../assets/svg/fullscreen.svg'
 import Svg from '../../../components/Svg/component'
 import UseFullscreenToggle from '../../../hooks/useFullscreenToggle'
-import { actions as todoActions } from '../../../reducers/todos'
+
+const Todos = React.lazy(() => import('./Todos'))
+const Settings = React.lazy(() => import('./Settings'))
 
 const Wrap = styled.div`
   z-index: 2;
@@ -96,23 +99,30 @@ const Content = styled.div<{ isOpen: boolean }>`
 interface Props {
   isOpen: boolean
   setIsOpen: any
-  children: any
 }
 
-const Sidebar: FC<Props> = ({ isOpen, setIsOpen, children }) => {
+const Sidebar: FC<Props> = ({ isOpen, setIsOpen }) => {
   const [isFullscreen, setIsFullscreen] = UseFullscreenToggle(false)
+  const [activeTabId, setActiveTab] = useState('todos')
+  const tabs = [{ id: 'todos', component: Todos }, { id: 'settings', component: Settings }]
+  const ActiveTab = tabs.find(tab => tab.id === activeTabId).component
 
   return (
     <Wrap>
-      <Tabs>
-        <Toggles>
-          <Toggle isActive={isFullscreen} svg={fullscreenSvg} onClick={setIsFullscreen} />
-        </Toggles>
-        <Tasks isOpen={isOpen} onClick={setIsOpen}>
-          <Tab svg={lisSvg} />
-        </Tasks>
-      </Tabs>
-      <Content isOpen={isOpen}>{children}</Content>
+      <Suspense fallback={<div />}>
+        <Tabs>
+          <Toggles>
+            <Toggle isActive={isFullscreen} svg={fullscreenSvg} onClick={setIsFullscreen} />
+          </Toggles>
+          <Tasks isOpen={isOpen} onClick={setIsOpen}>
+            <Tab svg={listSvg} onClick={() => setActiveTab('todos')} />
+            <Tab svg={cogSvg} onClick={() => setActiveTab('settings')} />
+          </Tasks>
+        </Tabs>
+        <Content isOpen={isOpen}>
+          <ActiveTab />
+        </Content>
+      </Suspense>
     </Wrap>
   )
 }

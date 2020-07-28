@@ -1,10 +1,9 @@
-import React, { Suspense, useState, useRef } from 'react'
+import React, { useState, useRef } from 'react'
 
 import styled from 'styled-components'
 import { STYLE_SIDEBAR_WIDTH_UNIT } from '../../styles'
 import Toast from '../../components/Toast/component'
 
-const Todos = React.lazy(() => import('./Sidebar/Todos'))
 import Sidebar from './Sidebar/Sidebar'
 import HourLabels from './Axis/HourLabels'
 import DayLabels from './Axis/DayLabels'
@@ -69,11 +68,7 @@ const Home = () => {
         <Toast />
       </Wrap>
 
-      <Sidebar isOpen={isOpen} setIsOpen={onSidebarToggle}>
-        <Suspense fallback={<div />}>
-          <Todos />
-        </Suspense>
-      </Sidebar>
+      <Sidebar isOpen={isOpen} setIsOpen={onSidebarToggle} />
     </PageWrap>
   )
 }
