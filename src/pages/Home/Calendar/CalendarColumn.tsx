@@ -20,6 +20,14 @@ const Wrap = styled.div<{ isCurrentWeek?: boolean; isCurrentDay: boolean }>`
   border-left: 1px solid var(--isabelline);
   width: 0;
 
+  &:hover {
+    border-left: 1px dashed #3d41503d;
+
+    & + div {
+      border-left: 1px dashed #3d41503d;
+    };
+  };
+
   &:first-child {
     border-left: 0;
   }
@@ -102,8 +110,8 @@ const CalendarColumn: FC<Props> = ({ timestamp, isCurrentDay, tasksFiltered, pla
   function updatePlaceholderTask(event: React.MouseEvent<HTMLDivElement, MouseEvent>) {
     if (taskBeingPrepared) return
     const columnTopPx = event.currentTarget.getBoundingClientRect().top
-    const placeholderY = event.clientY - columnTopPx
-    const nearestSegment = Math.floor(placeholderY / placeholderHeightPx) * placeholderHeightPx
+    const placeholderY = event.clientY - columnTopPx - (placeholderHeightPx / 4)
+    const nearestSegment = Math.floor(placeholderY / (placeholderHeightPx / 2)) * (placeholderHeightPx / 2)
     const isNewNearest = nearestSegment !== y
     if (isNewNearest) setY(nearestSegment)
   }
