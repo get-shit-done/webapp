@@ -62,6 +62,7 @@ export default `
     --dark-transparency: rgba(0, 0, 0, 0.4);
 
     --transition: 0.2s ease-out;
+    --transition-type: ease-out;
   }
   *,
   *::after,

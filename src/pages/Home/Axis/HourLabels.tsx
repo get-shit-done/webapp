@@ -20,7 +20,7 @@ const Wrap = styled.div<{ isBeingFiltered: boolean }>`
   padding-left: 8px;
   width: 24px;
   background-color: var(--jet);
-  transition: width var(--transition), padding var(--transition);
+  transition: width 0.1s var(--transition-type), padding 0.1s var(--transition-type);
 
   ${p =>
     p.isBeingFiltered &&
@@ -88,7 +88,7 @@ const HourLabel = styled.div<{ isFiltered: boolean; isActive: boolean; isBeingFi
 `
 
 interface Props {
-  onHover({}: { axis: string; isReset?: boolean }): void
+  onHover({ }: { axis: string; isReset?: boolean }): void
 }
 
 const HourLabels: FC<Props> = ({ onHover }) => {

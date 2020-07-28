@@ -7,53 +7,25 @@ import { useSelector } from 'react-redux'
 import CalendarColumn from './CalendarColumn'
 import { AppState } from '../../../Application/Root'
 
-const Wrap = styled.div<{ x: number; y: number }>`
+const Wrap = styled.div<{ scale: { x: number, y: number, duration: number } }>`
   position: relative;
   display: flex;
   flex-grow: 1;
   transform-origin: bottom right;
-  transition: transform var(--transition);
-  transform: ${p => `scale(${p.x}, ${p.y})`};
+  transition: transform ${p => p.scale.duration}s var(--transition-type);
+  transform: ${p => `scale(${p.scale.x}, ${p.scale.y})`};
 `
-
-// const Time = styled.div`
-//   position: absolute;
-//   z-index: 2;
-//   left: 300px;
-//   top: 400px;
-//   color: red;
-//   background-color: red;
-
-//   &::before, &::after {
-//     content: '';
-//     position: absolute;
-//     background-color: red;
-//   };
-
-//   &::before {
-//     top: 100%;
-//     right: 100%;
-//     width: 100vw;
-//     height: 1px;
-//   };
-
-//   &::after {
-//     right: 100%;
-//     width: 1px;
-//     height: 100vh;
-//     bottom: 100%;
-//   };
-// `
 
 interface Props {
   scale: {
     x: number
     y: number
+    duration: number,
   },
   calendarRef: any,
 }
 
-const Calendar: FC<Props> = ({ scale: { x, y }, calendarRef }) => {
+const Calendar: FC<Props> = ({ scale, calendarRef }) => {
   const { hoursAxis, daysAxis, allTasksByDay } = useSelector((state: AppState) => state.calendar)
   const placeholderHeightPx = calendarRef.current
     ? (calendarRef.current.getBoundingClientRect().height - 24) / (hoursAxis.length * 2)
@@ -61,7 +33,7 @@ const Calendar: FC<Props> = ({ scale: { x, y }, calendarRef }) => {
   // console.log(placeholderHeightPx)
 
   return (
-    <Wrap x={x} y={y}>
+    <Wrap scale={scale}>
       {/* <Time>
         time
       </Time> */}

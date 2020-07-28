@@ -82,6 +82,11 @@ const Cell = styled.div<{ isGap?: boolean; flex: number; accentColor?: string; i
   padding: 0 var(--size-sm);
   line-height: 1.5;
   color: ${p => (p.accentColor ? rgbAdjust(p.accentColor, -80) : 'red')};
+  cursor: pointer;
+
+  &:hover {
+    background-color: ${p => p.accentColor ? rgbAdjust(p.accentColor, -10) : 'transparent'};
+  };
 
   ${p =>
     p.isSmall &&
