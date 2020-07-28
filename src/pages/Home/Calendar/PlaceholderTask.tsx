@@ -71,15 +71,14 @@ interface Props {
 
 // TODO: get this calculation working - setting correct start time on different hours and zoom
 const PlaceholderTask: FC<Props> = ({ timestamp, hourSlotsRef, y, height30 }) => {
+  const dispatch = useAppDispatch()
   const { hoursAxis, taskBeingPrepared = { time: [] } } = useSelector((state: AppState) => state.calendar)
   const { groups, colors } = useSelector((state: AppState) => state.settings)
+  const colorId = groups.find(x => x.name === taskBeingPrepared.group)?.colorId
 
   // functionality needs to be extracted into hooks for reuse in edit modal
   const [{ yFromTime, heightFromTime }, setYAndHeightFromTime] = useState({ yFromTime: undefined, heightFromTime: height30 })
   const [{ isBeingEdited, time }, setTaskDetails] = useState({ isBeingEdited: false, time: [] })
-
-  const dispatch = useAppDispatch()
-  const colorId = groups.find(x => x.name === taskBeingPrepared.group)?.colorId
 
   function onPrepareNewTask() {
     const percentage = (y / hourSlotsRef.current.getBoundingClientRect().height) * 100
