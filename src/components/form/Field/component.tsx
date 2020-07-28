@@ -32,7 +32,7 @@ const Field: FC<Props> = ({
   const [value, setValue] = useState(defaultValue)
   const hasValue = value !== undefined && value !== ''
   const onChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = event.target
+    const { value } = event.target
     setValue(value)
   }
 
@@ -41,7 +41,7 @@ const Field: FC<Props> = ({
       <Placeholder theme={theme} hasValue={hasValue}>
         {placeholder}
       </Placeholder>
-      <Input name={name} type={type} isError={errorMessage} onChange={onChange} ref={inputRef} />
+      <Input defaultValue={value} name={name} type={type} isError={errorMessage} onChange={onChange} ref={inputRef} />
       {svg && <SvgStyled svg={svg} />}
       <ErrorField errorMessage={errorMessage} />
     </Wrap>

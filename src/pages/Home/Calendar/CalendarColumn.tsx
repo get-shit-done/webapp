@@ -20,6 +20,14 @@ const Wrap = styled.div<{ isCurrentWeek?: boolean; isCurrentDay: boolean }>`
   border-left: 1px solid var(--isabelline);
   width: 0;
 
+  &:hover {
+    border-left: 1px dashed #3d41503d;
+
+    & + div {
+      border-left: 1px dashed #3d41503d;
+    };
+  };
+
   &:first-child {
     border-left: 0;
   }
@@ -96,21 +104,26 @@ const CalendarColumn: FC<Props> = ({ timestamp, isCurrentDay, tasksFiltered, pla
   const dispatch = useAppDispatch()
 
   const [y, setY] = useState(0)
-  const [isEditModalOpen, setIsEditModalOpen] = useState(false)
+  const [isEditModalOpen, setIsTaskBeingEdited] = useState(false)
   const hourSlotsRef = useRef(null)
 
   function updatePlaceholderTask(event: React.MouseEvent<HTMLDivElement, MouseEvent>) {
     if (taskBeingPrepared) return
     const columnTopPx = event.currentTarget.getBoundingClientRect().top
-    const placeholderY = event.clientY - columnTopPx
-    const nearestSegment = Math.floor(placeholderY / placeholderHeightPx) * placeholderHeightPx
+    const placeholderY = event.clientY - columnTopPx - (placeholderHeightPx / 4)
+    const nearestSegment = Math.floor(placeholderY / (placeholderHeightPx / 2)) * (placeholderHeightPx / 2)
     const isNewNearest = nearestSegment !== y
     if (isNewNearest) setY(nearestSegment)
   }
 
   function onEditTask(_id: string) {
-    setIsEditModalOpen(true)
-    dispatch(actions.editTask({ _id, timestamp }))
+    setIsTaskBeingEdited(true)
+    dispatch(actions.editTaskPrepare({ _id, timestamp }))
+  }
+
+  function cancelTaskEditing() {
+    setIsTaskBeingEdited(false)
+    dispatch(actions.editTaskCancel())
   }
 
   return (
@@ -144,7 +157,7 @@ const CalendarColumn: FC<Props> = ({ timestamp, isCurrentDay, tasksFiltered, pla
         />
 
         {isEditModalOpen && (
-          <Modal title="task details" width={17} onOverlayToggle={() => setIsEditModalOpen(false)}>
+          <Modal title="task details" width={17} onOverlayToggle={() => cancelTaskEditing()}>
             <EditCalendarTask timestamp={timestamp} taskBeingEdited={taskBeingEdited} />
           </Modal>
         )}
