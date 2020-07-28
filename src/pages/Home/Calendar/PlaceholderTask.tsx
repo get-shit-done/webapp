@@ -18,7 +18,7 @@ const Lines = styled.div<{ top: number, isBeingPrepared: boolean, height: number
     display: flex;
   }
 
-  z-index: 22;
+  /* TODO: considering removing this entirely. think about it */
   &::before, &::after {
     content: '';
     position: fixed;
