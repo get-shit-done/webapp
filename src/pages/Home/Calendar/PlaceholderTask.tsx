@@ -49,9 +49,9 @@ const PlaceholderTaskWrap = styled.div<{ isBeingPrepared: boolean, top: number, 
   width: 100%;
   line-height: 1.5;
   color: ${p => (p.accentColor ? rgbAdjust(p.accentColor, -80) : 'red')};
-  background-color: ${p => p.accentColor || '#eee'};
+  background-color: ${p => p.accentColor || '#eeeeeea3'};
   box-shadow:
-    inset 4px 2px 0 0px var(--white),
+    inset 4px 3px 0 0px var(--white),
     inset -4px -2px 0 0px var(--white),
     0px 1px 0 0px var(--white),
     0px -1px 0 0px var(--white);
@@ -84,13 +84,12 @@ const PlaceholderTask: FC<Props> = ({ timestamp, hourSlotsRef, y, height30 }) =>
   const colorId = groups.find(x => x.name === taskBeingPrepared.group)?.colorId
 
   function onPrepareNewTask() {
-    const halfHoursToShow = [...hoursAxis.map(x => x), ...hoursAxis.map(x => x + 0.5)].sort((a, b) => a - b)
-    const visibleHalfHours = halfHoursToShow.length
     const percentage = (y / hourSlotsRef.current.getBoundingClientRect().height) * 100
-    const index = Math.round(visibleHalfHours / (100 / (percentage)))
-    const selectedHalfHour = halfHoursToShow[index]
-
-    setState({ isTaskBeingPrepared: true, time: [selectedHalfHour, selectedHalfHour + 0.5] })
+    const hourMin = hoursAxis[0]
+    const hourMax = hoursAxis[hoursAxis.length - 1] + 1
+    const alg = hourMin + (hourMax - hourMin) / 100 * percentage
+    const rounded = Math.round(alg / 0.25) * 0.25
+    setState({ isTaskBeingPrepared: true, time: [rounded, rounded + 0.5] })
   }
 
   useEffect(() => {
@@ -107,6 +106,8 @@ const PlaceholderTask: FC<Props> = ({ timestamp, hourSlotsRef, y, height30 }) =>
 
   const onModalClose = useCallback(() => {
     setState({ isTaskBeingPrepared: false, time: [] })
+    setPlaceholderY(undefined)
+    setDefaultTime([])
     dispatch(actions.removePreparedTask())
   }, [])
 
