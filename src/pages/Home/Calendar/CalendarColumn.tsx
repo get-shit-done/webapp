@@ -104,7 +104,7 @@ const CalendarColumn: FC<Props> = ({ timestamp, isCurrentDay, tasksFiltered, pla
   const dispatch = useAppDispatch()
 
   const [y, setY] = useState(0)
-  const [isEditModalOpen, setIsEditModalOpen] = useState(false)
+  const [isEditModalOpen, setIsTaskBeingEdited] = useState(false)
   const hourSlotsRef = useRef(null)
 
   function updatePlaceholderTask(event: React.MouseEvent<HTMLDivElement, MouseEvent>) {
@@ -117,8 +117,13 @@ const CalendarColumn: FC<Props> = ({ timestamp, isCurrentDay, tasksFiltered, pla
   }
 
   function onEditTask(_id: string) {
-    setIsEditModalOpen(true)
-    dispatch(actions.editTask({ _id, timestamp }))
+    setIsTaskBeingEdited(true)
+    dispatch(actions.editTaskPrepare({ _id, timestamp }))
+  }
+
+  function cancelTaskEditing() {
+    setIsTaskBeingEdited(false)
+    dispatch(actions.editTaskCancel())
   }
 
   return (
@@ -152,7 +157,7 @@ const CalendarColumn: FC<Props> = ({ timestamp, isCurrentDay, tasksFiltered, pla
         />
 
         {isEditModalOpen && (
-          <Modal title="task details" width={17} onOverlayToggle={() => setIsEditModalOpen(false)}>
+          <Modal title="task details" width={17} onOverlayToggle={() => cancelTaskEditing()}>
             <EditCalendarTask timestamp={timestamp} taskBeingEdited={taskBeingEdited} />
           </Modal>
         )}

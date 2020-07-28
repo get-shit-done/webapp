@@ -62,8 +62,22 @@ export const { reducer, actions } = createSlice({
     removePreparedTask(state) {
       state.taskBeingPrepared = undefined
     },
-    editTask(state, { payload: { _id, timestamp } }: PayloadAction<{ _id: string; timestamp: string }>): void {
+    editTaskPrepare(state, { payload: { _id, timestamp } }: PayloadAction<{ _id: string; timestamp: string }>): void {
       state.taskBeingEdited = state.allTasksByDay[timestamp].tasks.find(x => x._id === _id)
+    },
+    editTaskReplaceValues(state, { payload }: PayloadAction<SavedTask>): void {
+      const { _id, timestamp } = payload
+      const task = state.allTasksByDay[timestamp].tasks.find(x => x._id === _id)
+      for (const x in task) {
+        task[x] = payload[x] ?? task[x]
+      }
+    },
+    editTaskCancel(state): void {
+      const { _id, timestamp } = state.taskBeingEdited
+      const task = state.allTasksByDay[timestamp].tasks.find(x => x._id === _id)
+      for (const x in task) {
+        task[x] = state.taskBeingEdited[x]
+      }
     },
     saveTaskRequested(state, action) {},
     saveTaskSuccess(state, { payload }: PayloadAction<SavedTask>): void {

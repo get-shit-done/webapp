@@ -1,4 +1,4 @@
-import React, { useState, memo, FC } from 'react'
+import React, { useState, memo, FC, useEffect } from 'react'
 import { useSelector } from 'react-redux'
 import { useForm, SubmitHandler } from 'react-hook-form'
 import styled from 'styled-components'
@@ -32,11 +32,13 @@ const Remove = styled(Svg)`
 // TODO: timestamp should come from taskBeingEdited
 const EditCalendarTask: FC<Props> = ({ timestamp, taskBeingEdited }) => {
   const dispatch = useAppDispatch()
+  const { hoursAxis } = useSelector((state: AppState) => state.calendar)
   const { groups, colors } = useSelector((state: AppState) => state.settings)
   const [selectedGroup, setSelectedGroup] = useState(groups.find(x => x.name === taskBeingEdited.group))
   const { _id, time, name, group } = taskBeingEdited
   const accentColor = selectedGroup ? colors[selectedGroup.colorId] : undefined
   const onRemoveTask = () => dispatch(actions.removeTaskRequested({ _id, timestamp }))
+
 
   const onSubmit: SubmitHandler<FormValues> = (data): any => {
     const { name, from, to } = data
@@ -51,15 +53,26 @@ const EditCalendarTask: FC<Props> = ({ timestamp, taskBeingEdited }) => {
       }),
     )
   }
+  const { register, handleSubmit, watch, errors } = useForm<FormValues>()
 
-  const { register, handleSubmit, errors } = useForm({
-    defaultValues: {
-      from: time[0],
-      to: time[1],
-      name,
-      group,
-    },
-  })
+  const formfieldsUpdated: any = watch(['name', 'from', 'to'])
+
+  function updateTaskFromTime(formfields: any) {
+    if (Object.values(formfields).every(x => !x)) return
+
+    const formfieldsMapped = {
+      _id,
+      timestamp,
+      name: formfields.name,
+      group: selectedGroup.name,
+      time: [Number(formfields.from), Number(formfields.to)]
+    }
+    dispatch(actions.editTaskReplaceValues(formfieldsMapped))
+  }
+
+  useEffect(() => {
+    updateTaskFromTime(formfieldsUpdated)
+  }, [formfieldsUpdated.name, formfieldsUpdated.from, selectedGroup.name, formfieldsUpdated.to])
 
   return (
     <Form onSubmit={handleSubmit(onSubmit)}>
