@@ -30,12 +30,16 @@ const themes = {
     columnBorder: 'var(--isabelline)',
     columnHoverBg: '#fefcff',
     placeholderBorder: '#3d4150',
+    axisBg: 'var(--jet)',
+    axisBorder: '#ffffff42',
   },
   dark: {
     bg: '#2a2a2a',
     columnBorder: '#3c3b3b',
     columnHoverBg: '#333',
     placeholderBorder: '#fff',
+    axisBg: '#222',
+    axisBorder: '#3c3b3b',
   },
 }
 const THEME_DEFAULT = 'light'
