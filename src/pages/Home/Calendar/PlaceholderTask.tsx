@@ -62,20 +62,14 @@ const PlaceholderTaskWrap = styled.div<{
     box-shadow: 
       inset 4px 1px 0 0 ${p.theme.columnHoverBg},
       inset -4px -1px 0 0 ${p.theme.columnHoverBg},
-      inset 4px -1px 0 0 ${p.theme.columnHoverBg},
-      inset -4px 1px 0 0 ${p.theme.columnHoverBg},
       inset 6px 3px 0 0 ${p.theme.placeholderBorder},
-      inset -6px -3px 0 0 ${p.theme.placeholderBorder},
-      inset 6px -3px 0 0 ${p.theme.placeholderBorder},
-      inset -6px 3px 0 0 ${p.theme.placeholderBorder};
+      inset -6px -3px 0 0 ${p.theme.placeholderBorder};
   `};
   
   ${p => p.accentColor && `
     box-shadow: 
       inset 4px 1px 0 0 ${p.theme.columnHoverBg},
-      inset -4px -1px 0 0 ${p.theme.columnHoverBg},
-      inset 4px -1px 0 0 ${p.theme.columnHoverBg},
-      inset -4px 1px 0 0 ${p.theme.columnHoverBg};
+      inset -4px -1px 0 0 ${p.theme.columnHoverBg};
   `};
 
   .hour-slots:hover & {

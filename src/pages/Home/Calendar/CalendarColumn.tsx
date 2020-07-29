@@ -75,12 +75,10 @@ const Cell = styled.div<{ theme: { bg: string }, isGap?: boolean; flex: number; 
   flex-basis: 0;
   align-items: center;
   border-radius: 1px;
-  box-shadow:
-    inset 4px 1px 0 0 ${p => p.theme.bg},
-    inset -4px -1px 0 0 ${p => p.theme.bg},
-    inset 4px -1px 0 0 ${p => p.theme.bg},
-    inset -4px 1px 0 0 ${p => p.theme.bg}
-  ;
+  box-shadow: ${p => `
+    inset 4px 1px 0 0 ${p.theme.bg},
+    inset -4px -1px 0 0 ${p.theme.bg};
+  `};
   background-color: ${p => p.accentColor};
   display: block;
   padding: 0 var(--size-sm);
@@ -93,12 +91,10 @@ const Cell = styled.div<{ theme: { bg: string }, isGap?: boolean; flex: number; 
   };
 
   ${Wrap}:hover & {
-    box-shadow:
-      inset 4px 1px 0 0 ${p => p.theme.columnHoverBg},
-      inset -4px -1px 0 0 ${p => p.theme.columnHoverBg},
-      inset 4px -1px 0 0 ${p => p.theme.columnHoverBg},
-      inset -4px 1px 0 0 ${p => p.theme.columnHoverBg}
-    ;
+    box-shadow: ${p => `
+      inset 4px 1px 0 0 ${p.theme.columnHoverBg},
+      inset -4px -1px 0 0 ${p.theme.columnHoverBg};
+    `};
   };
 
   ${p =>
