@@ -17,7 +17,7 @@ const Wrap = styled.div`
   font-size: 13px;
   color: var(--lavender);
 `
-const Tabs = styled.div`
+const InnerWrap = styled.div`
   z-index: 1;
   height: 100%;
   background-color: var(--charcoal);
@@ -31,7 +31,7 @@ const Toggles = styled.div`
   position: absolute;
   top: 16px;
 `
-const Tasks = styled.div<{ isOpen: boolean }>`
+const TabToggle = styled.div<{ isActive: boolean }>`
   display: flex;
   align-items: center;
   justify-content: center;
@@ -50,7 +50,7 @@ const Tasks = styled.div<{ isOpen: boolean }>`
   }
 
   ${p =>
-    p.isOpen &&
+    p.isActive &&
     `
     svg {
       fill: var(--isabelline);
@@ -103,24 +103,39 @@ interface Props {
 
 const Sidebar: FC<Props> = ({ isOpen, setIsOpen }) => {
   const [isFullscreen, setIsFullscreen] = UseFullscreenToggle(false)
-  const [activeTabId, setActiveTab] = useState('todos')
-  const tabs = [{ id: 'todos', component: Todos }, { id: 'settings', component: Settings }]
-  const ActiveTab = tabs.find(tab => tab.id === activeTabId).component
+  const [activeTabId, setActiveTab] = useState(undefined)
+  const tabs = [{ id: 'todos', component: Todos, svg: listSvg }, { id: 'settings', component: Settings, svg: cogSvg }]
+  const ActiveTab = tabs.find(tab => tab.id === activeTabId)?.component
+  const handleTabClick = (id: string) => {
+    if (activeTabId === undefined) {
+      setIsOpen(true)
+      setActiveTab(id)
+    }
+    else if (id === activeTabId) {
+      setIsOpen(false)
+      setActiveTab(undefined)
+    }
+    else {
+      setActiveTab(id)
+    }
+  }
 
   return (
     <Wrap>
       <Suspense fallback={<div />}>
-        <Tabs>
+        <InnerWrap>
           <Toggles>
             <Toggle isActive={isFullscreen} svg={fullscreenSvg} onClick={setIsFullscreen} />
           </Toggles>
-          <Tasks isOpen={isOpen} onClick={setIsOpen}>
-            <Tab svg={listSvg} onClick={() => setActiveTab('todos')} />
-            <Tab svg={cogSvg} onClick={() => setActiveTab('settings')} />
-          </Tasks>
-        </Tabs>
+
+          {tabs.map(({ id, svg }) => (
+            <TabToggle key={id} isActive={id === activeTabId} onClick={() => handleTabClick(id)}>
+              <Tab svg={svg} />
+            </TabToggle>
+          ))}
+        </InnerWrap>
         <Content isOpen={isOpen}>
-          <ActiveTab />
+          {ActiveTab && <ActiveTab />}
         </Content>
       </Suspense>
     </Wrap>

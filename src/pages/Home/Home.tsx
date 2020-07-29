@@ -52,8 +52,8 @@ const Home = () => {
   const onSetCalendarScale = ({ isReset, axis }: { isReset?: boolean; axis: string }) => {
     setCalendarScale({ ref: calendarRef, inPixels: 26, isReset, axis, duration: 0.1 })
   }
-  const onSidebarToggle = () => {
-    setIsOpen(o => !o)
+  const onSidebarToggle = (openState: boolean) => {
+    setIsOpen(openState)
     setWrapScale({ ref: wrapRef, inPixels: Number(STYLE_SIDEBAR_WIDTH_UNIT) * 10, axis: 'x', duration: 0.2 })
   }
 
