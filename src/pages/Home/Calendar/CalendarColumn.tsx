@@ -12,12 +12,12 @@ import { AppState, useAppDispatch } from '../../../Application/Root'
 
 const CN_HOUR_SLOTS = 'hour-slots'
 
-const Wrap = styled.div<{ isCurrentWeek?: boolean; isCurrentDay: boolean }>`
+const Wrap = styled.div<{ theme: { columnBorder: string }, isCurrentWeek?: boolean; isCurrentDay: boolean }>`
   display: flex;
   flex-direction: column;
   flex-grow: 1;
   position: relative;
-  border-left: 1px solid var(--isabelline);
+  border-left: 1px solid ${p => p.theme.columnBorder};
   width: 0;
 
   &:hover {
@@ -42,11 +42,6 @@ const Wrap = styled.div<{ isCurrentWeek?: boolean; isCurrentDay: boolean }>`
     p.isCurrentDay &&
     `
     flex-grow: 2;
-    // background-color: var(--charcoal);
-
-    // .${CN_HOUR_SLOTS} * {
-    //   box-shadow: inset 0px 1px 0 0px var(--charcoal), inset 0px -1px 0 0px var(--charcoal) !important;
-    // };
   `};
 `
 
@@ -65,7 +60,7 @@ const HourSlots = styled.div`
     padding-left: 12px;
   }
 `
-const Cell = styled.div<{ isGap?: boolean; flex: number; accentColor?: string; isSmall?: boolean }>`
+const Cell = styled.div<{ theme: { bg: string }, isGap?: boolean; flex: number; accentColor?: string; isSmall?: boolean }>`
   ${ellipsis()};
   z-index: ${p => (p.isGap ? 0 : 1)};
   position: relative;
@@ -76,7 +71,7 @@ const Cell = styled.div<{ isGap?: boolean; flex: number; accentColor?: string; i
   flex-basis: 0;
   align-items: center;
   border-radius: 2px;
-  box-shadow: inset 4px 1px 0 0 var(--white), inset -4px -1px 0 0 var(--white);
+  box-shadow: inset 4px 1px 0 0 ${p => p.theme.bg}, inset -4px -1px 0 0 ${p => p.theme.bg};
   background-color: ${p => p.accentColor};
   display: block;
   padding: 0 var(--size-sm);

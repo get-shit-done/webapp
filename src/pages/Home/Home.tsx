@@ -33,13 +33,13 @@ const Wrap = styled.div<{ isOpen: boolean; scaleTest: any }>`
     transform: scale(${p.scaleTest.x}, ${p.scaleTest.y});
   `};
 `
-const CalendarWrap = styled.div`
+const CalendarWrap = styled.div<{ theme: { bg: string } }>`
   display: flex;
   flex-direction: column;
   flex-grow: 1;
   width: 100%;
   height: 100%;
-  background-color: var(--white);
+  background-color: ${p => p.theme.bg};
 `
 
 const Home = () => {

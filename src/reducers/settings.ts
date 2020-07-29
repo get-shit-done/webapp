@@ -6,21 +6,41 @@ export interface IGroup {
   colorId: string
 }
 
+interface ITheme {
+  [key: string]: any
+  bg: string
+  columnBorder: string
+}
+
 interface IInitialState {
   [key: string]: any
   defaultHoursFrom: number
   defaultHoursTo: number
-  theme: string
+  themeName: string
+  themeValues: ITheme
   colors: {
     [key: string]: string
   }
   groups: IGroup[]
 }
 
+const themes = {
+  light: {
+    bg: '#fff',
+    columnBorder: 'var(--isabelline)',
+  },
+  dark: {
+    bg: '#2a2a2a',
+    columnBorder: '#3c3b3b',
+  },
+}
+const THEME_DEFAULT = 'light'
+
 const initialState: IInitialState = {
   defaultHoursFrom: 6,
   defaultHoursTo: 23,
-  theme: 'light',
+  themeName: THEME_DEFAULT,
+  themeValues: themes[THEME_DEFAULT],
   colors: {
     aero_blue: 'rgb(216, 255, 230)',
     papaya_whip: 'rgb(255, 236, 210)',
@@ -105,7 +125,9 @@ export const { reducer, actions } = createSlice({
       })
     },
     toggleTheme(state): void {
-      state.theme === 'light' ? (state.theme = 'dark') : (state.theme = 'light')
+      const { themeName } = state
+      state.themeValues = themeName === 'light' ? themes['dark'] : themes['light']
+      state.themeName = themeName === 'light' ? 'dark' : 'light'
     },
   },
 })

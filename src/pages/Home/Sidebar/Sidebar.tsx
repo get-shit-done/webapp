@@ -140,7 +140,7 @@ const Sidebar: FC<Props> = ({ isOpen, setIsOpen }) => {
         <InnerWrap>
           <Toggles>
             <Toggle isActive={isFullscreen} svg={fullscreenSvg} onClick={setIsFullscreen} />
-            <Toggle isActive={theme === 'dark'} svg={paintSvg} onClick={toggleDarkTheme} />
+            <Toggle isActive={false} svg={paintSvg} onClick={toggleDarkTheme} />
           </Toggles>
 
           {tabs.map(({ id, svg }) => (
