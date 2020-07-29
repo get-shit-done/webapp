@@ -1,6 +1,6 @@
 import styled from 'styled-components'
 
-import { STYLE_PLACEHOLDER_COLOR_DARK, STYLE_PLACEHOLDER_COLOR_LIGHT } from '../shared'
+import { STYLE_PLACEHOLDER_COLOR_DARK, STYLE_PLACEHOLDER_COLOR_LIGHT } from './shared'
 
 export default styled.div<{ isError?: boolean; hasValue: boolean }>`
   position: absolute;

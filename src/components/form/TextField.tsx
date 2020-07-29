@@ -1,8 +1,8 @@
 import React, { FC, memo, useState } from 'react'
 
-import Placeholder from '../Placeholder/component'
-import { SvgStyled, Input, Wrap } from '../shared'
-import ErrorField from '../../error/Field/component'
+import Placeholder from './Placeholder'
+import { SvgStyled, Input, Wrap } from './shared'
+import ErrorField from '../error/Field/component'
 
 interface Props {
   isInForm?: boolean
@@ -35,13 +35,21 @@ const Field: FC<Props> = ({
     const { value } = event.target
     setValue(value)
   }
+  console.log(name, errorMessage, value)
 
   return (
     <Wrap isInForm={isInForm} theme={theme} className={className}>
       <Placeholder theme={theme} hasValue={hasValue}>
         {placeholder}
       </Placeholder>
-      <Input defaultValue={value} name={name} type={type} isError={errorMessage} onChange={onChange} ref={inputRef} />
+      <Input
+        defaultValue={value}
+        name={name}
+        type={type}
+        isError={errorMessage}
+        onChange={onChange}
+        ref={inputRef}
+      />
       {svg && <SvgStyled svg={svg} />}
       <ErrorField errorMessage={errorMessage} />
     </Wrap>
