@@ -141,6 +141,7 @@ const Sidebar: FC<Props> = ({ isOpen, setIsOpen }) => {
         <InnerWrap>
           <Toggles>
             <Toggle isActive={isFullscreen} svg={fullscreenSvg} onClick={setIsFullscreen} />
+            {/* TODO: add enum */}
             {themeName === 'light' && <Toggle isActive svg={sunSvg} onClick={toggleDarkTheme} />}
             {themeName === 'dark' && <Toggle isActive svg={moonSvg} onClick={toggleDarkTheme} />}
           </Toggles>

@@ -5,7 +5,7 @@ import startOfToday from 'date-fns/startOfToday'
 import format from 'date-fns/format'
 import add from 'date-fns/add'
 
-const Wrap = styled.div<{ top: number }>`
+const Wrap = styled.div<{ theme: { currentTimeBg: string, currentTimeBorder: string }; top: number }>`
   z-index: 2;
   position: absolute;
   top: ${p => p.top}%;
@@ -13,7 +13,7 @@ const Wrap = styled.div<{ top: number }>`
   left: 0;
   display: flex;
   align-items: center;
-  border-bottom: 1px solid #65656569;
+  border-bottom: 1px solid ${p => p.theme.currentTimeBorder};
 
   &::before {
     content: '';
@@ -24,16 +24,17 @@ const Wrap = styled.div<{ top: number }>`
     height: 8px;
     background: var(--white);
     border-radius: 50%;
-    box-shadow: inset 0 0 0 1px var(--granite-gray);
-  }
+    box-shadow: inset 0 0 0 1px ${p => p.theme.currentTimeBorder};
+  };
 `
-const Time = styled.span`
+const Time = styled.span<{ theme: { currentTimeBg: string, currentTimeColor: string, currentTimeBorder: string } }>`
   position: absolute;
   right: 0;
   padding: 4px 6px;
   font-size: 10px;
-  background: var(--granite-gray);
-  color: var(--white-smoke);
+  background: ${p => p.theme.currentTimeBg};
+  color: ${p => p.theme.currentTimeColor};
+  box-shadow: inset 0px 0px 0 1px ${p => p.theme.currentTimeBg}, inset 0px 0px 0 2px ${p => p.theme.currentTimeBorder};
 `
 const MINUTES_IN_DAY = 1440
 

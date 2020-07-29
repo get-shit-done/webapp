@@ -32,6 +32,9 @@ const themes = {
     placeholderBorder: '#3d4150',
     axisBg: 'var(--jet)',
     axisBorder: '#ffffff42',
+    currentTimeBg: 'var(--jet)',
+    currentTimeBorder: 'var(--jet)',
+    currentTimeColor: 'var(--white-smoke)',
   },
   dark: {
     bg: '#2a2a2a',
@@ -40,6 +43,9 @@ const themes = {
     placeholderBorder: '#fff',
     axisBg: '#222',
     axisBorder: '#3c3b3b',
+    currentTimeBg: '#fff',
+    currentTimeBorder: '#222',
+    currentTimeColor: '#222',
   },
 }
 const THEME_DEFAULT = 'light'
