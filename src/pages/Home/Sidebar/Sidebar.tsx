@@ -4,7 +4,8 @@ import { STYLE_SIDEBAR_WIDTH_UNIT } from '../../../styles'
 import listSvg from '../../../assets/svg/list.svg'
 import cogSvg from '../../../assets/svg/cog.svg'
 import fullscreenSvg from '../../../assets/svg/fullscreen.svg'
-import paintSvg from '../../../assets/svg/drop.svg'
+import sunSvg from '../../../assets/svg/sun.svg'
+import moonSvg from '../../../assets/svg/moon.svg'
 import Svg from '../../../components/Svg/component'
 import UseFullscreenToggle from '../../../hooks/useFullscreenToggle'
 import TabHOC from './TabHOC'
@@ -110,7 +111,7 @@ interface Props {
 
 const Sidebar: FC<Props> = ({ isOpen, setIsOpen }) => {
   const dispatch = useAppDispatch()
-  const { theme } = useSelector((state: AppState) => state.settings)
+  const { themeName } = useSelector((state: AppState) => state.settings)
   const [isFullscreen, setIsFullscreen] = UseFullscreenToggle(false)
   const [activeTabId, setActiveTab] = useState(undefined)
   const tabs = [
@@ -140,7 +141,8 @@ const Sidebar: FC<Props> = ({ isOpen, setIsOpen }) => {
         <InnerWrap>
           <Toggles>
             <Toggle isActive={isFullscreen} svg={fullscreenSvg} onClick={setIsFullscreen} />
-            <Toggle isActive={false} svg={paintSvg} onClick={toggleDarkTheme} />
+            {themeName === 'light' && <Toggle isActive svg={sunSvg} onClick={toggleDarkTheme} />}
+            {themeName === 'dark' && <Toggle isActive svg={moonSvg} onClick={toggleDarkTheme} />}
           </Toggles>
 
           {tabs.map(({ id, svg }) => (
