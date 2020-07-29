@@ -2,25 +2,20 @@ import React, { useState, memo, FC, useEffect } from 'react'
 import { useSelector } from 'react-redux'
 import { useForm, SubmitHandler } from 'react-hook-form'
 import styled from 'styled-components'
-import TextField from '../../../components/form/Field/component'
+import { TextField, Dropdown } from '../../../components/form'
 import Button from '../../../components/Button/component'
-import Dropdown from '../../../components/form/Dropdown'
 import binSvg from '../../../assets/svg/bin.svg'
 import Svg from '../../../components/Svg/component'
 import { actions, TaskWithMeta } from '../../../reducers/calendar'
 import { AppState, useAppDispatch } from '../../../Application/Root'
 import { ModalFooter } from '../../../components/Modal'
+import { CalendarFormValues } from './shared'
 
 const Form = styled.form``
 
 interface Props {
   timestamp: string
   taskBeingEdited: TaskWithMeta
-}
-type FormValues = {
-  name: string
-  to: number
-  from: number
 }
 const Remove = styled(Svg)`
   margin-left: var(--size-xlg);
@@ -32,7 +27,6 @@ const Remove = styled(Svg)`
 // TODO: timestamp should come from taskBeingEdited
 const EditCalendarTask: FC<Props> = ({ timestamp, taskBeingEdited }) => {
   const dispatch = useAppDispatch()
-  const { hoursAxis } = useSelector((state: AppState) => state.calendar)
   const { groups, colors } = useSelector((state: AppState) => state.settings)
   const [selectedGroup, setSelectedGroup] = useState(groups.find(x => x.name === taskBeingEdited.group))
   const { _id, time, name, group } = taskBeingEdited
@@ -40,7 +34,7 @@ const EditCalendarTask: FC<Props> = ({ timestamp, taskBeingEdited }) => {
   const onRemoveTask = () => dispatch(actions.removeTaskRequested({ _id, timestamp }))
 
 
-  const onSubmit: SubmitHandler<FormValues> = (data): any => {
+  const onSubmit: SubmitHandler<CalendarFormValues> = (data): any => {
     const { name, from, to } = data
     return dispatch(
       // TODO: name being redeclared but linter not complaining. FIX LINTING
@@ -53,26 +47,21 @@ const EditCalendarTask: FC<Props> = ({ timestamp, taskBeingEdited }) => {
       }),
     )
   }
-  const { register, handleSubmit, watch, errors } = useForm<FormValues>()
+  const { register, handleSubmit, watch, errors } = useForm<CalendarFormValues>()
+  const watchedFields = watch()
 
-  const formfieldsUpdated: any = watch(['name', 'from', 'to'])
-
-  function updateTaskFromTime(formfields: any) {
-    if (Object.values(formfields).every(x => !x)) return
+  useEffect(() => {
+    if (Object.values(watchedFields).every(x => !x)) return
 
     const formfieldsMapped = {
       _id,
       timestamp,
-      name: formfields.name,
+      name: watchedFields.name,
       group: selectedGroup.name,
-      time: [Number(formfields.from), Number(formfields.to)]
+      time: [Number(watchedFields.from), Number(watchedFields.to)]
     }
     dispatch(actions.editTaskReplaceValues(formfieldsMapped))
-  }
-
-  useEffect(() => {
-    updateTaskFromTime(formfieldsUpdated)
-  }, [formfieldsUpdated.name, formfieldsUpdated.from, selectedGroup.name, formfieldsUpdated.to])
+  }, [watchedFields.name, watchedFields.from, selectedGroup.name, watchedFields.to])
 
   return (
     <Form onSubmit={handleSubmit(onSubmit)}>
