@@ -12,21 +12,25 @@ import { AppState, useAppDispatch } from '../../../Application/Root'
 
 const CN_HOUR_SLOTS = 'hour-slots'
 
-const Wrap = styled.div<{ isCurrentWeek?: boolean; isCurrentDay: boolean }>`
+const Wrap = styled.div<{ theme: { columnBorder: string }, isCurrentWeek?: boolean; isCurrentDay: boolean }>`
   display: flex;
   flex-direction: column;
   flex-grow: 1;
   position: relative;
-  border-left: 1px solid var(--isabelline);
+  border-left: 1px solid ${p => p.theme.columnBorder};
   width: 0;
 
-  &:hover {
-    border-left: 1px dashed #3d41503d;
+  /* &:hover {
+    border-left-style: dashed;
 
     & + div {
-      border-left: 1px dashed #3d41503d;
+      border-left-style: dashed;
     };
-  };
+  }; */
+
+  &:hover {
+    background-color: ${p => p.theme.columnHoverBg}
+  }
 
   &:first-child {
     border-left: 0;
@@ -42,11 +46,6 @@ const Wrap = styled.div<{ isCurrentWeek?: boolean; isCurrentDay: boolean }>`
     p.isCurrentDay &&
     `
     flex-grow: 2;
-    // background-color: var(--charcoal);
-
-    // .${CN_HOUR_SLOTS} * {
-    //   box-shadow: inset 0px 1px 0 0px var(--charcoal), inset 0px -1px 0 0px var(--charcoal) !important;
-    // };
   `};
 `
 
@@ -65,7 +64,7 @@ const HourSlots = styled.div`
     padding-left: 12px;
   }
 `
-const Cell = styled.div<{ isGap?: boolean; flex: number; accentColor?: string; isSmall?: boolean }>`
+const Cell = styled.div<{ theme: { bg: string }, isGap?: boolean; flex: number; accentColor?: string; isSmall?: boolean }>`
   ${ellipsis()};
   z-index: ${p => (p.isGap ? 0 : 1)};
   position: relative;
@@ -75,8 +74,11 @@ const Cell = styled.div<{ isGap?: boolean; flex: number; accentColor?: string; i
   flex-shrink: 0;
   flex-basis: 0;
   align-items: center;
-  border-radius: 2px;
-  box-shadow: inset 4px 1px 0 0 var(--white), inset -4px -1px 0 0 var(--white);
+  border-radius: 1px;
+  box-shadow: ${p => `
+    inset 4px 1px 0 0 ${p.theme.bg},
+    inset -4px -1px 0 0 ${p.theme.bg};
+  `};
   background-color: ${p => p.accentColor};
   display: block;
   padding: 0 var(--size-sm);
@@ -86,6 +88,13 @@ const Cell = styled.div<{ isGap?: boolean; flex: number; accentColor?: string; i
 
   &:hover {
     background-color: ${p => p.accentColor ? rgbAdjust(p.accentColor, -10) : 'transparent'};
+  };
+
+  ${Wrap}:hover & {
+    box-shadow: ${p => `
+      inset 4px 1px 0 0 ${p.theme.columnHoverBg},
+      inset -4px -1px 0 0 ${p.theme.columnHoverBg};
+    `};
   };
 
   ${p =>

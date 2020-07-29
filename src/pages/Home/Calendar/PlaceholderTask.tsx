@@ -19,7 +19,7 @@ const Lines = styled.div<{ top: number, isBeingPrepared: boolean, height: number
   }
 
   /* TODO: considering removing this entirely. think about it */
-  &::before, &::after {
+  /* &::before, &::after {
     content: '';
     position: fixed;
     right: 0;
@@ -35,9 +35,15 @@ const Lines = styled.div<{ top: number, isBeingPrepared: boolean, height: number
   &::after {
     border-bottom: 1px dashed #3d41503d;
     transform: translateY(${p => p.height}px);
-  };
+  }; */
 `
-const PlaceholderTaskWrap = styled.div<{ isBeingPrepared: boolean, top: number, height: number, accentColor: string }>`
+const PlaceholderTaskWrap = styled.div<{
+  theme: { bg: string, columnHoverBg: string, placeholderBorder: string },
+  isBeingPrepared: boolean,
+  top: number,
+  height: number,
+  accentColor: string,
+}>`
   ${ellipsis()};
   display: ${p => (p.isBeingPrepared ? 'block' : 'none')};
   position: absolute;
@@ -49,13 +55,22 @@ const PlaceholderTaskWrap = styled.div<{ isBeingPrepared: boolean, top: number, 
   width: 100%;
   line-height: 1.5;
   color: ${p => (p.accentColor ? rgbAdjust(p.accentColor, -80) : 'red')};
-  background-color: ${p => p.accentColor || '#eeeeeea3'};
-  box-shadow:
-    inset 4px 3px 0 0px var(--white),
-    inset -4px -2px 0 0px var(--white),
-    0px 1px 0 0px var(--white),
-    0px -1px 0 0px var(--white);
-  border-radius: 2px;
+  background-color: ${p => p.accentColor || p.theme.bg};
+  border-radius: 1px;
+  
+  ${p => !p.accentColor && `
+    box-shadow: 
+      inset 4px 1px 0 0 ${p.theme.columnHoverBg},
+      inset -4px -1px 0 0 ${p.theme.columnHoverBg},
+      inset 6px 3px 0 0 ${p.theme.placeholderBorder},
+      inset -6px -3px 0 0 ${p.theme.placeholderBorder};
+  `};
+  
+  ${p => p.accentColor && `
+    box-shadow: 
+      inset 4px 1px 0 0 ${p.theme.columnHoverBg},
+      inset -4px -1px 0 0 ${p.theme.columnHoverBg};
+  `};
 
   .hour-slots:hover & {
     display: flex;

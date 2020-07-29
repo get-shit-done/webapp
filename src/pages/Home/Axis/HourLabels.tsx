@@ -7,7 +7,7 @@ import UseHighlightFilteredRange from '../../../hooks/useHighlightFIlteredRange'
 import { actions } from '../../../reducers/calendar'
 import { AppState } from '../../../Application/Root'
 
-const Wrap = styled.div<{ isBeingFiltered: boolean }>`
+const Wrap = styled.div<{ theme: { axisBg: string }, isBeingFiltered: boolean }>`
   z-index: 2;
   display: flex;
   position: absolute;
@@ -19,7 +19,7 @@ const Wrap = styled.div<{ isBeingFiltered: boolean }>`
   padding-bottom: 12px;
   padding-left: 8px;
   width: 24px;
-  background-color: var(--jet);
+  background-color: ${p => p.theme.axisBg};
   transition: width 0.1s var(--transition-type), padding 0.1s var(--transition-type);
 
   ${p =>
@@ -34,13 +34,18 @@ const Wrap = styled.div<{ isBeingFiltered: boolean }>`
     width: 50px;
   }
 `
-const HourLabel = styled.div<{ isFiltered: boolean; isActive: boolean; isBeingFiltered: boolean }>`
+const HourLabel = styled.div<{
+  theme: { axisBg: string, axisBorder: string };
+  isFiltered: boolean;
+  isActive: boolean;
+  isBeingFiltered: boolean;
+}>`
   position: relative;
   display: flex;
   justify-content: center;
   align-items: center;
   flex-grow: 1;
-  border-right: 4px solid var(--jet);
+  border-right: 4px solid ${p => p.theme.axisBg};
   text-align: center;
   font-size: 10px;
   color: var(--pastel-gray);
@@ -54,7 +59,7 @@ const HourLabel = styled.div<{ isFiltered: boolean; isActive: boolean; isBeingFi
     p.isActive &&
     `
     background-color: var(--arsenic);
-    box-shadow: inset 4px 0 0 0px var(--jet), inset -4px 0 0 0px var(--jet)
+    box-shadow: inset 4px 0 0 0px ${p.theme.axisBg}, inset -4px 0 0 0px ${p.theme.axisBg}
   `};
 
   &::before {
@@ -65,7 +70,7 @@ const HourLabel = styled.div<{ isFiltered: boolean; isActive: boolean; isBeingFi
     width: 6px;
     height: 1px;
     bottom: 0;
-    background-color: #ffffff42;
+    background-color: ${p => p.theme.axisBorder};
 
     ${Wrap}:hover & {
       display: none;

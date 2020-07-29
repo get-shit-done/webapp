@@ -11,7 +11,7 @@ import { MONTH_DAYS } from '../../../constants'
 import { flex } from '../../../styles'
 import { AppState } from '../../../Application/Root'
 
-const Wrap = styled.div<{ isBeingFiltered: boolean }>`
+const Wrap = styled.div<{ theme: { axisBg: string }, isBeingFiltered: boolean }>`
   position: absolute;
   top: 0;
   right: 0;
@@ -21,12 +21,10 @@ const Wrap = styled.div<{ isBeingFiltered: boolean }>`
   height: 24px;
   font-size: 10px;
   color: var(--pastel-gray);
-  background: var(--jet);
+  background: ${p => p.theme.axisBg};
   transition: height 0.1s var(--transition-type), padding 0.1s var(--transition-type);
 
-  ${p =>
-    p.isBeingFiltered &&
-    `
+  ${p => p.isBeingFiltered && `
     height: 50px;
   `};
 
@@ -35,15 +33,16 @@ const Wrap = styled.div<{ isBeingFiltered: boolean }>`
   }
 `
 const DayLabel = styled.div<{
-  isBeingFiltered: boolean
-  isCurrentWeek?: boolean
-  isCurrentDay: boolean
-  isActive: boolean
-  isFiltered: boolean
+  theme: { axisBg: string, axisBorder: string };
+  isBeingFiltered: boolean;
+  isCurrentWeek?: boolean;
+  isCurrentDay: boolean;
+  isActive: boolean;
+  isFiltered: boolean;
 }>`
   ${flex({ grow: 1, shrink: 0, basis: 0, isCenter: true })};
   position: relative;
-  border-bottom: 4px solid var(--jet);
+  border-bottom: 4px solid ${p => p.theme.axisBg};
   border-left: 1px solid transparent;
   padding-top: 8px;
   cursor: pointer;
@@ -100,11 +99,11 @@ const DayLabel = styled.div<{
     `
     flex-grow: 2;
     background-color: var(--white);
-    color: var(--jet);
+    color: ${p.theme.axisBg};
     ${!p.isActive && 'border-bottom: 4px solid var(--white)'};
 
     &:hover {
-      border-bottom: 4px solid var(--jet);
+      border-bottom: 4px solid ${p.theme.axisBg};
     };
 
     & + .day-label-should-be-component-butTS {
@@ -131,7 +130,7 @@ const DayLabel = styled.div<{
     p.isActive &&
     `
     background-color: var(--arsenic);
-    box-shadow: inset 0px 4px 0 0px var(--jet), inset 0px -4px 0 0px var(--jet);
+    box-shadow: inset 0px 4px 0 0px ${p.theme.axisBg}, inset 0px -4px 0 0px ${p.theme.axisBg};
     color: var(--isabelline);
   `};
 
@@ -139,11 +138,11 @@ const DayLabel = styled.div<{
     display: block;
     content: '';
     position: absolute;
-    left: 0;
+    left: -1px;
     width: 1px;
     height: 6px;
     bottom: -4px;
-    background-color: #ffffff42;
+    background-color: ${p => p.theme.axisBorder};
   }
 `
 interface Props {
