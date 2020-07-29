@@ -14,7 +14,7 @@ interface Props {
   svg?: string
   errorMessage?: string
   className?: string
-  inputRef(instance: HTMLInputElement): void
+  inputRef(instance: HTMLInputElement): void,
 }
 
 const Field: FC<Props> = ({
@@ -35,7 +35,6 @@ const Field: FC<Props> = ({
     const { value } = event.target
     setValue(value)
   }
-  console.log(name, errorMessage, value)
 
   return (
     <Wrap isInForm={isInForm} theme={theme} className={className}>

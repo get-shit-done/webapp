@@ -1,7 +1,7 @@
 import React, { FC } from 'react'
 import { useForm } from 'react-hook-form'
 import styled from 'styled-components'
-import TextField from '../../../components/form/Field/component'
+import { TextField } from '../../../components/form'
 
 const Form = styled.form`
   margin-bottom: var(--size-md);
@@ -23,7 +23,7 @@ const AddNewTodo: FC<IProps> = ({ addNewTodo }) => {
         name="todo"
         placeholder="add todo"
         errorMessage={errorMessage}
-        inputRef={register({ required: true, maxLength: 80 })}
+        inputRef={register({ required: true, maxLength: 20 })}
       />
     </Form>
   )
