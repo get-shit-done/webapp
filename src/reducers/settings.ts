@@ -28,10 +28,14 @@ const themes = {
   light: {
     bg: '#fff',
     columnBorder: 'var(--isabelline)',
+    columnHoverBg: '#fefcff',
+    placeholderBorder: '#3d4150',
   },
   dark: {
     bg: '#2a2a2a',
     columnBorder: '#3c3b3b',
+    columnHoverBg: '#333',
+    placeholderBorder: '#fff',
   },
 }
 const THEME_DEFAULT = 'light'
