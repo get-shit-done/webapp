@@ -6,6 +6,7 @@ import cogSvg from '../../../assets/svg/cog.svg'
 import fullscreenSvg from '../../../assets/svg/fullscreen.svg'
 import Svg from '../../../components/Svg/component'
 import UseFullscreenToggle from '../../../hooks/useFullscreenToggle'
+import TabHOC from './TabHOC'
 
 const Todos = React.lazy(() => import('./Todos'))
 const Settings = React.lazy(() => import('./Settings'))
@@ -88,6 +89,7 @@ const Content = styled.div<{ isOpen: boolean }>`
   box-shadow: inset -1px 0 0 0px var(--independence);
   transform: translateX(100%);
   transition: transform 0.2s var(--transition-type);
+  overflow: hidden;
 
   ${p =>
     p.isOpen &&
@@ -104,8 +106,18 @@ interface Props {
 const Sidebar: FC<Props> = ({ isOpen, setIsOpen }) => {
   const [isFullscreen, setIsFullscreen] = UseFullscreenToggle(false)
   const [activeTabId, setActiveTab] = useState(undefined)
-  const tabs = [{ id: 'todos', component: Todos, svg: listSvg }, { id: 'settings', component: Settings, svg: cogSvg }]
-  const ActiveTab = tabs.find(tab => tab.id === activeTabId)?.component
+  const tabs = [
+    {
+      id: 'todos',
+      Component: TabHOC(Todos),
+      svg: listSvg,
+    },
+    {
+      id: 'settings',
+      Component: TabHOC(Settings),
+      svg: cogSvg,
+    }
+  ]
   const handleTabClick = (id: string) => {
     if (activeTabId === undefined) {
       setIsOpen(true)
@@ -135,7 +147,7 @@ const Sidebar: FC<Props> = ({ isOpen, setIsOpen }) => {
           ))}
         </InnerWrap>
         <Content isOpen={isOpen}>
-          {ActiveTab && <ActiveTab />}
+          {tabs.map(({ id, Component }) => <Component key={id} isActive={id === activeTabId} title={id} />)}
         </Content>
       </Suspense>
     </Wrap>
