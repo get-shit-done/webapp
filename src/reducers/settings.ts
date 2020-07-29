@@ -10,6 +10,7 @@ interface IInitialState {
   [key: string]: any
   defaultHoursFrom: number
   defaultHoursTo: number
+  theme: string
   colors: {
     [key: string]: string
   }
@@ -19,6 +20,7 @@ interface IInitialState {
 const initialState: IInitialState = {
   defaultHoursFrom: 6,
   defaultHoursTo: 23,
+  theme: 'light',
   colors: {
     aero_blue: 'rgb(216, 255, 230)',
     papaya_whip: 'rgb(255, 236, 210)',
@@ -101,6 +103,9 @@ export const { reducer, actions } = createSlice({
       Object.entries(payload).forEach(([key, value]) => {
         state[key] = value
       })
+    },
+    toggleTheme(state): void {
+      state.theme === 'light' ? (state.theme = 'dark') : (state.theme = 'light')
     },
   },
 })

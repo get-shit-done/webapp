@@ -4,9 +4,13 @@ import { STYLE_SIDEBAR_WIDTH_UNIT } from '../../../styles'
 import listSvg from '../../../assets/svg/list.svg'
 import cogSvg from '../../../assets/svg/cog.svg'
 import fullscreenSvg from '../../../assets/svg/fullscreen.svg'
+import paintSvg from '../../../assets/svg/drop.svg'
 import Svg from '../../../components/Svg/component'
 import UseFullscreenToggle from '../../../hooks/useFullscreenToggle'
 import TabHOC from './TabHOC'
+import { useAppDispatch, AppState } from '../../../Application/Root'
+import { useSelector } from 'react-redux'
+import { actions } from '../../../reducers/settings'
 
 const Todos = React.lazy(() => import('./Todos'))
 const Settings = React.lazy(() => import('./Settings'))
@@ -30,7 +34,21 @@ const InnerWrap = styled.div`
 `
 const Toggles = styled.div`
   position: absolute;
-  top: 16px;
+  top: 6px;
+`
+const Toggle = styled(Svg) <{ isActive: boolean }>`
+  padding: 1rem;
+  width: 4rem;
+  height: 4rem;
+  cursor: pointer;
+
+  ${p =>
+    p.isActive &&
+    `
+    svg {
+      fill: var(--isabelline);
+    };
+  `};
 `
 const TabToggle = styled.div<{ isActive: boolean }>`
   display: flex;
@@ -49,19 +67,6 @@ const TabToggle = styled.div<{ isActive: boolean }>`
       fill: var(--isabelline);
     }
   }
-
-  ${p =>
-    p.isActive &&
-    `
-    svg {
-      fill: var(--isabelline);
-    };
-  `};
-`
-const Toggle = styled(Svg) <{ isActive: boolean }>`
-  width: 2rem;
-  height: 2rem;
-  cursor: pointer;
 
   ${p =>
     p.isActive &&
@@ -104,6 +109,8 @@ interface Props {
 }
 
 const Sidebar: FC<Props> = ({ isOpen, setIsOpen }) => {
+  const dispatch = useAppDispatch()
+  const { theme } = useSelector((state: AppState) => state.settings)
   const [isFullscreen, setIsFullscreen] = UseFullscreenToggle(false)
   const [activeTabId, setActiveTab] = useState(undefined)
   const tabs = [
@@ -119,17 +126,12 @@ const Sidebar: FC<Props> = ({ isOpen, setIsOpen }) => {
     }
   ]
   const handleTabClick = (id: string) => {
-    if (activeTabId === undefined) {
-      setIsOpen(true)
-      setActiveTab(id)
-    }
-    else if (id === activeTabId) {
-      setIsOpen(false)
-      setActiveTab(undefined)
-    }
-    else {
-      setActiveTab(id)
-    }
+    setActiveTab(id === activeTabId ? undefined : id)
+    !activeTabId && setIsOpen(true)
+    activeTabId === id && setIsOpen(false)
+  }
+  const toggleDarkTheme = () => {
+    dispatch(actions.toggleTheme())
   }
 
   return (
@@ -138,6 +140,7 @@ const Sidebar: FC<Props> = ({ isOpen, setIsOpen }) => {
         <InnerWrap>
           <Toggles>
             <Toggle isActive={isFullscreen} svg={fullscreenSvg} onClick={setIsFullscreen} />
+            <Toggle isActive={theme === 'dark'} svg={paintSvg} onClick={toggleDarkTheme} />
           </Toggles>
 
           {tabs.map(({ id, svg }) => (
