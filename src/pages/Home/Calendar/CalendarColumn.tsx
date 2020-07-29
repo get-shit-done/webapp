@@ -20,13 +20,17 @@ const Wrap = styled.div<{ theme: { columnBorder: string }, isCurrentWeek?: boole
   border-left: 1px solid ${p => p.theme.columnBorder};
   width: 0;
 
-  &:hover {
-    border-left: 1px dashed #3d41503d;
+  /* &:hover {
+    border-left-style: dashed;
 
     & + div {
-      border-left: 1px dashed #3d41503d;
+      border-left-style: dashed;
     };
-  };
+  }; */
+
+  &:hover {
+    background-color: ${p => p.theme.columnHoverBg}
+  }
 
   &:first-child {
     border-left: 0;
@@ -71,7 +75,12 @@ const Cell = styled.div<{ theme: { bg: string }, isGap?: boolean; flex: number; 
   flex-basis: 0;
   align-items: center;
   border-radius: 2px;
-  box-shadow: inset 4px 1px 0 0 ${p => p.theme.bg}, inset -4px -1px 0 0 ${p => p.theme.bg};
+  box-shadow:
+    inset 4px 1px 0 0 ${p => p.theme.bg},
+    inset -4px -1px 0 0 ${p => p.theme.bg},
+    inset 4px -1px 0 0 ${p => p.theme.bg},
+    inset -4px 1px 0 0 ${p => p.theme.bg}
+  ;
   background-color: ${p => p.accentColor};
   display: block;
   padding: 0 var(--size-sm);
@@ -81,6 +90,15 @@ const Cell = styled.div<{ theme: { bg: string }, isGap?: boolean; flex: number; 
 
   &:hover {
     background-color: ${p => p.accentColor ? rgbAdjust(p.accentColor, -10) : 'transparent'};
+  };
+
+  ${Wrap}:hover & {
+    box-shadow:
+      inset 4px 1px 0 0 ${p => p.theme.columnHoverBg},
+      inset -4px -1px 0 0 ${p => p.theme.columnHoverBg},
+      inset 4px -1px 0 0 ${p => p.theme.columnHoverBg},
+      inset -4px 1px 0 0 ${p => p.theme.columnHoverBg}
+    ;
   };
 
   ${p =>
