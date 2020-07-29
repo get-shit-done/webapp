@@ -2,13 +2,13 @@ import React, { useState, useEffect, memo, FC } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 import { useForm } from 'react-hook-form'
 import styled from 'styled-components'
-import TextField from '../../../components/form/Field/component'
 import Button from '../../../components/Button/component'
-import Dropdown from '../../../components/form/Dropdown'
+import { Dropdown, TextField } from '../../../components/form'
 import { actions } from '../../../reducers/calendar'
 import { AppState, useAppDispatch } from '../../../Application/Root'
 import { IGroup } from '../../../reducers/settings'
 import { ModalFooter } from '../../../components/Modal'
+import { CalendarFormValues } from './shared'
 
 const Form = styled.form``
 
@@ -26,9 +26,9 @@ interface ISelectedGroup extends IGroup {
 
 const AddNewCalendarTask: FC<Props> = ({ timestamp, time, onModalClose }) => {
   const dispatch = useAppDispatch()
-  const [selectedGroup, setSelectedGroup] = useState<ISelectedGroup>()
-  const { colors } = useSelector((state: AppState) => state.settings)
-  const { register, handleSubmit, errors, watch } = useForm({ defaultValues: { from: time[0], to: time[1], name: '' } }) // fix this. is not correct shape
+  const { groups, colors } = useSelector((state: AppState) => state.settings)
+  const [selectedGroup, setSelectedGroup] = useState(groups.find(x => x.name === 'improvement'))
+  const { register, handleSubmit, errors, watch } = useForm<CalendarFormValues>()
   const onSubmit = (data: any) => {
     const { name, from, to } = data
     dispatch(
@@ -45,14 +45,17 @@ const AddNewCalendarTask: FC<Props> = ({ timestamp, time, onModalClose }) => {
   const accentColor = selectedGroup ? colors[selectedGroup.colorId] : undefined
 
   useEffect(() => {
+    const { name, from, to } = watchedFields
+    const isFormValuesEmpty = Object.values(watchedFields).every(x => !x)
+    const timeFormatted = isFormValuesEmpty ? time : [Number(from), Number(to)]
     dispatch(
       actions.prepareTask({
-        name: watchedFields.name,
-        time: [Number(watchedFields.from), Number(watchedFields.to)],
+        name,
+        time: timeFormatted,
         group: selectedGroup?.name,
       }),
     )
-  }, [watchedFields, selectedGroup])
+  }, [watchedFields.name, watchedFields.from, watchedFields.to, selectedGroup.name])
 
   return (
     <Form onSubmit={handleSubmit(onSubmit)}>

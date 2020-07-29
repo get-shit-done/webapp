@@ -1,11 +1,15 @@
-import React, { FC } from 'react'
+import React, { Suspense, FC, useState } from 'react'
 import styled from 'styled-components'
 import { STYLE_SIDEBAR_WIDTH_UNIT } from '../../../styles'
-import lisSvg from '../../../assets/svg/list.svg'
+import listSvg from '../../../assets/svg/list.svg'
+import cogSvg from '../../../assets/svg/cog.svg'
 import fullscreenSvg from '../../../assets/svg/fullscreen.svg'
 import Svg from '../../../components/Svg/component'
 import UseFullscreenToggle from '../../../hooks/useFullscreenToggle'
-import { actions as todoActions } from '../../../reducers/todos'
+import TabHOC from './TabHOC'
+
+const Todos = React.lazy(() => import('./Todos'))
+const Settings = React.lazy(() => import('./Settings'))
 
 const Wrap = styled.div`
   z-index: 2;
@@ -14,7 +18,7 @@ const Wrap = styled.div`
   font-size: 13px;
   color: var(--lavender);
 `
-const Tabs = styled.div`
+const InnerWrap = styled.div`
   z-index: 1;
   height: 100%;
   background-color: var(--charcoal);
@@ -28,7 +32,7 @@ const Toggles = styled.div`
   position: absolute;
   top: 16px;
 `
-const Tasks = styled.div<{ isOpen: boolean }>`
+const TabToggle = styled.div<{ isActive: boolean }>`
   display: flex;
   align-items: center;
   justify-content: center;
@@ -47,7 +51,7 @@ const Tasks = styled.div<{ isOpen: boolean }>`
   }
 
   ${p =>
-    p.isOpen &&
+    p.isActive &&
     `
     svg {
       fill: var(--isabelline);
@@ -85,6 +89,7 @@ const Content = styled.div<{ isOpen: boolean }>`
   box-shadow: inset -1px 0 0 0px var(--independence);
   transform: translateX(100%);
   transition: transform 0.2s var(--transition-type);
+  overflow: hidden;
 
   ${p =>
     p.isOpen &&
@@ -96,23 +101,55 @@ const Content = styled.div<{ isOpen: boolean }>`
 interface Props {
   isOpen: boolean
   setIsOpen: any
-  children: any
 }
 
-const Sidebar: FC<Props> = ({ isOpen, setIsOpen, children }) => {
+const Sidebar: FC<Props> = ({ isOpen, setIsOpen }) => {
   const [isFullscreen, setIsFullscreen] = UseFullscreenToggle(false)
+  const [activeTabId, setActiveTab] = useState(undefined)
+  const tabs = [
+    {
+      id: 'todos',
+      Component: TabHOC(Todos),
+      svg: listSvg,
+    },
+    {
+      id: 'settings',
+      Component: TabHOC(Settings),
+      svg: cogSvg,
+    }
+  ]
+  const handleTabClick = (id: string) => {
+    if (activeTabId === undefined) {
+      setIsOpen(true)
+      setActiveTab(id)
+    }
+    else if (id === activeTabId) {
+      setIsOpen(false)
+      setActiveTab(undefined)
+    }
+    else {
+      setActiveTab(id)
+    }
+  }
 
   return (
     <Wrap>
-      <Tabs>
-        <Toggles>
-          <Toggle isActive={isFullscreen} svg={fullscreenSvg} onClick={setIsFullscreen} />
-        </Toggles>
-        <Tasks isOpen={isOpen} onClick={setIsOpen}>
-          <Tab svg={lisSvg} />
-        </Tasks>
-      </Tabs>
-      <Content isOpen={isOpen}>{children}</Content>
+      <Suspense fallback={<div />}>
+        <InnerWrap>
+          <Toggles>
+            <Toggle isActive={isFullscreen} svg={fullscreenSvg} onClick={setIsFullscreen} />
+          </Toggles>
+
+          {tabs.map(({ id, svg }) => (
+            <TabToggle key={id} isActive={id === activeTabId} onClick={() => handleTabClick(id)}>
+              <Tab svg={svg} />
+            </TabToggle>
+          ))}
+        </InnerWrap>
+        <Content isOpen={isOpen}>
+          {tabs.map(({ id, Component }) => <Component key={id} isActive={id === activeTabId} title={id} />)}
+        </Content>
+      </Suspense>
     </Wrap>
   )
 }

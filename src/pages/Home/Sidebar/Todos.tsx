@@ -9,11 +9,6 @@ import { AppState, useAppDispatch } from '../../../Application/Root'
 
 import AddNewTodo from './AddNewTodo'
 
-const Title = styled.div`
-  font-weight: bold;
-  text-transform: uppercase;
-  margin-bottom: 3.4rem;
-`
 const Todo = styled.div<{ isDone: boolean }>`
   position: relative;
   display: flex;
@@ -52,7 +47,7 @@ const Remove = styled(Svg)`
   cursor: pointer;
 `
 
-const Todos = () => {
+const Todos = ({ isActive }: { isActive: boolean }) => {
   const { add, remove, toggleIsDone } = todoActions
   const { todos } = useSelector((state: AppState) => state.todos.present)
   const dispatch = useAppDispatch()
@@ -66,8 +61,6 @@ const Todos = () => {
 
   return (
     <>
-      <Title>Todos</Title>
-
       <AddNewTodo addNewTodo={onAddNewTodo} />
       {todos.map(({ id, todoName, isDone }: Todo) => (
         <Todo isDone={isDone} key={id} onClick={() => dispatch(toggleIsDone(id))}>

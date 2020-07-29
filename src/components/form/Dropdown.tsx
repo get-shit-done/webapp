@@ -1,7 +1,7 @@
 import React, { useState, FC } from 'react'
 import styled from 'styled-components'
 import chevronDownSvg from '../../assets/svg/chevron-down.svg'
-import Placeholder from './Placeholder/component'
+import Placeholder from './Placeholder'
 import { SvgStyled, Input, Wrap } from './shared'
 import { useSelector } from 'react-redux'
 import { AppState } from '../../Application/Root'
