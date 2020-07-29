@@ -139,7 +139,7 @@ const DayLabel = styled.div<{
     display: block;
     content: '';
     position: absolute;
-    left: 0;
+    left: -1px;
     width: 1px;
     height: 6px;
     bottom: -4px;
