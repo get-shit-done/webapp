@@ -74,7 +74,7 @@ const Cell = styled.div<{ theme: { bg: string }, isGap?: boolean; flex: number; 
   flex-shrink: 0;
   flex-basis: 0;
   align-items: center;
-  border-radius: 2px;
+  border-radius: 1px;
   box-shadow:
     inset 4px 1px 0 0 ${p => p.theme.bg},
     inset -4px -1px 0 0 ${p => p.theme.bg},

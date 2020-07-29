@@ -56,9 +56,9 @@ const PlaceholderTaskWrap = styled.div<{
   line-height: 1.5;
   color: ${p => (p.accentColor ? rgbAdjust(p.accentColor, -80) : 'red')};
   background-color: ${p => p.accentColor || p.theme.bg};
+  border-radius: 1px;
   
   ${p => !p.accentColor && `
-    border-radius: 1px;
     box-shadow: 
       inset 4px 1px 0 0 ${p.theme.columnHoverBg},
       inset -4px -1px 0 0 ${p.theme.columnHoverBg},
@@ -71,7 +71,6 @@ const PlaceholderTaskWrap = styled.div<{
   `};
   
   ${p => p.accentColor && `
-    border-radius: 2px;
     box-shadow: 
       inset 4px 1px 0 0 ${p.theme.columnHoverBg},
       inset -4px -1px 0 0 ${p.theme.columnHoverBg},
