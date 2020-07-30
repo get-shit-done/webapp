@@ -124,11 +124,6 @@ const initialState: IInitialState = {
     },
     {
       id: nanoid(),
-      name: 'health',
-      colorId: 'teagreen',
-    },
-    {
-      id: nanoid(),
       name: 'laze',
       colorId: 'light_cyan',
     },
@@ -148,6 +143,13 @@ export const { reducer, actions } = createSlice({
       Object.entries(payload).forEach(([key, value]) => {
         state[key] = value
       })
+    },
+    updateGroup(state, { payload: { groupId, colorId } }: PayloadAction<{ groupId: string; colorId: string }>): void {
+      const groupToUpdate = state.groups.find(x => x.id === groupId)
+      groupToUpdate.colorId = colorId
+    },
+    removeGroup(state, { payload: { id } }: PayloadAction<{ id: string }>): void {
+      state.groups = state.groups.filter(x => x.id !== id)
     },
     activateTheme(state, { payload: { theme } }: PayloadAction<{ theme: string }>): void {
       state.themeValues = themes[theme]

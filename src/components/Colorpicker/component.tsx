@@ -4,56 +4,111 @@ import styled from 'styled-components'
 import { AppState } from '../../Application/Root'
 
 const Wrap = styled.div`
-  position: relative;
+  flex-grow: 1;
 `
 const Toggle = styled.div`
-  background-color: ${p => p.color || '#eee'};
+  display: flex;
+`;
+const ColorCircle = styled.div<{ isOpen: boolean; color: string }>`
+  position: relative;
   width: 16px;
   height: 16px;
-  border-radius: 50%;
+
+  &::before, &::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    border-radius: 50%;
+  };
+
+  &::before {
+    background-color: transparent;
+    scale: 1;
+    transition: scale 0.1s ease-out;
+  };
+
+  &::after {
+    background-color: ${p => p.color || '#eee'};
+    box-shadow: 1px 1px 2px var(--charcoal);
+  };
+
+  ${p => p.isOpen && `
+    &::before {
+      background-color: #5b5e69;
+      scale: 1.8;
+    };
+  `};
 `
+
+const Label = styled.div`
+  margin-left: var(--size-lg);
+  /* flex-grow: 1; */
+`
+
 const Colors = styled.div<{ isOpen: boolean }>`
+  z-index: 1;
   display: ${p => (p.isOpen ? 'flex' : 'none')};
   width: 208px;
   background-color: var(--charcoal);
   position: absolute;
   top: 0;
-  left: 100%;
+  right: 100%;
   flex-wrap: wrap;
   padding: 4px;
-  margin-left: 28px;
+  margin-right: 36px;
   background: var(--charcoal);
   box-shadow: 3px 3px 8px -5px var(--charcoal);
 `
-const Color = styled.div<{ color: string }>`
+const Color = styled.div<{ isActive: boolean; color: string }>`
   width: 40px;
   height: 40px;
   background-color: ${p => p.color};
 
+  ${p => p.isActive && `
+    z-index: 1;
+    box-shadow: 0 0 0 1px var(--charcoal);
+  `};
+
   &:hover {
     z-index: 1;
     box-shadow: 0 0 0 1px var(--charcoal);
-  }
+  };
 `
-interface Props {
-  selectedColor: string
-  setSelectedColor(color: string): void
+interface IColor {
+  colorId: string
+  colorValue: string
+}
+interface IProps {
+  selectedColorValue: string
+  label: string
+  setSelectedColor(color: IColor): void
 }
 
-const Colorpicker: FC<Props> = ({ selectedColor, setSelectedColor }) => {
+const Colorpicker: FC<IProps> = ({ selectedColorValue, label, setSelectedColor }) => {
   const { colors } = useSelector((state: AppState) => state.settings)
   const [isOpen, toggleIsOpen] = useState(false)
 
-  function handleClick(color: string) {
+  function handleClick(color: IColor) {
     setSelectedColor(color)
     toggleIsOpen(false)
   }
   return (
     <Wrap>
-      <Toggle color={selectedColor} onClick={() => toggleIsOpen(!isOpen)}></Toggle>
+      <Toggle onClick={() => toggleIsOpen(!isOpen)}>
+        <ColorCircle isOpen={isOpen} color={selectedColorValue} />
+        <Label>{label}</Label>
+      </Toggle>
       <Colors isOpen={isOpen}>
-        {Object.entries(colors).map(([key, value]) => (
-          <Color color={value} key={key} onClick={() => handleClick(value)} /> // potential bug
+        {Object.entries(colors).map(([colorId, colorValue]) => (
+          <Color
+            isActive={colorValue === selectedColorValue}
+            color={colorValue}
+            key={colorId}
+            onClick={() => handleClick({ colorId, colorValue })}
+          />
         ))}
       </Colors>
     </Wrap>

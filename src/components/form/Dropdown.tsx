@@ -39,7 +39,7 @@ const Item = styled.div<{ isActive: boolean; color: string }>`
     color: ${p => (p.isActive ? p.color : 'var(--white)')};
   }
 `
-const After = styled.div`
+const GroupColor = styled.div<{ color: string }>`
   width: 15px;
   height: 15px;
   background: ${p => p.color};
@@ -53,17 +53,15 @@ interface IProps {
   isInForm?: boolean
   activeGroup?: any
   label: string
-  name?: string
   onSelect(item: any): void
   inputRef(instance: HTMLInputElement): void
 }
 
-const Dropdown: FC<IProps> = ({ theme, isInForm, activeGroup = {}, label, name, onSelect, inputRef }) => {
+// TODO: rename this into group dd
+const Dropdown: FC<IProps> = ({ theme, isInForm, activeGroup = {}, label, onSelect, inputRef }) => {
   const { groups, colors } = useSelector((state: AppState) => state.settings)
   const [isOpen, setIsOpen] = useState(false)
-  // const activeGroup = groups.find(x => x.name === activeGroup)
   const accentColor = activeGroup.colorId ? colors[activeGroup.colorId] : undefined
-  // console.log(accentColor)
 
   function onItemSelect(item: any): void {
     onSelect(item)
@@ -88,7 +86,7 @@ const Dropdown: FC<IProps> = ({ theme, isInForm, activeGroup = {}, label, name, 
             key={item.id}
           >
             {item.name}
-            <After color={colors[item.colorId]} />
+            <GroupColor color={colors[item.colorId]} />
           </Item>
         ))}
       </List>
