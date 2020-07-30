@@ -6,7 +6,6 @@ import Button from '../../../components/Button/component'
 import { Dropdown, TextField } from '../../../components/form'
 import { actions } from '../../../reducers/calendar'
 import { AppState, useAppDispatch } from '../../../Application/Root'
-import { IGroup } from '../../../reducers/settings'
 import { ModalFooter } from '../../../components/Modal'
 import { CalendarFormValues } from './shared'
 

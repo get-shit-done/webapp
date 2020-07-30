@@ -13,12 +13,12 @@ import { determineTimeFromY, taskShadow, taskShadowBeingEdited } from './shared'
 
 const CN_HOUR_SLOTS = 'hour-slots'
 
-const Wrap = styled.div<{
+interface IWrap {
   theme: { columnBorder: string },
-  isCurrentWeek?: boolean;
   isCurrentDay: boolean,
   isInFocusedTimeframe: boolean,
-}>`
+}
+const Wrap = styled.div<IWrap>`
   display: flex;
   flex-direction: column;
   flex-grow: 1;
@@ -27,20 +27,14 @@ const Wrap = styled.div<{
   width: 0;
 
   ${p => p.isInFocusedTimeframe && `background-color: ${p.theme.columnHoverBg}`};
+  ${p => p.isCurrentDay && `flex-grow: 2;`};
 
   &:hover {
     background-color: ${p => p.theme.columnHoverBg}
   };
-
   &:first-child {
     border-left: 0;
   };
-
-  ${p => p.isCurrentWeek && `flex-grow: 2;`};
-
-  ${p => p.isCurrentDay && `
-    flex-grow: 2;
-  `};
 `
 
 const HourSlots = styled.div`
@@ -58,15 +52,16 @@ const HourSlots = styled.div`
     padding-left: 12px;
   }
 `
-const Cell = styled.div<{
+interface ICell {
   theme: { bg: string };
   isInFocusedTimeframe: boolean;
   isBeingEdited: boolean;
   isGap?: boolean;
   flex: number;
   accentColor?: string;
-  isSmall?: boolean
-}>`
+  isSmall?: boolean;
+}
+const Cell = styled.div<ICell>`
   ${ellipsis()};
   z-index: ${p => (p.isGap ? 0 : 1)};
   position: relative;
@@ -97,9 +92,7 @@ const Cell = styled.div<{
     background-color: ${p.accentColor ? rgbAdjust(p.accentColor, -10) : 'transparent'};
     ${taskShadowBeingEdited(p.theme.columnHoverBg)};
   `};
-
   ${p => (!p.isBeingEdited && p.isInFocusedTimeframe) && taskShadow(p.theme.columnHoverBg)};
-
   ${p => p.isSmall && `
     line-height: 0.8;
     font-size: 11px;
