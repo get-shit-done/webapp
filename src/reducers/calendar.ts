@@ -26,6 +26,7 @@ export interface TaskWithMeta extends SavedTask {
   gapAfter?: number
 }
 interface IInitialState {
+  focusedTimestamp: string
   taskBeingPrepared: TaskBeingPrepared
   taskBeingEdited: TaskWithMeta | null
   allTasksByDay: {
@@ -37,6 +38,7 @@ interface IInitialState {
   daysAxis: string[]
 }
 const initialState: IInitialState = {
+  focusedTimestamp: undefined,
   taskBeingPrepared: undefined,
   taskBeingEdited: null,
   allTasksByDay: {},
@@ -55,6 +57,9 @@ export const { reducer, actions } = createSlice({
       state.daysAxis = MONTH_DAYS.filter(day => format(day, 'd') >= from && format(day, 'd') <= to).map(day =>
         day.toString(),
       )
+    },
+    saveFocusedTimestamp(state, { payload }: PayloadAction<{ timestamp: string }>): void {
+      state.focusedTimestamp = payload.timestamp
     },
     prepareTask(state, { payload }: PayloadAction<TaskBeingPrepared>): void {
       state.taskBeingPrepared = payload

@@ -113,6 +113,7 @@ const CalendarColumn: FC<Props> = ({ timestamp, isCurrentDay, tasksFiltered, pla
 
   function updatePlaceholderTask(event: React.MouseEvent<HTMLDivElement, MouseEvent>) {
     if (taskBeingPrepared) return
+
     const columnTopPx = event.currentTarget.getBoundingClientRect().top
     const placeholderY = event.clientY - columnTopPx - (placeholderHeightPx / 4)
     const newY = Math.floor(placeholderY / (placeholderHeightPx / 2)) * (placeholderHeightPx / 2)
@@ -134,10 +135,20 @@ const CalendarColumn: FC<Props> = ({ timestamp, isCurrentDay, tasksFiltered, pla
     dispatch(actions.editTaskCancel())
   }
 
+  function saveFocusedTimestamp() {
+    dispatch(actions.saveFocusedTimestamp({ timestamp }))
+  }
+
   return (
     <Wrap isCurrentDay={isCurrentDay}>
       {isCurrentDay && <CurrentTime />}
-      <HourSlots ref={hourSlotsRef} onMouseMove={updatePlaceholderTask} className={CN_HOUR_SLOTS}>
+
+      <HourSlots
+        ref={hourSlotsRef}
+        onMouseMove={updatePlaceholderTask}
+        onMouseEnter={saveFocusedTimestamp}
+        className={CN_HOUR_SLOTS}
+      >
         {tasksFiltered.map(({ _id, heightInFlex, name, group, gapBefore, gapAfter }) => {
           const { colorId } = groups.find(x => x.name === group)
           return (

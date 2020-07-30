@@ -30,15 +30,9 @@ const Calendar: FC<Props> = ({ scale, calendarRef }) => {
   const placeholderHeightPx = calendarRef.current
     ? (calendarRef.current.getBoundingClientRect().height - 24) / (hoursAxis.length * 2)
     : 20
-  // console.log(placeholderHeightPx)
 
   return (
     <Wrap scale={scale}>
-      {/* <Time>
-        time
-      </Time> */}
-
-      {/* calculate height of hour based on hours visible and px height */}
       {daysAxis.map(timestamp => {
         const date = new Date(timestamp)
         const day = format(date, 'd')
