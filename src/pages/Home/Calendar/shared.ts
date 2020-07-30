@@ -20,3 +20,23 @@ export const determineTimeFromY = ({
   const rounded = Math.round(alg / 0.25) * 0.25
   return rounded
 }
+
+const generateDefaultShadowValue = (value: string) => `
+  inset 4px 1px 0 0 ${value},
+  inset -4px -1px 0 0 ${value}
+`
+export const taskShadow = (value: string) => `
+  box-shadow: ${generateDefaultShadowValue(value)};
+`
+export const taskShadowBeingEdited = (value: string) => `
+  box-shadow:
+    ${generateDefaultShadowValue(value)},
+    inset 5px 2px 0 0 var(--charcoal),
+    inset -5px -2px 0 0 var(--charcoal);
+`
+export const placeholderShadow = (value1: string, value2: string) => `
+  box-shadow:
+    ${generateDefaultShadowValue(value1)},
+    inset 6px 3px 0 0 ${value2},
+    inset -6px -3px 0 0 ${value2};
+`

@@ -6,7 +6,7 @@ import { Modal } from '../../../components/Modal'
 import AddNewCalendarTask from './AddNewCalendarTask'
 import { rgbAdjust, ellipsis } from '../../../styles'
 import { AppState, useAppDispatch } from '../../../Application/Root'
-import { determineTimeFromY } from './shared'
+import { determineTimeFromY, taskShadow, placeholderShadow } from './shared'
 
 const PlaceholderTaskWrap = styled.div<{
   theme: { bg: string, columnHoverBg: string, placeholderBorder: string },
@@ -28,19 +28,10 @@ const PlaceholderTaskWrap = styled.div<{
   background-color: ${p => p.accentColor || p.theme.bg};
   border-radius: 1px;
   
-  ${p => !p.accentColor && `
-    box-shadow: 
-      inset 4px 1px 0 0 ${p.theme.columnHoverBg},
-      inset -4px -1px 0 0 ${p.theme.columnHoverBg},
-      inset 6px 3px 0 0 ${p.theme.placeholderBorder},
-      inset -6px -3px 0 0 ${p.theme.placeholderBorder};
-  `};
-  
+  ${p => !p.accentColor && placeholderShadow(p.theme.columnHoverBg, p.theme.placeholderBorder)};
   ${p => p.accentColor && `
     ${ellipsis()};
-    box-shadow: 
-      inset 4px 1px 0 0 ${p.theme.columnHoverBg},
-      inset -4px -1px 0 0 ${p.theme.columnHoverBg};
+    ${taskShadow(p.theme.columnHoverBg)};
   `};
 
   .hour-slots:hover & {

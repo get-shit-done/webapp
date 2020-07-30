@@ -30,7 +30,7 @@ const Wrap = styled.div<{ theme: { axisBg: string }, isBeingFiltered: boolean }>
 
   &:hover {
     height: 50px;
-  }
+  };
 `
 const DayLabel = styled.div<{
   theme: { axisBg: string, axisBorder: string };
@@ -39,6 +39,7 @@ const DayLabel = styled.div<{
   isCurrentDay: boolean;
   isActive: boolean;
   isFiltered: boolean;
+  isFocusedTimestamp: boolean;
 }>`
   ${flex({ grow: 1, shrink: 0, basis: 0, isCenter: true })};
   position: relative;
@@ -79,25 +80,20 @@ const DayLabel = styled.div<{
     }
   }
 
-  ${p =>
-    p.isBeingFiltered &&
-    `
+  ${p => p.isBeingFiltered && `
     padding-top: 16px;
     &::before {
       display: none;
     };
   `};
 
-  ${p =>
-    p.isCurrentWeek &&
-    `
+  ${p => p.isCurrentWeek && `
     flex-grow: 2;
   `};
 
-  ${p =>
-    p.isCurrentDay &&
-    `
-    flex-grow: 2;
+  ${p => (p.isCurrentDay || p.isFocusedTimestamp) && `
+    ${p.isCurrentDay && 'flex-grow: 2'};
+
     background-color: var(--white);
     color: ${p.theme.axisBg};
     ${!p.isActive && 'border-bottom: 4px solid var(--white)'};
@@ -117,18 +113,14 @@ const DayLabel = styled.div<{
     color: var(--isabelline);
     background-color: var(--arsenic);
 
-    ${p =>
-    p.isFiltered &&
-    `
+    ${p => p.isFiltered && `
       background-color: inherit;
       color: inherit;
       cursor: inherit;
     `};
   }
 
-  ${p =>
-    p.isActive &&
-    `
+  ${p => p.isActive && `
     background-color: var(--arsenic);
     box-shadow: inset 0px 4px 0 0px ${p.theme.axisBg}, inset 0px -4px 0 0px ${p.theme.axisBg};
     color: var(--isabelline);
@@ -150,7 +142,7 @@ interface Props {
 }
 
 const DayLabels: FC<Props> = ({ onHover }) => {
-  const { daysAxis } = useSelector((state: AppState) => state.calendar)
+  const { daysAxis, focusedTimestamp } = useSelector((state: AppState) => state.calendar)
   const [{ isFiltered, isBeingFiltered, from }, onFilter] = UseFilterRange({
     from: 1,
     to: MONTH_DAYS.length,
@@ -169,6 +161,7 @@ const DayLabels: FC<Props> = ({ onHover }) => {
         const day = Number(format(date, 'd'))
         const dayOfWeek = format(date, 'EEEEE')
         const isCurrentDay = isToday(date)
+        const isFocusedTimestamp = timestamp === focusedTimestamp
 
         return (
           <DayLabel
@@ -177,6 +170,7 @@ const DayLabels: FC<Props> = ({ onHover }) => {
             isFiltered={isFiltered}
             isBeingFiltered={isBeingFiltered}
             isActive={filteredRange.includes(day)}
+            isFocusedTimestamp={isFocusedTimestamp}
             onMouseEnter={() => highlightFilteredRange(day)}
             onClick={() => onFilter(day)}
           >

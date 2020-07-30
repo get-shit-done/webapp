@@ -1,4 +1,5 @@
-import { createSlice, nanoid } from '@reduxjs/toolkit'
+import { createSlice, nanoid, PayloadAction } from '@reduxjs/toolkit'
+import { ENUM_THEMES } from '../enums'
 
 export interface IGroup {
   id: string
@@ -6,10 +7,21 @@ export interface IGroup {
   colorId: string
 }
 
-interface ITheme {
+interface IThemeValues {
   [key: string]: any
   bg: string
   columnBorder: string
+  columnHoverBg: string
+  placeholderBorder: string
+  axisBg: string
+  axisBorder: string
+  currentTimeBg: string
+  currentTimeBorder: string
+  currentTimeColor: string
+}
+
+interface ITheme {
+  [key: string]: IThemeValues
 }
 
 interface IInitialState {
@@ -24,8 +36,8 @@ interface IInitialState {
   groups: IGroup[]
 }
 
-const themes = {
-  light: {
+const themes: ITheme = {
+  [ENUM_THEMES.light]: {
     bg: '#fff',
     columnBorder: 'var(--isabelline)',
     columnHoverBg: '#fefcff',
@@ -36,7 +48,7 @@ const themes = {
     currentTimeBorder: 'var(--jet)',
     currentTimeColor: 'var(--white-smoke)',
   },
-  dark: {
+  [ENUM_THEMES.dark]: {
     bg: '#2a2a2a',
     columnBorder: '#3c3b3b',
     columnHoverBg: '#333',
@@ -48,13 +60,12 @@ const themes = {
     currentTimeColor: '#222',
   },
 }
-const THEME_DEFAULT = 'light'
 
 const initialState: IInitialState = {
   defaultHoursFrom: 6,
   defaultHoursTo: 23,
-  themeName: THEME_DEFAULT,
-  themeValues: themes[THEME_DEFAULT],
+  themeName: ENUM_THEMES.light,
+  themeValues: themes[ENUM_THEMES.light],
   colors: {
     aero_blue: 'rgb(216, 255, 230)',
     papaya_whip: 'rgb(255, 236, 210)',
@@ -138,10 +149,9 @@ export const { reducer, actions } = createSlice({
         state[key] = value
       })
     },
-    toggleTheme(state): void {
-      const { themeName } = state
-      state.themeValues = themeName === 'light' ? themes['dark'] : themes['light']
-      state.themeName = themeName === 'light' ? 'dark' : 'light'
+    activateTheme(state, { payload: { theme } }: PayloadAction<{ theme: string }>): void {
+      state.themeValues = themes[theme]
+      state.themeName = theme
     },
   },
 })
