@@ -17,7 +17,6 @@ const Groups = styled.div`
   position: relative;
 `
 const Group = styled.div<{ color: string }>`
-  /* position: relative; */
   display: flex;
   align-items: center;
   padding: var(--size-xsm) 0;
@@ -44,12 +43,6 @@ const Remove = styled(Svg)`
   height: 1.6rem;
   cursor: pointer;
 `
-const GroupColor = styled.div`
-  width: 16px;
-  height: 16px;
-  background: ${p => p.color};
-  border-radius: 50%;
-`
 
 const Settings: FC = () => {
   const dispatch = useAppDispatch()
@@ -68,8 +61,8 @@ const Settings: FC = () => {
     console.log('removed ', id)
   }
 
-  const test = (aa: any) => {
-    console.log('set selected color', aa)
+  const onColorSelect = ({ selectedColor: { colorId }, id }: { selectedColor: { colorId: string }, id: string }) => {
+    dispatch(actions.updateGroup({ groupId: id, colorId }))
   }
 
   return (
@@ -99,10 +92,12 @@ const Settings: FC = () => {
         {groups.map(({ id, name, colorId }) => {
           return (
             <Group key={id} color={colors[colorId]}>
-              <Colorpicker selectedColor={colors[colorId]} setSelectedColor={test} />
+              <Colorpicker
+                selectedColor={colors[colorId]}
+                setSelectedColor={(selectedColor) => onColorSelect({ selectedColor, id })}
+              />
               <Name>{name}</Name>
               <Actions>
-                {/* <GroupColor color={colors[colorId]} /> */}
                 <Remove isDanger theme="light" svg={binSvg} onClick={() => onRemoveGroup(id)} />
               </Actions>
             </Group>

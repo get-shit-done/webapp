@@ -36,16 +36,20 @@ const Color = styled.div<{ color: string }>`
     box-shadow: 0 0 0 1px var(--charcoal);
   }
 `
-interface Props {
+interface IColor {
+  colorId: string
+  colorValue: string
+}
+interface IProps {
   selectedColor: string
-  setSelectedColor(color: string): void
+  setSelectedColor(color: IColor): void
 }
 
-const Colorpicker: FC<Props> = ({ selectedColor, setSelectedColor }) => {
+const Colorpicker: FC<IProps> = ({ selectedColor, setSelectedColor }) => {
   const { colors } = useSelector((state: AppState) => state.settings)
   const [isOpen, toggleIsOpen] = useState(false)
 
-  function handleClick(color: string) {
+  function handleClick(color: IColor) {
     setSelectedColor(color)
     toggleIsOpen(false)
   }
@@ -53,8 +57,8 @@ const Colorpicker: FC<Props> = ({ selectedColor, setSelectedColor }) => {
     <Wrap>
       <Toggle color={selectedColor} onClick={() => toggleIsOpen(!isOpen)}></Toggle>
       <Colors isOpen={isOpen}>
-        {Object.entries(colors).map(([key, value]) => (
-          <Color color={value} key={key} onClick={() => handleClick(value)} /> // potential bug
+        {Object.entries(colors).map(([colorId, colorValue]) => (
+          <Color color={colorValue} key={colorId} onClick={() => handleClick({ colorId, colorValue })} />
         ))}
       </Colors>
     </Wrap>

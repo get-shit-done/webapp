@@ -144,6 +144,10 @@ export const { reducer, actions } = createSlice({
         state[key] = value
       })
     },
+    updateGroup(state, { payload: { groupId, colorId } }: PayloadAction<{ groupId: string; colorId: string }>): void {
+      const groupToUpdate = state.groups.find(x => x.id === groupId)
+      groupToUpdate.colorId = colorId
+    },
     activateTheme(state, { payload: { theme } }: PayloadAction<{ theme: string }>): void {
       state.themeValues = themes[theme]
       state.themeName = theme
