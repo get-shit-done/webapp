@@ -9,7 +9,7 @@ import { actions, TaskWithMeta } from '../../../reducers/calendar'
 import { Modal } from '../../../components/Modal'
 import EditCalendarTask from './EditCalendarTask'
 import { AppState, useAppDispatch } from '../../../Application/Root'
-import { determineTimeFromY } from './shared'
+import { determineTimeFromY, taskShadow, taskShadowBeingEdited } from './shared'
 
 const CN_HOUR_SLOTS = 'hour-slots'
 
@@ -61,6 +61,7 @@ const HourSlots = styled.div`
 const Cell = styled.div<{
   theme: { bg: string };
   isInFocusedTimeframe: boolean;
+  isBeingEdited: boolean;
   isGap?: boolean;
   flex: number;
   accentColor?: string;
@@ -76,10 +77,7 @@ const Cell = styled.div<{
   flex-basis: 0;
   align-items: center;
   border-radius: 1px;
-  box-shadow: ${p => `
-    inset 4px 1px 0 0 ${p.theme.bg},
-    inset -4px -1px 0 0 ${p.theme.bg};
-  `};
+  ${p => taskShadow(p.theme.bg)}
   background-color: ${p => p.accentColor};
   display: block;
   padding: 0 var(--size-sm);
@@ -91,18 +89,16 @@ const Cell = styled.div<{
     background-color: ${p => p.accentColor ? rgbAdjust(p.accentColor, -10) : 'transparent'};
   };
 
-  ${p => p.isInFocusedTimeframe && `
-    box-shadow:
-      inset 4px 1px 0 0 ${p.theme.columnHoverBg},
-      inset -4px -1px 0 0 ${p.theme.columnHoverBg};
+  ${Wrap}:hover & {
+    ${p => taskShadow(p.theme.columnHoverBg)};
+  };
+
+  ${p => p.isBeingEdited && `
+    background-color: ${p.accentColor ? rgbAdjust(p.accentColor, -10) : 'transparent'};
+    ${taskShadowBeingEdited(p.theme.columnHoverBg)};
   `};
 
-  ${Wrap}:hover & {
-    box-shadow: ${p => `
-      inset 4px 1px 0 0 ${p.theme.columnHoverBg},
-      inset -4px -1px 0 0 ${p.theme.columnHoverBg};
-    `};
-  };
+  ${p => (!p.isBeingEdited && p.isInFocusedTimeframe) && taskShadow(p.theme.columnHoverBg)};
 
   ${p => p.isSmall && `
     line-height: 0.8;
@@ -170,19 +166,36 @@ const CalendarColumn: FC<Props> = ({ timestamp, isCurrentDay, tasksFiltered, pla
           const { colorId } = groups.find(x => x.name === group)
           return (
             <Fragment key={_id}>
-              {gapBefore > 0 && <Cell isGap flex={gapBefore} isInFocusedTimeframe={isInFocusedTimeframe} />}
+              {gapBefore > 0 && (
+                <Cell
+                  isGap
+                  flex={gapBefore}
+                  isInFocusedTimeframe={isInFocusedTimeframe}
+                  isBeingEdited={false}
+                />
+              )}
+
               {heightInFlex > 0 && (
                 <Cell
                   flex={heightInFlex}
                   accentColor={colors[colorId]}
                   isSmall={hoursAxis.length > 16 && heightInFlex <= 0.25}
                   isInFocusedTimeframe={isInFocusedTimeframe}
+                  isBeingEdited={taskBeingEdited?._id === _id}
                   onClick={() => onEditTask(_id)}
                 >
                   {name}
                 </Cell>
               )}
-              {gapAfter > 0 && <Cell isGap flex={gapAfter} isInFocusedTimeframe={isInFocusedTimeframe} />}
+
+              {gapAfter > 0 && (
+                <Cell
+                  isGap
+                  flex={gapAfter}
+                  isInFocusedTimeframe={isInFocusedTimeframe}
+                  isBeingEdited={false}
+                />
+              )}
             </Fragment>
           )
         })}

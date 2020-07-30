@@ -84,6 +84,7 @@ export const { reducer, actions } = createSlice({
       for (const x in task) {
         task[x] = state.taskBeingEdited[x]
       }
+      state.taskBeingEdited = null
     },
     saveTaskRequested(state, action) {},
     saveTaskSuccess(state, { payload }: PayloadAction<SavedTask>): void {
