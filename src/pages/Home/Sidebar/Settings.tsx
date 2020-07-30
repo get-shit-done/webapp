@@ -58,7 +58,7 @@ const Settings: FC = () => {
   }
 
   const onRemoveGroup = (id: string) => {
-    console.log('removed ', id)
+    dispatch(actions.removeGroup({ id }))
   }
 
   const onColorSelect = ({ selectedColor: { colorId }, id }: { selectedColor: { colorId: string }, id: string }) => {
@@ -93,7 +93,7 @@ const Settings: FC = () => {
           return (
             <Group key={id} color={colors[colorId]}>
               <Colorpicker
-                selectedColor={colors[colorId]}
+                selectedColorValue={colors[colorId]}
                 setSelectedColor={(selectedColor) => onColorSelect({ selectedColor, id })}
               />
               <Name>{name}</Name>
