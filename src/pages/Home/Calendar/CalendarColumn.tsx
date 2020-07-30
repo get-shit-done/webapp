@@ -9,6 +9,7 @@ import { actions, TaskWithMeta } from '../../../reducers/calendar'
 import { Modal } from '../../../components/Modal'
 import EditCalendarTask from './EditCalendarTask'
 import { AppState, useAppDispatch } from '../../../Application/Root'
+import { determineTimeFromY } from './shared'
 
 const CN_HOUR_SLOTS = 'hour-slots'
 
@@ -118,6 +119,7 @@ const CalendarColumn: FC<Props> = ({ timestamp, isCurrentDay, tasksFiltered, pla
   const dispatch = useAppDispatch()
 
   const [y, setY] = useState(0)
+  const [timeFrom, setTimeFrom] = useState(0)
   const [isEditModalOpen, setIsTaskBeingEdited] = useState(false)
   const hourSlotsRef = useRef(null)
 
@@ -125,9 +127,15 @@ const CalendarColumn: FC<Props> = ({ timestamp, isCurrentDay, tasksFiltered, pla
     if (taskBeingPrepared) return
     const columnTopPx = event.currentTarget.getBoundingClientRect().top
     const placeholderY = event.clientY - columnTopPx - (placeholderHeightPx / 4)
-    const nearestSegment = Math.floor(placeholderY / (placeholderHeightPx / 2)) * (placeholderHeightPx / 2)
-    const isNewNearest = nearestSegment !== y
-    if (isNewNearest) setY(nearestSegment)
+    const newY = Math.floor(placeholderY / (placeholderHeightPx / 2)) * (placeholderHeightPx / 2)
+    const isNewNearest = newY !== y
+    if (isNewNearest) {
+      const rounded = determineTimeFromY({ y: newY, ref: hourSlotsRef, hoursAxis })
+
+      console.log({ rounded })
+      setY(newY)
+      setTimeFrom(rounded)
+    }
   }
 
   function onEditTask(_id: string) {
@@ -167,6 +175,7 @@ const CalendarColumn: FC<Props> = ({ timestamp, isCurrentDay, tasksFiltered, pla
           timestamp={timestamp}
           hourSlotsRef={hourSlotsRef}
           y={y}
+          timeFrom={timeFrom}
           height30={placeholderHeightPx}
         />
 

@@ -6,6 +6,7 @@ import { Modal } from '../../../components/Modal'
 import AddNewCalendarTask from './AddNewCalendarTask'
 import { rgbAdjust, ellipsis } from '../../../styles'
 import { AppState, useAppDispatch } from '../../../Application/Root'
+import { determineTimeFromY } from './shared'
 
 const Lines = styled.div<{ top: number, isBeingPrepared: boolean, height: number }>`
   display: ${p => (p.isBeingPrepared ? 'block' : 'none')};
@@ -16,26 +17,7 @@ const Lines = styled.div<{ top: number, isBeingPrepared: boolean, height: number
 
   .hour-slots:hover & {
     display: flex;
-  }
-
-  /* TODO: considering removing this entirely. think about it */
-  /* &::before, &::after {
-    content: '';
-    position: fixed;
-    right: 0;
-    left: 0;
-    height: 1px;
   };
-
-  &::before {
-    border-top: 1px dashed #3d41503d;
-    height: 1px;
-  };
-
-  &::after {
-    border-bottom: 1px dashed #3d41503d;
-    transform: translateY(${p => p.height}px);
-  }; */
 `
 const PlaceholderTaskWrap = styled.div<{
   theme: { bg: string, columnHoverBg: string, placeholderBorder: string },
@@ -44,7 +26,6 @@ const PlaceholderTaskWrap = styled.div<{
   height: number,
   accentColor: string,
 }>`
-  ${ellipsis()};
   display: ${p => (p.isBeingPrepared ? 'block' : 'none')};
   position: absolute;
   top: ${p => p.top}px;
@@ -67,6 +48,7 @@ const PlaceholderTaskWrap = styled.div<{
   `};
   
   ${p => p.accentColor && `
+    ${ellipsis()};
     box-shadow: 
       inset 4px 1px 0 0 ${p.theme.columnHoverBg},
       inset -4px -1px 0 0 ${p.theme.columnHoverBg};
@@ -74,33 +56,52 @@ const PlaceholderTaskWrap = styled.div<{
 
   .hour-slots:hover & {
     display: flex;
-  }
+  };
+`
+
+const Time = styled.div`
+  display: flex;
+  z-index: 2;
+  position: absolute;
+  top: 2px;
+  left: 100%;
+  color: #fff;
+  font-weight: bold;
+  text-align: right;
+
+  &:hover {
+    display: none;
+  };
+`
+const TimeText = styled.div`
+  width: 34px;
+  background: rgba(0, 0, 0, 0.6);
+  border-radius: 2px;
+  height: 16px;
+  display: block;
+  line-height: 1;
+  padding: 1px 4px;
 `
 
 interface Props {
   timestamp: string
   hourSlotsRef: any
   y: number
+  timeFrom: number,
   height30: number
 }
 
-// TODO: get this calculation working - setting correct start time on different hours and zoom
-const PlaceholderTask: FC<Props> = ({ timestamp, hourSlotsRef, y, height30 }) => {
+const PlaceholderTask: FC<Props> = ({ timestamp, hourSlotsRef, y, timeFrom, height30 }) => {
   const dispatch = useAppDispatch()
   const { hoursAxis, taskBeingPrepared = { time: [] } } = useSelector((state: AppState) => state.calendar)
   const { groups, colors } = useSelector((state: AppState) => state.settings)
   const colorId = groups.find(x => x.name === taskBeingPrepared.group)?.colorId
 
-  // functionality needs to be extracted into hooks for reuse in edit modal
   const [{ yFromTime, heightFromTime }, setYAndHeightFromTime] = useState({ yFromTime: undefined, heightFromTime: height30 })
   const [{ isBeingEdited, time }, setTaskDetails] = useState({ isBeingEdited: false, time: [] })
 
   function onPrepareNewTask() {
-    const percentage = (y / hourSlotsRef.current.getBoundingClientRect().height) * 100
-    const hourMin = hoursAxis[0]
-    const hourMax = hoursAxis[hoursAxis.length - 1] + 1
-    const alg = hourMin + (hourMax - hourMin) / 100 * percentage
-    const rounded = Math.round(alg / 0.25) * 0.25
+    const rounded = determineTimeFromY({ y, ref: hourSlotsRef, hoursAxis })
     setTaskDetails({ isBeingEdited: true, time: [rounded, rounded + 0.5] })
   }
 
@@ -132,7 +133,8 @@ const PlaceholderTask: FC<Props> = ({ timestamp, hourSlotsRef, y, height30 }) =>
           onClick={onPrepareNewTask}
           accentColor={colors[colorId]}
         >
-          {taskBeingPrepared?.name}
+          {/* {taskBeingPrepared?.name} */}
+          <Time><TimeText>{timeFrom}</TimeText></Time>
         </PlaceholderTaskWrap>
 
         {isBeingEdited && (
