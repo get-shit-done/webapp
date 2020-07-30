@@ -115,6 +115,7 @@ const Sidebar: FC<Props> = ({ isOpen, setIsOpen }) => {
   const { themeName } = useSelector((state: AppState) => state.settings)
   const [isFullscreen, setIsFullscreen] = UseFullscreenToggle(false)
   const [activeTabId, setActiveTab] = useState(undefined)
+  const { light, dark } = ENUM_THEMES
   const tabs = [
     {
       id: 'todos',
@@ -141,8 +142,8 @@ const Sidebar: FC<Props> = ({ isOpen, setIsOpen }) => {
             <Toggle isActive={isFullscreen} svg={fullscreenSvg} onClick={setIsFullscreen} />
             <Toggle
               isActive
-              svg={themeName === ENUM_THEMES.dark ? moonSvg : sunSvg}
-              onClick={() => dispatch(actions.activateTheme({ theme: themeName }))}
+              svg={themeName === dark ? moonSvg : sunSvg}
+              onClick={() => dispatch(actions.activateTheme({ theme: themeName === dark ? light : dark }))}
             />
           </Toggles>
 
