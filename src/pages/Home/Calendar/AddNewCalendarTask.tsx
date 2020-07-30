@@ -18,12 +18,6 @@ interface Props {
   onModalClose(): void
 }
 
-interface ISelectedGroup extends IGroup {
-  name: string
-  from: string
-  to: string
-}
-
 const AddNewCalendarTask: FC<Props> = ({ timestamp, time, onModalClose }) => {
   const dispatch = useAppDispatch()
   const { groups, colors } = useSelector((state: AppState) => state.settings)

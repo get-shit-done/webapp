@@ -13,13 +13,20 @@ import { determineTimeFromY } from './shared'
 
 const CN_HOUR_SLOTS = 'hour-slots'
 
-const Wrap = styled.div<{ theme: { columnBorder: string }, isCurrentWeek?: boolean; isCurrentDay: boolean }>`
+const Wrap = styled.div<{
+  theme: { columnBorder: string },
+  isCurrentWeek?: boolean;
+  isCurrentDay: boolean,
+  isInFocusedTimeframe: boolean,
+}>`
   display: flex;
   flex-direction: column;
   flex-grow: 1;
   position: relative;
   border-left: 1px solid ${p => p.theme.columnBorder};
   width: 0;
+
+  ${p => p.isInFocusedTimeframe && `background-color: ${p.theme.columnHoverBg}`};
 
   &:hover {
     background-color: ${p => p.theme.columnHoverBg}
@@ -31,9 +38,7 @@ const Wrap = styled.div<{ theme: { columnBorder: string }, isCurrentWeek?: boole
 
   ${p => p.isCurrentWeek && `flex-grow: 2;`};
 
-  ${p =>
-    p.isCurrentDay &&
-    `
+  ${p => p.isCurrentDay && `
     flex-grow: 2;
   `};
 `
@@ -53,7 +58,14 @@ const HourSlots = styled.div`
     padding-left: 12px;
   }
 `
-const Cell = styled.div<{ theme: { bg: string }, isGap?: boolean; flex: number; accentColor?: string; isSmall?: boolean }>`
+const Cell = styled.div<{
+  theme: { bg: string };
+  isInFocusedTimeframe: boolean;
+  isGap?: boolean;
+  flex: number;
+  accentColor?: string;
+  isSmall?: boolean
+}>`
   ${ellipsis()};
   z-index: ${p => (p.isGap ? 0 : 1)};
   position: relative;
@@ -79,6 +91,12 @@ const Cell = styled.div<{ theme: { bg: string }, isGap?: boolean; flex: number; 
     background-color: ${p => p.accentColor ? rgbAdjust(p.accentColor, -10) : 'transparent'};
   };
 
+  ${p => p.isInFocusedTimeframe && `
+    box-shadow:
+      inset 4px 1px 0 0 ${p.theme.columnHoverBg},
+      inset -4px -1px 0 0 ${p.theme.columnHoverBg};
+  `};
+
   ${Wrap}:hover & {
     box-shadow: ${p => `
       inset 4px 1px 0 0 ${p.theme.columnHoverBg},
@@ -86,9 +104,7 @@ const Cell = styled.div<{ theme: { bg: string }, isGap?: boolean; flex: number; 
     `};
   };
 
-  ${p =>
-    p.isSmall &&
-    `
+  ${p => p.isSmall && `
     line-height: 0.8;
     font-size: 11px;
   `};
@@ -102,7 +118,7 @@ interface Props {
 }
 
 const CalendarColumn: FC<Props> = ({ timestamp, isCurrentDay, tasksFiltered, placeholderHeightPx }) => {
-  const { hoursAxis, taskBeingEdited, taskBeingPrepared } = useSelector((state: AppState) => state.calendar)
+  const { hoursAxis, taskBeingEdited, taskBeingPrepared, focusedTimestamp } = useSelector((state: AppState) => state.calendar)
   const { groups, colors } = useSelector((state: AppState) => state.settings)
   const dispatch = useAppDispatch()
 
@@ -110,6 +126,7 @@ const CalendarColumn: FC<Props> = ({ timestamp, isCurrentDay, tasksFiltered, pla
   const [timeFromY, setTimeFromY] = useState(0)
   const [isEditModalOpen, setIsTaskBeingEdited] = useState(false)
   const hourSlotsRef = useRef(null)
+  const isInFocusedTimeframe = timestamp === focusedTimestamp
 
   function updatePlaceholderTask(event: React.MouseEvent<HTMLDivElement, MouseEvent>) {
     if (taskBeingPrepared) return
@@ -140,7 +157,7 @@ const CalendarColumn: FC<Props> = ({ timestamp, isCurrentDay, tasksFiltered, pla
   }
 
   return (
-    <Wrap isCurrentDay={isCurrentDay}>
+    <Wrap isCurrentDay={isCurrentDay} isInFocusedTimeframe={isInFocusedTimeframe}>
       {isCurrentDay && <CurrentTime />}
 
       <HourSlots
@@ -153,18 +170,19 @@ const CalendarColumn: FC<Props> = ({ timestamp, isCurrentDay, tasksFiltered, pla
           const { colorId } = groups.find(x => x.name === group)
           return (
             <Fragment key={_id}>
-              {gapBefore > 0 && <Cell isGap flex={gapBefore} />}
+              {gapBefore > 0 && <Cell isGap flex={gapBefore} isInFocusedTimeframe={isInFocusedTimeframe} />}
               {heightInFlex > 0 && (
                 <Cell
                   flex={heightInFlex}
                   accentColor={colors[colorId]}
                   isSmall={hoursAxis.length > 16 && heightInFlex <= 0.25}
+                  isInFocusedTimeframe={isInFocusedTimeframe}
                   onClick={() => onEditTask(_id)}
                 >
                   {name}
                 </Cell>
               )}
-              {gapAfter > 0 && <Cell isGap flex={gapAfter} />}
+              {gapAfter > 0 && <Cell isGap flex={gapAfter} isInFocusedTimeframe={isInFocusedTimeframe} />}
             </Fragment>
           )
         })}

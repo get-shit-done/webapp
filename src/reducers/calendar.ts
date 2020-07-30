@@ -5,6 +5,7 @@ import { taskSort } from '../utils'
 
 export interface TaskBeingPrepared {
   // [key: string]: any,
+  timestamp?: string
   time?: number[]
   name?: string
   group?: string
