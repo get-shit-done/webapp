@@ -26,26 +26,31 @@ const Colors = styled.div<{ isOpen: boolean }>`
   background: var(--charcoal);
   box-shadow: 3px 3px 8px -5px var(--charcoal);
 `
-const Color = styled.div<{ color: string }>`
+const Color = styled.div<{ isActive: boolean; color: string }>`
   width: 40px;
   height: 40px;
   background-color: ${p => p.color};
 
+  ${p => p.isActive && `
+    z-index: 1;
+    box-shadow: 0 0 0 1px var(--charcoal);
+  `};
+
   &:hover {
     z-index: 1;
     box-shadow: 0 0 0 1px var(--charcoal);
-  }
+  };
 `
 interface IColor {
   colorId: string
   colorValue: string
 }
 interface IProps {
-  selectedColor: string
+  selectedColorValue: string
   setSelectedColor(color: IColor): void
 }
 
-const Colorpicker: FC<IProps> = ({ selectedColor, setSelectedColor }) => {
+const Colorpicker: FC<IProps> = ({ selectedColorValue, setSelectedColor }) => {
   const { colors } = useSelector((state: AppState) => state.settings)
   const [isOpen, toggleIsOpen] = useState(false)
 
@@ -55,10 +60,15 @@ const Colorpicker: FC<IProps> = ({ selectedColor, setSelectedColor }) => {
   }
   return (
     <Wrap>
-      <Toggle color={selectedColor} onClick={() => toggleIsOpen(!isOpen)}></Toggle>
+      <Toggle color={selectedColorValue} onClick={() => toggleIsOpen(!isOpen)}></Toggle>
       <Colors isOpen={isOpen}>
         {Object.entries(colors).map(([colorId, colorValue]) => (
-          <Color color={colorValue} key={colorId} onClick={() => handleClick({ colorId, colorValue })} />
+          <Color
+            isActive={colorValue === selectedColorValue}
+            color={colorValue}
+            key={colorId}
+            onClick={() => handleClick({ colorId, colorValue })}
+          />
         ))}
       </Colors>
     </Wrap>
