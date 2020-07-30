@@ -21,9 +21,7 @@ const Todo = styled.div<{ isDone: boolean }>`
     color: var(--cool-gray);
   }
 
-  ${p =>
-    p.isDone &&
-    `
+  ${p => p.isDone && `
     color: var(--rhythm);
 
     &:hover {

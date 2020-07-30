@@ -124,11 +124,6 @@ const initialState: IInitialState = {
     },
     {
       id: nanoid(),
-      name: 'health',
-      colorId: 'teagreen',
-    },
-    {
-      id: nanoid(),
       name: 'laze',
       colorId: 'light_cyan',
     },

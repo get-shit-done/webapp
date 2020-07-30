@@ -3,6 +3,8 @@ import { useForm } from 'react-hook-form'
 import styled from 'styled-components'
 import { TextField } from '../../../components/form'
 import Button from '../../../components/Button/component'
+import binSvg from '../../../assets/svg/bin.svg'
+import Svg from '../../../components/Svg/component'
 import { useAppDispatch, AppState } from '../../../Application/Root'
 import { useSelector } from 'react-redux'
 import { actions } from '../../../reducers/settings'
@@ -11,9 +13,41 @@ const Form = styled.form`
   margin-bottom: var(--size-md);
 `
 
+const Group = styled.div<{ color: string }>`
+  position: relative;
+  display: flex;
+  align-items: center;
+  padding: var(--size-xsm) var(--size-lg) var(--size-xsm) 0;
+  cursor: pointer;
+  line-height: 1.5;
+
+  &:hover {
+    font-weight: bold;
+    color: ${p => p.color};
+  };
+`
+const Name = styled.div``
+const Actions = styled.div`
+  display: flex;
+  position: absolute;
+  right: 0;
+`
+const Remove = styled(Svg)`
+  margin-left: var(--size-lg);
+  width: 1.6rem;
+  height: 1.6rem;
+  cursor: pointer;
+`
+const GroupColor = styled.div`
+  width: 16px;
+  height: 16px;
+  background: ${p => p.color};
+  border-radius: 50%;
+`
+
 const Settings: FC = () => {
   const dispatch = useAppDispatch()
-  const { defaultHoursFrom, defaultHoursTo } = useSelector((state: AppState) => state.settings)
+  const { defaultHoursFrom, defaultHoursTo, colors, groups } = useSelector((state: AppState) => state.settings)
   const { register, handleSubmit, errors } = useForm()
 
   const onSubmit = (data: any) => {
@@ -22,6 +56,10 @@ const Settings: FC = () => {
       defaultHoursTo: Number(data.defaultHoursTo)
     }
     dispatch(actions.updateSettings(dataMapped))
+  }
+
+  const onRemoveGroup = (id: string) => {
+    console.log('removed ', id)
   }
 
   return (
@@ -44,6 +82,24 @@ const Settings: FC = () => {
         errorMessage={errors.defaultHoursTo?.type}
         inputRef={register({ required: true, maxLength: 5 })}
       />
+
+      <br /><br />
+
+      {groups.map(({ id, name, colorId }) => {
+
+        return (
+          <Group key={id} color={colors[colorId]}>
+            <Name>{name}</Name>
+            <Actions>
+              <GroupColor color={colors[colorId]} />
+              <Remove isDanger theme="light" svg={binSvg} onClick={() => onRemoveGroup(id)} />
+            </Actions>
+          </Group>
+        );
+      })}
+
+      <br /><br />
+
       <Button type="submit">
         save
       </Button>
