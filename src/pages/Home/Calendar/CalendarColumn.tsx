@@ -21,27 +21,15 @@ const Wrap = styled.div<{ theme: { columnBorder: string }, isCurrentWeek?: boole
   border-left: 1px solid ${p => p.theme.columnBorder};
   width: 0;
 
-  /* &:hover {
-    border-left-style: dashed;
-
-    & + div {
-      border-left-style: dashed;
-    };
-  }; */
-
   &:hover {
     background-color: ${p => p.theme.columnHoverBg}
-  }
+  };
 
   &:first-child {
     border-left: 0;
-  }
+  };
 
-  ${p =>
-    p.isCurrentWeek &&
-    `
-    flex-grow: 2;
-  `};
+  ${p => p.isCurrentWeek && `flex-grow: 2;`};
 
   ${p =>
     p.isCurrentDay &&

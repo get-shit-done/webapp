@@ -8,17 +8,6 @@ import { rgbAdjust, ellipsis } from '../../../styles'
 import { AppState, useAppDispatch } from '../../../Application/Root'
 import { determineTimeFromY } from './shared'
 
-const Lines = styled.div<{ top: number, isBeingPrepared: boolean, height: number }>`
-  display: ${p => (p.isBeingPrepared ? 'block' : 'none')};
-  position: absolute;
-  top: ${p => p.top}px;
-  right: 0;
-  left: 0;
-
-  .hour-slots:hover & {
-    display: flex;
-  };
-`
 const PlaceholderTaskWrap = styled.div<{
   theme: { bg: string, columnHoverBg: string, placeholderBorder: string },
   isBeingPrepared: boolean,
@@ -59,7 +48,7 @@ const PlaceholderTaskWrap = styled.div<{
   };
 `
 
-const Time = styled.div`
+const TimeWrap = styled.div`
   display: flex;
   z-index: 2;
   position: absolute;
@@ -124,25 +113,22 @@ const PlaceholderTask: FC<Props> = ({ timestamp, hourSlotsRef, y, timeFrom, heig
 
   return (
     <>
-      <Lines top={yFromTime ?? y} isBeingPrepared={isBeingEdited} height={heightFromTime} />
-      <>
-        <PlaceholderTaskWrap
-          isBeingPrepared={isBeingEdited}
-          top={yFromTime ?? y}
-          height={heightFromTime}
-          onClick={onPrepareNewTask}
-          accentColor={colors[colorId]}
-        >
-          {/* {taskBeingPrepared?.name} */}
-          <Time><TimeText>{timeFrom}</TimeText></Time>
-        </PlaceholderTaskWrap>
+      <PlaceholderTaskWrap
+        isBeingPrepared={isBeingEdited}
+        top={yFromTime ?? y}
+        height={heightFromTime}
+        onClick={onPrepareNewTask}
+        accentColor={colors[colorId]}
+      >
+        {taskBeingPrepared?.name}
+        {!isBeingEdited && <TimeWrap><TimeText>{timeFrom}</TimeText></TimeWrap>}
+      </PlaceholderTaskWrap>
 
-        {isBeingEdited && (
-          <Modal title="task details" width={17} onOverlayToggle={onModalClose}>
-            <AddNewCalendarTask timestamp={timestamp} time={time} onModalClose={onModalClose} />
-          </Modal>
-        )}
-      </>
+      {isBeingEdited && (
+        <Modal title="task details" width={17} onOverlayToggle={onModalClose}>
+          <AddNewCalendarTask timestamp={timestamp} time={time} onModalClose={onModalClose} />
+        </Modal>
+      )}
     </>
   )
 }
