@@ -107,7 +107,7 @@ const CalendarColumn: FC<Props> = ({ timestamp, isCurrentDay, tasksFiltered, pla
   const dispatch = useAppDispatch()
 
   const [y, setY] = useState(0)
-  const [timeFrom, setTimeFrom] = useState(0)
+  const [timeFromY, setTimeFromY] = useState(0)
   const [isEditModalOpen, setIsTaskBeingEdited] = useState(false)
   const hourSlotsRef = useRef(null)
 
@@ -119,10 +119,8 @@ const CalendarColumn: FC<Props> = ({ timestamp, isCurrentDay, tasksFiltered, pla
     const isNewNearest = newY !== y
     if (isNewNearest) {
       const rounded = determineTimeFromY({ y: newY, ref: hourSlotsRef, hoursAxis })
-
-      console.log({ rounded })
       setY(newY)
-      setTimeFrom(rounded)
+      setTimeFromY(rounded)
     }
   }
 
@@ -163,7 +161,7 @@ const CalendarColumn: FC<Props> = ({ timestamp, isCurrentDay, tasksFiltered, pla
           timestamp={timestamp}
           hourSlotsRef={hourSlotsRef}
           y={y}
-          timeFrom={timeFrom}
+          timeFromY={timeFromY}
           height30={placeholderHeightPx}
         />
 

@@ -76,11 +76,11 @@ interface Props {
   timestamp: string
   hourSlotsRef: any
   y: number
-  timeFrom: number,
+  timeFromY: number,
   height30: number
 }
 
-const PlaceholderTask: FC<Props> = ({ timestamp, hourSlotsRef, y, timeFrom, height30 }) => {
+const PlaceholderTask: FC<Props> = ({ timestamp, hourSlotsRef, y, timeFromY, height30 }) => {
   const dispatch = useAppDispatch()
   const { hoursAxis, taskBeingPrepared = { time: [] } } = useSelector((state: AppState) => state.calendar)
   const { groups, colors } = useSelector((state: AppState) => state.settings)
@@ -121,7 +121,7 @@ const PlaceholderTask: FC<Props> = ({ timestamp, hourSlotsRef, y, timeFrom, heig
         accentColor={colors[colorId]}
       >
         {taskBeingPrepared?.name}
-        {!isBeingEdited && <TimeWrap><TimeText>{timeFrom}</TimeText></TimeWrap>}
+        {!isBeingEdited && <TimeWrap><TimeText>{timeFromY}</TimeText></TimeWrap>}
       </PlaceholderTaskWrap>
 
       {isBeingEdited && (
