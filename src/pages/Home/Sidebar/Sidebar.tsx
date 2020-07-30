@@ -12,6 +12,7 @@ import TabHOC from './TabHOC'
 import { useAppDispatch, AppState } from '../../../Application/Root'
 import { useSelector } from 'react-redux'
 import { actions } from '../../../reducers/settings'
+import { ENUM_THEMES } from '../../../enums'
 
 const Todos = React.lazy(() => import('./Todos'))
 const Settings = React.lazy(() => import('./Settings'))
@@ -131,9 +132,6 @@ const Sidebar: FC<Props> = ({ isOpen, setIsOpen }) => {
     !activeTabId && setIsOpen(true)
     activeTabId === id && setIsOpen(false)
   }
-  const toggleDarkTheme = () => {
-    dispatch(actions.toggleTheme())
-  }
 
   return (
     <Wrap>
@@ -141,9 +139,11 @@ const Sidebar: FC<Props> = ({ isOpen, setIsOpen }) => {
         <InnerWrap>
           <Toggles>
             <Toggle isActive={isFullscreen} svg={fullscreenSvg} onClick={setIsFullscreen} />
-            {/* TODO: add enum */}
-            {themeName === 'light' && <Toggle isActive svg={sunSvg} onClick={toggleDarkTheme} />}
-            {themeName === 'dark' && <Toggle isActive svg={moonSvg} onClick={toggleDarkTheme} />}
+            <Toggle
+              isActive
+              svg={themeName === ENUM_THEMES.dark ? moonSvg : sunSvg}
+              onClick={() => dispatch(actions.activateTheme({ theme: themeName }))}
+            />
           </Toggles>
 
           {tabs.map(({ id, svg }) => (
