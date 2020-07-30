@@ -28,10 +28,6 @@ const Group = styled.div<{ color: string }>`
     color: ${p => p.color};
   };
 `
-const Name = styled.div`
-  margin-left: var(--size-lg);
-  flex-grow: 1;
-`
 const Actions = styled.div`
   /* display: flex;
   position: absolute;
@@ -94,9 +90,9 @@ const Settings: FC = () => {
             <Group key={id} color={colors[colorId]}>
               <Colorpicker
                 selectedColorValue={colors[colorId]}
+                label={name}
                 setSelectedColor={(selectedColor) => onColorSelect({ selectedColor, id })}
               />
-              <Name>{name}</Name>
               <Actions>
                 <Remove isDanger theme="light" svg={binSvg} onClick={() => onRemoveGroup(id)} />
               </Actions>

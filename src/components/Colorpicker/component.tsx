@@ -4,14 +4,50 @@ import styled from 'styled-components'
 import { AppState } from '../../Application/Root'
 
 const Wrap = styled.div`
-  /* position: relative; */
+  flex-grow: 1;
 `
 const Toggle = styled.div`
-  background-color: ${p => p.color || '#eee'};
+  display: flex;
+`;
+const ColorCircle = styled.div<{ isOpen: boolean; color: string }>`
+  position: relative;
   width: 16px;
   height: 16px;
-  border-radius: 50%;
+
+  &::before, &::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    border-radius: 50%;
+  };
+
+  &::before {
+    background-color: transparent;
+    scale: 1;
+    transition: scale 0.1s ease-out;
+  };
+
+  &::after {
+    background-color: ${p => p.color || '#eee'};
+    box-shadow: 1px 1px 2px var(--charcoal);
+  };
+
+  ${p => p.isOpen && `
+    &::before {
+      background-color: #5b5e69;
+      scale: 1.8;
+    };
+  `};
 `
+
+const Label = styled.div`
+  margin-left: var(--size-lg);
+  /* flex-grow: 1; */
+`
+
 const Colors = styled.div<{ isOpen: boolean }>`
   z-index: 1;
   display: ${p => (p.isOpen ? 'flex' : 'none')};
@@ -47,10 +83,11 @@ interface IColor {
 }
 interface IProps {
   selectedColorValue: string
+  label: string
   setSelectedColor(color: IColor): void
 }
 
-const Colorpicker: FC<IProps> = ({ selectedColorValue, setSelectedColor }) => {
+const Colorpicker: FC<IProps> = ({ selectedColorValue, label, setSelectedColor }) => {
   const { colors } = useSelector((state: AppState) => state.settings)
   const [isOpen, toggleIsOpen] = useState(false)
 
@@ -60,7 +97,10 @@ const Colorpicker: FC<IProps> = ({ selectedColorValue, setSelectedColor }) => {
   }
   return (
     <Wrap>
-      <Toggle color={selectedColorValue} onClick={() => toggleIsOpen(!isOpen)}></Toggle>
+      <Toggle onClick={() => toggleIsOpen(!isOpen)}>
+        <ColorCircle isOpen={isOpen} color={selectedColorValue} />
+        <Label>{label}</Label>
+      </Toggle>
       <Colors isOpen={isOpen}>
         {Object.entries(colors).map(([colorId, colorValue]) => (
           <Color
