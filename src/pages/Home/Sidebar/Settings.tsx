@@ -8,16 +8,19 @@ import Svg from '../../../components/Svg/component'
 import { useAppDispatch, AppState } from '../../../Application/Root'
 import { useSelector } from 'react-redux'
 import { actions } from '../../../reducers/settings'
+import Colorpicker from '../../../components/Colorpicker/component'
 
 const Form = styled.form`
   margin-bottom: var(--size-md);
 `
-
-const Group = styled.div<{ color: string }>`
+const Groups = styled.div`
   position: relative;
+`
+const Group = styled.div<{ color: string }>`
+  /* position: relative; */
   display: flex;
   align-items: center;
-  padding: var(--size-xsm) var(--size-lg) var(--size-xsm) 0;
+  padding: var(--size-xsm) 0;
   cursor: pointer;
   line-height: 1.5;
 
@@ -26,11 +29,14 @@ const Group = styled.div<{ color: string }>`
     color: ${p => p.color};
   };
 `
-const Name = styled.div``
+const Name = styled.div`
+  margin-left: var(--size-lg);
+  flex-grow: 1;
+`
 const Actions = styled.div`
-  display: flex;
+  /* display: flex;
   position: absolute;
-  right: 0;
+  right: 0; */
 `
 const Remove = styled(Svg)`
   margin-left: var(--size-lg);
@@ -62,6 +68,10 @@ const Settings: FC = () => {
     console.log('removed ', id)
   }
 
+  const test = (aa: any) => {
+    console.log('set selected color', aa)
+  }
+
   return (
     <Form onSubmit={handleSubmit(onSubmit)}>
       <TextField
@@ -85,18 +95,20 @@ const Settings: FC = () => {
 
       <br /><br />
 
-      {groups.map(({ id, name, colorId }) => {
-
-        return (
-          <Group key={id} color={colors[colorId]}>
-            <Name>{name}</Name>
-            <Actions>
-              <GroupColor color={colors[colorId]} />
-              <Remove isDanger theme="light" svg={binSvg} onClick={() => onRemoveGroup(id)} />
-            </Actions>
-          </Group>
-        );
-      })}
+      <Groups>
+        {groups.map(({ id, name, colorId }) => {
+          return (
+            <Group key={id} color={colors[colorId]}>
+              <Colorpicker selectedColor={colors[colorId]} setSelectedColor={test} />
+              <Name>{name}</Name>
+              <Actions>
+                {/* <GroupColor color={colors[colorId]} /> */}
+                <Remove isDanger theme="light" svg={binSvg} onClick={() => onRemoveGroup(id)} />
+              </Actions>
+            </Group>
+          );
+        })}
+      </Groups>
 
       <br /><br />
 

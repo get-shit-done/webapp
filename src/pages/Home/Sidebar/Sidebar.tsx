@@ -96,11 +96,8 @@ const Content = styled.div<{ isOpen: boolean }>`
   box-shadow: inset -1px 0 0 0px var(--independence);
   transform: translateX(100%);
   transition: transform 0.2s var(--transition-type);
-  overflow: hidden;
 
-  ${p =>
-    p.isOpen &&
-    `
+  ${p => p.isOpen && `
     transform: translateX(0);
   `};
 `

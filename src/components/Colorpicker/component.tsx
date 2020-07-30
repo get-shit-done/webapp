@@ -4,7 +4,7 @@ import styled from 'styled-components'
 import { AppState } from '../../Application/Root'
 
 const Wrap = styled.div`
-  position: relative;
+  /* position: relative; */
 `
 const Toggle = styled.div`
   background-color: ${p => p.color || '#eee'};
@@ -13,15 +13,16 @@ const Toggle = styled.div`
   border-radius: 50%;
 `
 const Colors = styled.div<{ isOpen: boolean }>`
+  z-index: 1;
   display: ${p => (p.isOpen ? 'flex' : 'none')};
   width: 208px;
   background-color: var(--charcoal);
   position: absolute;
   top: 0;
-  left: 100%;
+  right: 100%;
   flex-wrap: wrap;
   padding: 4px;
-  margin-left: 28px;
+  margin-right: 36px;
   background: var(--charcoal);
   box-shadow: 3px 3px 8px -5px var(--charcoal);
 `
