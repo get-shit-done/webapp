@@ -1,6 +1,8 @@
 import React, { Fragment, useState, useRef, memo, FC } from 'react'
 import styled from 'styled-components'
+// import { useSelector } from 'react-redux'
 import { useSelector } from 'react-redux'
+import { createSelector } from '@reduxjs/toolkit'
 
 import { rgbAdjust, ellipsis } from '../../../styles'
 import CurrentTime from './CurrentTime'
@@ -103,12 +105,13 @@ const Cell = styled.div<ICell>`
 interface Props {
   timestamp: string
   isCurrentDay: boolean
-  tasksFiltered: TaskWithMeta[]
+  tasksFiltered: any
   placeholderHeightPx: number
 }
 
 const CalendarColumn: FC<Props> = ({ timestamp, isCurrentDay, tasksFiltered, placeholderHeightPx }) => {
-  const { hoursAxis, focusedTimestamp } = useSelector((state: AppState) => state.calendarAxis)
+  // const selectHoursAxis = createSelector((state: any) => state.calendarAxis, (axis: any) => axis.hoursAxis)
+  // const hoursAxis = useSelector(selectHoursAxis)
   const { taskBeingEdited, taskBeingPrepared } = useSelector((state: AppState) => state.calendarTasks)
   const { groups } = useSelector((state: AppState) => state.apiGroups)
   const { colors } = useSelector((state: AppState) => state.settings)
@@ -118,7 +121,8 @@ const CalendarColumn: FC<Props> = ({ timestamp, isCurrentDay, tasksFiltered, pla
   const [timeFromY, setTimeFromY] = useState(0)
   const [isEditModalOpen, setIsTaskBeingEdited] = useState(false)
   const hourSlotsRef = useRef(null)
-  const isInFocusedTimeframe = timestamp === focusedTimestamp
+  const isInFocusedTimeframe = false
+  // const isInFocusedTimeframe = timestamp === focusedTimestamp
 
   function updatePlaceholderTask(event: React.MouseEvent<HTMLDivElement, MouseEvent>) {
     if (taskBeingPrepared) return
@@ -128,7 +132,7 @@ const CalendarColumn: FC<Props> = ({ timestamp, isCurrentDay, tasksFiltered, pla
     const newY = Math.floor(placeholderY / (placeholderHeightPx / 2)) * (placeholderHeightPx / 2)
     const isNewNearest = newY !== y
     if (isNewNearest) {
-      const rounded = determineTimeFromY({ y: newY, ref: hourSlotsRef, hoursAxis })
+      const rounded = determineTimeFromY({ y: newY, ref: hourSlotsRef, hoursAxis: [1, 2, 3] })
       setY(newY)
       setTimeFromY(rounded)
     }
@@ -148,6 +152,7 @@ const CalendarColumn: FC<Props> = ({ timestamp, isCurrentDay, tasksFiltered, pla
     // TODO: use selector so that this doesn't cause entire cal to rerender
     // dispatch(actionsCalendarAxis.saveFocusedTimestamp({ timestamp }))
   }
+  console.log('column')
 
   return (
     <Wrap isCurrentDay={isCurrentDay} isInFocusedTimeframe={isInFocusedTimeframe}>
@@ -159,7 +164,8 @@ const CalendarColumn: FC<Props> = ({ timestamp, isCurrentDay, tasksFiltered, pla
         onMouseEnter={saveFocusedTimestamp}
         className={CN_HOUR_SLOTS}
       >
-        {tasksFiltered.map(({ _id, heightInFlex, name, group, gapBefore, gapAfter }) => {
+        {tasksFiltered.map(({ _id, heightInFlex, name, group, gapBefore, gapAfter }: any) => {
+          console.log('tasks')
           const { colorId } = (groups.find(x => x.name === group)) || {}
           return (
             <Fragment key={_id}>
@@ -176,7 +182,7 @@ const CalendarColumn: FC<Props> = ({ timestamp, isCurrentDay, tasksFiltered, pla
                 <Cell
                   flex={heightInFlex}
                   accentColor={colors[colorId]}
-                  isSmall={hoursAxis.length > 16 && heightInFlex <= 0.25}
+                  isSmall={false}
                   isInFocusedTimeframe={isInFocusedTimeframe}
                   isBeingEdited={taskBeingEdited?._id === _id}
                   onClick={() => onEditTask(_id)}

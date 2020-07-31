@@ -19,7 +19,7 @@ export const { reducer, actions } = createSlice({
   reducers: {
     getGroupsRequested(): void {},
     getGroupsSucceeded(state, { payload }: PayloadAction<IGroup[]>): void {
-      console.log('grt groups succeded', payload)
+      // console.log('grt groups succeded', payload)
       state.groups = payload
     },
     getGroupsFailed() {
