@@ -6,7 +6,7 @@ import format from 'date-fns/format'
 import UseFilterRange from '../../../hooks/useFilterRange'
 import UseHighlightFilteredRange from '../../../hooks/useHighlightFIlteredRange'
 import { useSelector } from 'react-redux'
-import { actions } from '../../../reducers/calendar'
+import { actions } from '../../../reducers/calendarAxis'
 import { MONTH_DAYS } from '../../../constants'
 import { flex } from '../../../styles'
 import { AppState } from '../../../Application/Root'
@@ -142,7 +142,7 @@ interface Props {
 }
 
 const DayLabels: FC<Props> = ({ onHover }) => {
-  const { daysAxis, focusedTimestamp } = useSelector((state: AppState) => state.calendar)
+  const { daysAxis, focusedTimestamp } = useSelector((state: AppState) => state.calendarAxis)
   const [{ isFiltered, isBeingFiltered, from }, onFilter] = UseFilterRange({
     from: 1,
     to: MONTH_DAYS.length,

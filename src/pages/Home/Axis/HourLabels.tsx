@@ -4,7 +4,7 @@ import { useSelector } from 'react-redux'
 
 import UseFilterRange from '../../../hooks/useFilterRange'
 import UseHighlightFilteredRange from '../../../hooks/useHighlightFIlteredRange'
-import { actions } from '../../../reducers/calendar'
+import { actions } from '../../../reducers/calendarAxis'
 import { AppState } from '../../../Application/Root'
 
 const Wrap = styled.div<{ theme: { axisBg: string }, isBeingFiltered: boolean }>`
@@ -97,7 +97,7 @@ interface Props {
 }
 
 const HourLabels: FC<Props> = ({ onHover }) => {
-  const { hoursAxis } = useSelector((state: AppState) => state.calendar)
+  const { hoursAxis } = useSelector((state: AppState) => state.calendarAxis)
   const [{ isFiltered, isBeingFiltered, from }, onFilter] = UseFilterRange({ from: 0, to: 23, cb: actions.filterHours })
   const [filteredRange, highlightFilteredRange] = UseHighlightFilteredRange({ isBeingFiltered, isFiltered, from })
 

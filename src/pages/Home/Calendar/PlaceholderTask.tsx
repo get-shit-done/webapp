@@ -1,7 +1,7 @@
 import React, { FC, useState, useCallback, useEffect } from 'react'
 import styled from 'styled-components'
 import { useSelector } from 'react-redux'
-import { actions } from '../../../reducers/calendar'
+import { actions } from '../../../reducers/calendarTasks'
 import { Modal } from '../../../components/Modal'
 import AddNewCalendarTask from './AddNewCalendarTask'
 import { rgbAdjust, ellipsis } from '../../../styles'
@@ -81,7 +81,8 @@ interface Props {
 
 const PlaceholderTask: FC<Props> = ({ timestamp, hourSlotsRef, y, timeFromY, height30 }) => {
   const dispatch = useAppDispatch()
-  const { hoursAxis, taskBeingPrepared = { time: [] } } = useSelector((state: AppState) => state.calendar)
+  const { hoursAxis } = useSelector((state: AppState) => state.calendarAxis)
+  const { taskBeingPrepared = { time: [] } } = useSelector((state: AppState) => state.calendarTasks)
   const { groups } = useSelector((state: AppState) => state.apiGroups)
   const { colors } = useSelector((state: AppState) => state.settings)
   const colorId = groups.find(x => x.name === taskBeingPrepared.group)?.colorId

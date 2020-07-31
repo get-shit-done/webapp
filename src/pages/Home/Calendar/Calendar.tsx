@@ -26,7 +26,8 @@ interface Props {
 }
 
 const Calendar: FC<Props> = ({ scale, calendarRef }) => {
-  const { hoursAxis, daysAxis, allTasksByDay } = useSelector((state: AppState) => state.calendar)
+  const { hoursAxis, daysAxis } = useSelector((state: AppState) => state.calendarAxis)
+  const { allTasksByDay } = useSelector((state: AppState) => state.calendarTasks)
   const placeholderHeightPx = calendarRef.current
     ? (calendarRef.current.getBoundingClientRect().height - 24) / (hoursAxis.length * 2)
     : 20

@@ -1,7 +1,7 @@
 import { call, put, takeLatest } from 'redux-saga/effects'
 import axios from 'axios'
 import { API_TASKS, API_TASKS_BY_ID } from '../api'
-import { actions } from '../reducers/calendar'
+import { actions } from '../reducers/calendarTasks'
 
 function* fetchTasks() {
   try {

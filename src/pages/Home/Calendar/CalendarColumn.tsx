@@ -5,7 +5,8 @@ import { useSelector } from 'react-redux'
 import { rgbAdjust, ellipsis } from '../../../styles'
 import CurrentTime from './CurrentTime'
 import PlaceholderTask from './PlaceholderTask'
-import { actions, TaskWithMeta } from '../../../reducers/calendar'
+import { actions as actionsCalendarTasks, TaskWithMeta } from '../../../reducers/calendarTasks'
+import { actions as actionsCalendarAxis } from '../../../reducers/calendarAxis'
 import { Modal } from '../../../components/Modal'
 import EditCalendarTask from './EditCalendarTask'
 import { AppState, useAppDispatch } from '../../../Application/Root'
@@ -107,7 +108,8 @@ interface Props {
 }
 
 const CalendarColumn: FC<Props> = ({ timestamp, isCurrentDay, tasksFiltered, placeholderHeightPx }) => {
-  const { hoursAxis, taskBeingEdited, taskBeingPrepared, focusedTimestamp } = useSelector((state: AppState) => state.calendar)
+  const { hoursAxis, focusedTimestamp } = useSelector((state: AppState) => state.calendarAxis)
+  const { taskBeingEdited, taskBeingPrepared } = useSelector((state: AppState) => state.calendarTasks)
   const { groups } = useSelector((state: AppState) => state.apiGroups)
   const { colors } = useSelector((state: AppState) => state.settings)
   const dispatch = useAppDispatch()
@@ -134,16 +136,17 @@ const CalendarColumn: FC<Props> = ({ timestamp, isCurrentDay, tasksFiltered, pla
 
   function onEditTask(_id: string) {
     setIsTaskBeingEdited(true)
-    dispatch(actions.editTaskPrepare({ _id, timestamp }))
+    dispatch(actionsCalendarTasks.editTaskPrepare({ _id, timestamp }))
   }
 
   function cancelTaskEditing() {
     setIsTaskBeingEdited(false)
-    dispatch(actions.editTaskCancel())
+    dispatch(actionsCalendarTasks.editTaskCancel())
   }
 
   function saveFocusedTimestamp() {
-    dispatch(actions.saveFocusedTimestamp({ timestamp }))
+    // TODO: use selector so that this doesn't cause entire cal to rerender
+    // dispatch(actionsCalendarAxis.saveFocusedTimestamp({ timestamp }))
   }
 
   return (
