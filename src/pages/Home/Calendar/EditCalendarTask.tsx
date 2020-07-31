@@ -27,7 +27,8 @@ const Remove = styled(Svg)`
 // TODO: timestamp should come from taskBeingEdited
 const EditCalendarTask: FC<Props> = ({ timestamp, taskBeingEdited }) => {
   const dispatch = useAppDispatch()
-  const { groups, colors } = useSelector((state: AppState) => state.settings)
+  const { groups } = useSelector((state: AppState) => state.apiGroups)
+  const { colors } = useSelector((state: AppState) => state.settings)
   const [selectedGroup, setSelectedGroup] = useState(groups.find(x => x.name === taskBeingEdited.group))
   const { _id, time, name, group } = taskBeingEdited
   const accentColor = selectedGroup ? colors[selectedGroup.colorId] : undefined

@@ -7,7 +7,8 @@ import binSvg from '../../../assets/svg/bin.svg'
 import Svg from '../../../components/Svg/component'
 import { useAppDispatch, AppState } from '../../../Application/Root'
 import { useSelector } from 'react-redux'
-import { actions } from '../../../reducers/settings'
+import { actions as actionsGroups } from '../../../reducers/apiGroups'
+import { actions as actionsSettings } from '../../../reducers/settings'
 import Colorpicker from '../../../components/Colorpicker/component'
 
 const Form = styled.form`
@@ -42,7 +43,8 @@ const Remove = styled(Svg)`
 
 const Settings: FC = () => {
   const dispatch = useAppDispatch()
-  const { defaultHoursFrom, defaultHoursTo, colors, groups } = useSelector((state: AppState) => state.settings)
+  const { groups } = useSelector((state: AppState) => state.apiGroups)
+  const { defaultHoursFrom, defaultHoursTo, colors } = useSelector((state: AppState) => state.settings)
   const { register, handleSubmit, errors } = useForm()
 
   const onSubmit = (data: any) => {
@@ -50,15 +52,15 @@ const Settings: FC = () => {
       defaultHoursFrom: Number(data.defaultHoursFrom),
       defaultHoursTo: Number(data.defaultHoursTo)
     }
-    dispatch(actions.updateSettings(dataMapped))
+    dispatch(actionsSettings.updateSettings(dataMapped))
   }
 
   const onRemoveGroup = (_id: string) => {
-    dispatch(actions.removeGroup({ _id }))
+    dispatch(actionsGroups.removeGroup({ _id }))
   }
 
   const onColorSelect = ({ selectedColor: { colorId }, _id }: { selectedColor: { colorId: string }, _id: string }) => {
-    dispatch(actions.updateGroupRequested({ groupId: _id, colorId }))
+    dispatch(actionsGroups.updateGroupRequested({ groupId: _id, colorId }))
   }
 
   return (

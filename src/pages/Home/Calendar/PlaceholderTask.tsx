@@ -82,7 +82,8 @@ interface Props {
 const PlaceholderTask: FC<Props> = ({ timestamp, hourSlotsRef, y, timeFromY, height30 }) => {
   const dispatch = useAppDispatch()
   const { hoursAxis, taskBeingPrepared = { time: [] } } = useSelector((state: AppState) => state.calendar)
-  const { groups, colors } = useSelector((state: AppState) => state.settings)
+  const { groups } = useSelector((state: AppState) => state.apiGroups)
+  const { colors } = useSelector((state: AppState) => state.settings)
   const colorId = groups.find(x => x.name === taskBeingPrepared.group)?.colorId
 
   const [{ yFromTime, heightFromTime }, setYAndHeightFromTime] = useState({ yFromTime: undefined, heightFromTime: height30 })

@@ -19,7 +19,8 @@ interface Props {
 
 const AddNewCalendarTask: FC<Props> = ({ timestamp, time, onModalClose }) => {
   const dispatch = useAppDispatch()
-  const { groups, colors } = useSelector((state: AppState) => state.settings)
+  const { groups } = useSelector((state: AppState) => state.apiGroups)
+  const { colors } = useSelector((state: AppState) => state.settings)
   const [selectedGroup, setSelectedGroup] = useState(groups.find(x => x.name === 'improvement'))
   const { register, handleSubmit, errors, watch } = useForm<CalendarFormValues>()
   const onSubmit = (data: any) => {

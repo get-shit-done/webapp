@@ -1,6 +1,6 @@
 import { takeLatest, put } from 'redux-saga/effects'
 import axios from 'axios'
-import { actions } from '../reducers/settings'
+import { actions } from '../reducers/apiGroups'
 import { API_GROUPS, API_GROUPS_BY_ID } from '../api'
 
 function* getGroups() {
@@ -21,9 +21,9 @@ function* updateGroup(data: any) {
   }
 }
 
-function* settingsSagas() {
+function* apiGroupsSagas() {
   yield takeLatest(actions.getGroupsRequested.toString(), getGroups),
     yield takeLatest(actions.updateGroupRequested.toString(), updateGroup)
 }
 
-export { settingsSagas }
+export { apiGroupsSagas }

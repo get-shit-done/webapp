@@ -108,7 +108,8 @@ interface Props {
 
 const CalendarColumn: FC<Props> = ({ timestamp, isCurrentDay, tasksFiltered, placeholderHeightPx }) => {
   const { hoursAxis, taskBeingEdited, taskBeingPrepared, focusedTimestamp } = useSelector((state: AppState) => state.calendar)
-  const { groups, colors } = useSelector((state: AppState) => state.settings)
+  const { groups } = useSelector((state: AppState) => state.apiGroups)
+  const { colors } = useSelector((state: AppState) => state.settings)
   const dispatch = useAppDispatch()
 
   const [y, setY] = useState(0)

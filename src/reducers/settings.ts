@@ -1,11 +1,5 @@
-import { createSlice, nanoid, PayloadAction } from '@reduxjs/toolkit'
+import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 import { ENUM_THEMES } from '../enums'
-
-export interface IGroup {
-  _id: string
-  name: string
-  colorId: string
-}
 
 interface IThemeValues {
   [key: string]: any
@@ -33,7 +27,6 @@ interface IInitialState {
   colors: {
     [key: string]: string
   }
-  groups: IGroup[]
 }
 
 const themes: ITheme = {
@@ -96,7 +89,6 @@ const initialState: IInitialState = {
     beige: 'rgb(226, 236, 213)',
     beau_blue: 'rgb(193, 206, 212)',
   },
-  groups: [],
 }
 
 export const { reducer, actions } = createSlice({
@@ -107,26 +99,6 @@ export const { reducer, actions } = createSlice({
       Object.entries(payload).forEach(([key, value]) => {
         state[key] = value
       })
-    },
-    getGroupsRequested(): void {},
-    getGroupsSucceeded(state, { payload }: PayloadAction<IGroup[]>): void {
-      console.log('grt groups succeded', payload)
-      state.groups = payload
-    },
-    getGroupsFailed() {
-      console.log('failed to get groups')
-    },
-    updateGroupRequested(
-      state,
-      { payload: { groupId, colorId } }: PayloadAction<{ groupId: string; colorId: string }>,
-    ): void {
-      const groupToUpdate = state.groups.find(x => x._id === groupId)
-      groupToUpdate.colorId = colorId
-    },
-    updateGroupSucceeded(): void {},
-    updateGroupFailed(): void {},
-    removeGroup(state, { payload: { _id } }: PayloadAction<{ _id: string }>): void {
-      state.groups = state.groups.filter(x => x._id !== _id)
     },
     activateTheme(state, { payload: { theme } }: PayloadAction<{ theme: string }>): void {
       state.themeValues = themes[theme]

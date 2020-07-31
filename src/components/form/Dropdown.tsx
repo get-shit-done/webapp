@@ -5,7 +5,7 @@ import Placeholder from './Placeholder'
 import { SvgStyled, Input, Wrap } from './shared'
 import { useSelector } from 'react-redux'
 import { AppState } from '../../Application/Root'
-import { IGroup } from '../../reducers/settings'
+import { IGroup } from '../../reducers/apiGroups'
 
 const Header = styled.div<{ color: string }>`
   width: 100%;
@@ -59,7 +59,8 @@ interface IProps {
 
 // TODO: rename this into group dd
 const Dropdown: FC<IProps> = ({ theme, isInForm, activeGroup = {}, label, onSelect, inputRef }) => {
-  const { groups, colors } = useSelector((state: AppState) => state.settings)
+  const { groups } = useSelector((state: AppState) => state.apiGroups)
+  const { colors } = useSelector((state: AppState) => state.settings)
   const [isOpen, setIsOpen] = useState(false)
   const accentColor = activeGroup.colorId ? colors[activeGroup.colorId] : undefined
 
