@@ -1,5 +1,6 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 import { taskSort } from '../utils'
+import { MONTH_DAYS_STRING, HOURS_IN_DAY } from '../constants'
 
 export interface TaskBeingPrepared {
   timestamp?: string
@@ -23,16 +24,21 @@ export interface TaskWithMeta extends SavedTask {
   gapBefore?: number
   gapAfter?: number
 }
-interface IInitialState {
-  taskBeingPrepared: TaskBeingPrepared
-  taskBeingEdited: TaskWithMeta | null
-  allTasksByDay: {
-    [key: string]: {
-      tasks: SavedTask[]
-    }
+export interface IAllTasksByDay {
+  [key: string]: {
+    tasks: SavedTask[]
   }
 }
+interface IInitialState {
+  daysAxis: string[]
+  hoursAxis: number[]
+  taskBeingPrepared: TaskBeingPrepared
+  taskBeingEdited: TaskWithMeta | null
+  allTasksByDay: IAllTasksByDay
+}
 const initialState: IInitialState = {
+  daysAxis: MONTH_DAYS_STRING,
+  hoursAxis: HOURS_IN_DAY,
   taskBeingPrepared: undefined,
   taskBeingEdited: null,
   allTasksByDay: {},
