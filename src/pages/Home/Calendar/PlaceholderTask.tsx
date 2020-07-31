@@ -15,7 +15,7 @@ const PlaceholderTaskWrap = styled.div<{
   height: number,
   accentColor: string,
 }>`
-  display: ${p => (p.isBeingPrepared ? 'block' : 'none')};
+  opacity: ${p => (p.isBeingPrepared ? '1' : '0')};
   position: absolute;
   top: ${p => p.top}px;
   right: 0;
@@ -35,7 +35,7 @@ const PlaceholderTaskWrap = styled.div<{
   `};
 
   .hour-slots:hover & {
-    display: flex;
+    opacity: 1;
   };
 `
 
@@ -48,9 +48,17 @@ const TimeWrap = styled.div`
   color: #fff;
   font-weight: bold;
   text-align: right;
+  opacity: 0;
 
   &:hover {
     display: none;
+  };
+
+  .hour-slots:hover & {
+    opacity: 1;
+    transition: 0.2s opacity ease-out;
+    transition-delay: 0.2s;
+    transition-property: opacity;
   };
 `
 const TimeText = styled.div`
