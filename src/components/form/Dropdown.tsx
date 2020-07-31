@@ -70,7 +70,7 @@ const Dropdown: FC<IProps> = ({ theme, isInForm, activeGroup = {}, label, onSele
   return (
     <Wrap theme={theme} isInForm={isInForm} tabIndex={0} onBlur={() => setIsOpen(false)}>
       <Header color={accentColor} onClick={() => setIsOpen(!isOpen)}>
-        <Placeholder theme={theme} hasValue={activeGroup.id!!}>
+        <Placeholder theme={theme} hasValue={activeGroup._id!!}>
           {label}
         </Placeholder>
         <Input as="div">{activeGroup.name}</Input>
@@ -80,10 +80,10 @@ const Dropdown: FC<IProps> = ({ theme, isInForm, activeGroup = {}, label, onSele
       <List isOpen={isOpen}>
         {groups.map((item: IGroup) => (
           <Item
-            isActive={item.id === activeGroup.id}
+            isActive={item._id === activeGroup._id}
             color={accentColor}
             onClick={() => onItemSelect(item)}
-            key={item.id}
+            key={item._id}
           >
             {item.name}
             <GroupColor color={colors[item.colorId]} />

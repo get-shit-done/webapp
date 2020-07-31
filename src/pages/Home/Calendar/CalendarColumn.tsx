@@ -156,7 +156,7 @@ const CalendarColumn: FC<Props> = ({ timestamp, isCurrentDay, tasksFiltered, pla
         className={CN_HOUR_SLOTS}
       >
         {tasksFiltered.map(({ _id, heightInFlex, name, group, gapBefore, gapAfter }) => {
-          const { colorId } = groups.find(x => x.name === group)
+          const { colorId } = (groups.find(x => x.name === group)) || {}
           return (
             <Fragment key={_id}>
               {gapBefore > 0 && (

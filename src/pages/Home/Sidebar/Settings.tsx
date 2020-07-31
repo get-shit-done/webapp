@@ -53,12 +53,12 @@ const Settings: FC = () => {
     dispatch(actions.updateSettings(dataMapped))
   }
 
-  const onRemoveGroup = (id: string) => {
-    dispatch(actions.removeGroup({ id }))
+  const onRemoveGroup = (_id: string) => {
+    dispatch(actions.removeGroup({ _id }))
   }
 
-  const onColorSelect = ({ selectedColor: { colorId }, id }: { selectedColor: { colorId: string }, id: string }) => {
-    dispatch(actions.updateGroup({ groupId: id, colorId }))
+  const onColorSelect = ({ selectedColor: { colorId }, _id }: { selectedColor: { colorId: string }, _id: string }) => {
+    dispatch(actions.updateGroupRequested({ groupId: _id, colorId }))
   }
 
   return (
@@ -85,16 +85,16 @@ const Settings: FC = () => {
       <br /><br />
 
       <Groups>
-        {groups.map(({ id, name, colorId }) => {
+        {groups.map(({ _id, name, colorId }) => {
           return (
-            <Group key={id} color={colors[colorId]}>
+            <Group key={_id} color={colors[colorId]}>
               <Colorpicker
                 selectedColorValue={colors[colorId]}
                 label={name}
-                setSelectedColor={(selectedColor) => onColorSelect({ selectedColor, id })}
+                setSelectedColor={(selectedColor) => onColorSelect({ selectedColor, _id })}
               />
               <Actions>
-                <Remove isDanger theme="light" svg={binSvg} onClick={() => onRemoveGroup(id)} />
+                <Remove isDanger theme="light" svg={binSvg} onClick={() => onRemoveGroup(_id)} />
               </Actions>
             </Group>
           );
