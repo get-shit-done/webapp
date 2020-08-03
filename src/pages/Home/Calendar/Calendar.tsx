@@ -5,9 +5,12 @@ import format from 'date-fns/format'
 
 import { useSelector } from 'react-redux'
 import CalendarColumn from './CalendarColumn'
-import { AppState } from '../../../Application/Root'
+import { AppState, useAppDispatch } from '../../../Application/Root'
 import { tasksInCalendar } from '../../../selectors/tasksInCalendar'
 import { determinePlaceholderHeight } from '../../../utils'
+import { Modal } from '../../../components/Modal'
+import EditCalendarTask from './EditCalendarTask'
+import { actions } from '../../../reducers/calendar'
 
 const Wrap = styled.div<{ scale: { x: number, y: number, duration: number } }>`
   position: relative;
@@ -28,9 +31,11 @@ interface Props {
 
 const Calendar: FC<Props> = ({ scale }) => {
   const wrapRef = useRef(null)
-  const { hoursAxis } = useSelector((state: AppState) => state.calendar)
+  const dispatch = useAppDispatch()
+  const { hoursAxis, taskBeingEdited } = useSelector((state: AppState) => state.calendar)
   const placeholderHeight = determinePlaceholderHeight({ wrapRef, hoursAxis })
   const tasksMapped = useSelector(tasksInCalendar)
+
   console.log('calendar', placeholderHeight)
 
   return (
@@ -44,6 +49,11 @@ const Calendar: FC<Props> = ({ scale }) => {
           placeholderHeight={placeholderHeight}
         />
       ))}
+      {taskBeingEdited && (
+        <Modal title="task details" width={17} onOverlayToggle={() => dispatch(actions.editTaskCancel())}>
+          <EditCalendarTask />
+        </Modal>
+      )}
     </Wrap>
   )
 }
