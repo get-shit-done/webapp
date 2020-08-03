@@ -1,4 +1,4 @@
-import React, { FC, useState, useCallback, useEffect } from 'react'
+import React, { FC, useState, useCallback, useEffect, useRef } from 'react'
 import styled from 'styled-components'
 import { useSelector } from 'react-redux'
 import { actions } from '../../../reducers/calendarTasks'
@@ -8,21 +8,41 @@ import { rgbAdjust, ellipsis } from '../../../styles'
 import { AppState, useAppDispatch } from '../../../Application/Root'
 import { determineTimeFromY, taskShadow, placeholderShadow } from './shared'
 
+const OuterWrap = styled.div<{ hoverIndex: number, theme: { columnHoverBg: string } }>`
+  z-index: 1;
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+
+  &:hover {
+    & ~ .column:nth-child(${p => p.hoverIndex}) {
+      background-color: ${p => p.theme.columnHoverBg};
+
+      * {
+        box-shadow: ${p => taskShadow(p.theme.columnHoverBg)};
+      }
+    };
+  };
+`
 const PlaceholderTaskWrap = styled.div<{
   theme: { bg: string, columnHoverBg: string, placeholderBorder: string },
+  isVisible: boolean,
   isBeingPrepared: boolean,
   top: number,
+  left: number,
+  width: number,
   height: number,
   accentColor: string,
 }>`
-  opacity: ${p => (p.isBeingPrepared ? '1' : '0')};
+  display: ${p => p.isVisible ? 'block' : 'none'};
   position: absolute;
   top: ${p => p.top}px;
-  right: 0;
-  left: 0;
+  left: ${p => p.left}px;
   padding: 0 var(--size-sm);
   height: ${p => p.height}px;
-  width: 100%;
+  width: ${p => p.width}px;
   line-height: 1.5;
   color: ${p => (p.accentColor ? rgbAdjust(p.accentColor, -80) : 'red')};
   background-color: ${p => p.accentColor || p.theme.bg};
@@ -33,10 +53,6 @@ const PlaceholderTaskWrap = styled.div<{
     ${ellipsis()};
     ${taskShadow(p.theme.columnHoverBg)};
   `};
-
-  .hour-slots:hover & {
-    opacity: 1;
-  };
 `
 
 const TimeWrap = styled.div`
@@ -72,16 +88,21 @@ const TimeText = styled.div`
 `
 
 interface Props {
-  timestamp: string
-  hourSlotsRef: any
-  y: number
-  timeFromY: number,
   height30: number
 }
 
-const PlaceholderTask: FC<Props> = ({ timestamp, hourSlotsRef, y, timeFromY, height30 }) => {
+const PlaceholderContainer: FC<Props> = ({ height30 }) => {
+  const wrapRef = useRef(null)
   const dispatch = useAppDispatch()
-  const { hoursAxis } = useSelector((state: AppState) => state.calendarAxis)
+
+
+  const [{ x, y }, setCoordinates] = useState({ x: 0, y: 0 })
+  const [hoverIndex, setHoverIndex] = useState(undefined)
+  const [timeFromY, setTimeFromY] = useState(0)
+  const [width, setWidth] = useState(0)
+  const [placeholderVisibility, togglePlaceholder] = useState(false)
+
+  const { hoursAxis, daysAxis } = useSelector((state: AppState) => state.calendarAxis)
   const { taskBeingPrepared = { time: [] } } = useSelector((state: AppState) => state.calendarTasks)
   const { groups } = useSelector((state: AppState) => state.apiGroups)
   const { colors } = useSelector((state: AppState) => state.settings)
@@ -91,7 +112,7 @@ const PlaceholderTask: FC<Props> = ({ timestamp, hourSlotsRef, y, timeFromY, hei
   const [{ isBeingEdited, time }, setTaskDetails] = useState({ isBeingEdited: false, time: [] })
 
   function onPrepareNewTask() {
-    const rounded = determineTimeFromY({ y, ref: hourSlotsRef, hoursAxis })
+    const rounded = determineTimeFromY({ y, ref: wrapRef, hoursAxis })
     setTaskDetails({ isBeingEdited: true, time: [rounded, rounded + 0.5] })
   }
 
@@ -112,11 +133,44 @@ const PlaceholderTask: FC<Props> = ({ timestamp, hourSlotsRef, y, timeFromY, hei
     dispatch(actions.removePreparedTask())
   }, [])
 
+
+  function updatePlaceholderTask({ clientY, clientX }: React.MouseEvent<HTMLDivElement, MouseEvent>) {
+    const { top, left, width } = wrapRef.current.getBoundingClientRect()
+    const colWidth = width / daysAxis.length
+
+    const yCurrent = clientY - top - (height30 / 4)
+    const yNearest = Math.floor(yCurrent / (height30 / 2)) * (height30 / 2)
+    const xCurrent = clientX - left
+    const xNearest = Math.floor(xCurrent / colWidth) * colWidth
+    // if (taskBeingPrepared) return
+
+    setCoordinates({ x: xNearest, y: yNearest })
+    console.log(xNearest / colWidth, Math.floor(xNearest / colWidth) + 2)
+    setHoverIndex(Math.round(xNearest / colWidth) + 2)
+    setWidth(colWidth)
+    setTimeFromY(determineTimeFromY({ y, ref: wrapRef, hoursAxis: [1, 2, 3] }))
+  }
+
+  function togglePlaceholderVisibility() {
+    togglePlaceholder(!placeholderVisibility)
+  }
+
+  // console.log('placeholder')
+
   return (
-    <>
+    <OuterWrap
+      ref={wrapRef}
+      onMouseOver={togglePlaceholderVisibility}
+      onMouseMove={updatePlaceholderTask}
+      onMouseOut={togglePlaceholderVisibility}
+      hoverIndex={hoverIndex}
+    >
       <PlaceholderTaskWrap
+        isVisible={placeholderVisibility}
         isBeingPrepared={isBeingEdited}
         top={yFromTime ?? y}
+        left={x}
+        width={width}
         height={heightFromTime}
         onClick={onPrepareNewTask}
         accentColor={colors[colorId]}
@@ -125,13 +179,13 @@ const PlaceholderTask: FC<Props> = ({ timestamp, hourSlotsRef, y, timeFromY, hei
         {!isBeingEdited && <TimeWrap><TimeText>{timeFromY}</TimeText></TimeWrap>}
       </PlaceholderTaskWrap>
 
-      {isBeingEdited && (
+      {/* {isBeingEdited && (
         <Modal title="task details" width={17} onOverlayToggle={onModalClose}>
           <AddNewCalendarTask timestamp={timestamp} time={time} onModalClose={onModalClose} />
         </Modal>
-      )}
-    </>
+      )} */}
+    </OuterWrap>
   )
 }
 
-export default PlaceholderTask
+export default PlaceholderContainer
