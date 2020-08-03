@@ -72,7 +72,7 @@ interface Props {
 }
 
 const PlaceholderTask: FC<Props> = ({ timestamp, hourSlotsRef, y, timeFromY, placeholderHeight }) => {
-  console.log('placeholder', placeholderHeight)
+  // console.log('placeholder', placeholderHeight)
   const dispatch = useAppDispatch()
   const { hoursAxis, taskBeingPrepared = { time: [] } } = useSelector((state: AppState) => state.calendar)
   const { groups, colors } = useSelector((state: AppState) => state.settings)

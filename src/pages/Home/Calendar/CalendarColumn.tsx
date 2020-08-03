@@ -1,14 +1,12 @@
-import React, { Fragment, useState, useRef, memo, FC } from 'react'
+import React, { useState, useRef, memo, FC } from 'react'
 import styled from 'styled-components'
 import { useSelector } from 'react-redux'
 
 import { rgbAdjust, ellipsis } from '../../../styles'
 import CurrentTime from './CurrentTime'
 import PlaceholderTask from './PlaceholderTask'
-import { actions, TaskWithMeta } from '../../../reducers/calendar'
-import { Modal } from '../../../components/Modal'
-import EditCalendarTask from './EditCalendarTask'
-import { AppState, useAppDispatch } from '../../../Application/Root'
+import { TaskWithMeta } from '../../../reducers/calendar'
+import { AppState } from '../../../Application/Root'
 import { determineTimeFromY, taskShadow, taskShadowBeingEdited } from './shared'
 import DayTasks from './DayTasks'
 
@@ -108,14 +106,11 @@ interface Props {
 }
 
 const CalendarColumn: FC<Props> = ({ timestamp, isCurrentDay, tasksFiltered, placeholderHeight }) => {
-  const { hoursAxis, taskBeingEdited, taskBeingPrepared, focusedTimestamp } = useSelector((state: AppState) => state.calendar)
-  const { groups, colors } = useSelector((state: AppState) => state.settings)
-  const dispatch = useAppDispatch()
+  const { hoursAxis, taskBeingPrepared, focusedTimestamp } = useSelector((state: AppState) => state.calendar)
   console.log('calendarColumn')
 
   const [y, setY] = useState(0)
   const [timeFromY, setTimeFromY] = useState(0)
-  const [isEditModalOpen, setIsTaskBeingEdited] = useState(false)
   const hourSlotsRef = useRef(null)
   const isInFocusedTimeframe = timestamp === focusedTimestamp
 
@@ -131,16 +126,6 @@ const CalendarColumn: FC<Props> = ({ timestamp, isCurrentDay, tasksFiltered, pla
       setY(newY)
       setTimeFromY(rounded)
     }
-  }
-
-  function onEditTask(_id: string) {
-    setIsTaskBeingEdited(true)
-    dispatch(actions.editTaskPrepare({ _id, timestamp }))
-  }
-
-  function cancelTaskEditing() {
-    setIsTaskBeingEdited(false)
-    dispatch(actions.editTaskCancel())
   }
 
   function saveFocusedTimestamp() {
@@ -166,12 +151,6 @@ const CalendarColumn: FC<Props> = ({ timestamp, isCurrentDay, tasksFiltered, pla
           timeFromY={timeFromY}
           placeholderHeight={placeholderHeight}
         />
-
-        {isEditModalOpen && (
-          <Modal title="task details" width={17} onOverlayToggle={() => cancelTaskEditing()}>
-            <EditCalendarTask timestamp={timestamp} taskBeingEdited={taskBeingEdited} />
-          </Modal>
-        )}
       </HourSlots>
     </Wrap>
   )

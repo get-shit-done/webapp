@@ -61,11 +61,9 @@ const DayTasks: FC<IProps> = ({ task: { _id, group, timestamp, name, gapBefore, 
   const dispatch = useAppDispatch()
   const { colorId } = groups.find(x => x.name === group)
 
-  const [isEditModalOpen, setIsTaskBeingEdited] = useState(false)
   const isInFocusedTimeframe = timestamp === focusedTimestamp
 
-  function onEditTask(_id: string) {
-    setIsTaskBeingEdited(true)
+  function onEditTask() {
     dispatch(actions.editTaskPrepare({ _id, timestamp }))
   }
 
@@ -87,7 +85,7 @@ const DayTasks: FC<IProps> = ({ task: { _id, group, timestamp, name, gapBefore, 
           isSmall={hoursAxis.length > 16 && heightInFlex <= 0.25}
           isInFocusedTimeframe={isInFocusedTimeframe}
           isBeingEdited={taskBeingEdited?._id === _id}
-          onClick={() => onEditTask(_id)}
+          onClick={onEditTask}
         >
           {name}
         </Cell>
