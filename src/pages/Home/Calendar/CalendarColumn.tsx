@@ -10,6 +10,7 @@ import { Modal } from '../../../components/Modal'
 import EditCalendarTask from './EditCalendarTask'
 import { AppState, useAppDispatch } from '../../../Application/Root'
 import { determineTimeFromY, taskShadow, taskShadowBeingEdited } from './shared'
+import DayTasks from './DayTasks'
 
 const CN_HOUR_SLOTS = 'hour-slots'
 
@@ -146,6 +147,7 @@ const CalendarColumn: FC<Props> = ({ timestamp, isCurrentDay, tasksFiltered, pla
     // dispatch(actions.saveFocusedTimestamp({ timestamp }))
   }
 
+  // console.log('tasksFiltered', tasksFiltered)
   return (
     <Wrap isCurrentDay={isCurrentDay} isInFocusedTimeframe={isInFocusedTimeframe}>
       {isCurrentDay && <CurrentTime />}
@@ -156,43 +158,7 @@ const CalendarColumn: FC<Props> = ({ timestamp, isCurrentDay, tasksFiltered, pla
         onMouseEnter={saveFocusedTimestamp}
         className={CN_HOUR_SLOTS}
       >
-        {tasksFiltered.map(({ _id, heightInFlex, name, group, gapBefore, gapAfter }) => {
-          const { colorId } = groups.find(x => x.name === group)
-          return (
-            <Fragment key={_id}>
-              {gapBefore > 0 && (
-                <Cell
-                  isGap
-                  flex={gapBefore}
-                  isInFocusedTimeframe={isInFocusedTimeframe}
-                  isBeingEdited={false}
-                />
-              )}
-
-              {heightInFlex > 0 && (
-                <Cell
-                  flex={heightInFlex}
-                  accentColor={colors[colorId]}
-                  isSmall={hoursAxis.length > 16 && heightInFlex <= 0.25}
-                  isInFocusedTimeframe={isInFocusedTimeframe}
-                  isBeingEdited={taskBeingEdited?._id === _id}
-                  onClick={() => onEditTask(_id)}
-                >
-                  {name}
-                </Cell>
-              )}
-
-              {gapAfter > 0 && (
-                <Cell
-                  isGap
-                  flex={gapAfter}
-                  isInFocusedTimeframe={isInFocusedTimeframe}
-                  isBeingEdited={false}
-                />
-              )}
-            </Fragment>
-          )
-        })}
+        {tasksFiltered.map(task => <DayTasks key={task._id} task={task} />)}
         <PlaceholderTask
           timestamp={timestamp}
           hourSlotsRef={hourSlotsRef}
