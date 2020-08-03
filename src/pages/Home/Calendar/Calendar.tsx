@@ -1,4 +1,4 @@
-import React, { FC, useRef } from 'react'
+import React, { FC, useRef, useCallback } from 'react'
 import styled from 'styled-components'
 import isToday from 'date-fns/isToday'
 import format from 'date-fns/format'
@@ -11,6 +11,7 @@ import { determinePlaceholderHeight } from '../../../utils'
 import { Modal } from '../../../components/Modal'
 import EditCalendarTask from './EditCalendarTask'
 import { actions } from '../../../reducers/calendar'
+import AddNewCalendarTask from './AddNewCalendarTask'
 
 const Wrap = styled.div<{ scale: { x: number, y: number, duration: number } }>`
   position: relative;
@@ -32,10 +33,16 @@ interface Props {
 const Calendar: FC<Props> = ({ scale }) => {
   const wrapRef = useRef(null)
   const dispatch = useAppDispatch()
-  const { hoursAxis, taskBeingEdited } = useSelector((state: AppState) => state.calendar)
+  const { hoursAxis, taskBeingEdited, taskBeingPrepared } = useSelector((state: AppState) => state.calendar)
   const placeholderHeight = determinePlaceholderHeight({ wrapRef, hoursAxis })
   const tasksMapped = useSelector(tasksInCalendar)
 
+
+  const onAddNewCancel = useCallback(() => {
+    // setTaskDetails({ isBeingEdited: false, time: [] })
+    // setYAndHeightFromTime({ yFromTime: undefined, heightFromTime: placeholderHeight })
+    dispatch(actions.removePreparedTask())
+  }, [])
   console.log('calendar', placeholderHeight)
 
   return (
@@ -52,6 +59,12 @@ const Calendar: FC<Props> = ({ scale }) => {
       {taskBeingEdited && (
         <Modal title="task details" width={17} onOverlayToggle={() => dispatch(actions.editTaskCancel())}>
           <EditCalendarTask />
+        </Modal>
+      )}
+
+      {taskBeingPrepared !== undefined && (
+        <Modal title="task details" width={17} onOverlayToggle={onAddNewCancel}>
+          <AddNewCalendarTask onClose={onAddNewCancel} />
         </Modal>
       )}
     </Wrap>

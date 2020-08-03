@@ -74,21 +74,28 @@ interface Props {
 const PlaceholderTask: FC<Props> = ({ timestamp, hourSlotsRef, y, timeFromY, placeholderHeight }) => {
   // console.log('placeholder', placeholderHeight)
   const dispatch = useAppDispatch()
-  const { hoursAxis, taskBeingPrepared = { time: [] } } = useSelector((state: AppState) => state.calendar)
+  const { hoursAxis, taskBeingPrepared } = useSelector((state: AppState) => state.calendar)
   const { groups, colors } = useSelector((state: AppState) => state.settings)
-  const colorId = groups.find(x => x.name === taskBeingPrepared.group)?.colorId
+  const colorId = taskBeingPrepared ? groups.find(x => x.name === taskBeingPrepared.group)?.colorId : undefined
 
   const [{ yFromTime, heightFromTime }, setYAndHeightFromTime] = useState({ yFromTime: undefined, heightFromTime: placeholderHeight })
-  const [{ isBeingEdited, time }, setTaskDetails] = useState({ isBeingEdited: false, time: [] })
+  // const [{ isBeingEdited, time }, setTaskDetails] = useState({ isBeingEdited: false, time: [] })
+  const isBeingEdited = taskBeingPrepared?.timestamp === timestamp
 
   function onPrepareNewTask() {
     const rounded = determineTimeFromY({ y, ref: hourSlotsRef, hoursAxis })
-    setTaskDetails({ isBeingEdited: true, time: [rounded, rounded + 0.5] })
+    dispatch(actions.prepareTask({
+      name: '',
+      group: 'improvement',
+      timestamp,
+      time: [rounded, rounded + 0.5],
+    }))
+    // setTaskDetails({ isBeingEdited: true, time: [rounded, rounded + 0.5] })
   }
 
   useEffect(() => {
     isBeingEdited && updateTaskFromTime()
-  }, [taskBeingPrepared.time[0], taskBeingPrepared.time[1]])
+  }, [taskBeingPrepared?.time[0], taskBeingPrepared?.time[1]])
 
   function updateTaskFromTime() {
     console.log('update placeholder y from time')
@@ -98,11 +105,11 @@ const PlaceholderTask: FC<Props> = ({ timestamp, hourSlotsRef, y, timeFromY, pla
     setYAndHeightFromTime({ yFromTime: yAlg, heightFromTime: heightAlg })
   }
 
-  const onModalClose = useCallback(() => {
-    setTaskDetails({ isBeingEdited: false, time: [] })
-    setYAndHeightFromTime({ yFromTime: undefined, heightFromTime: placeholderHeight })
-    dispatch(actions.removePreparedTask())
-  }, [])
+  // const onModalClose = useCallback(() => {
+  //   setTaskDetails({ isBeingEdited: false, time: [] })
+  //   setYAndHeightFromTime({ yFromTime: undefined, heightFromTime: placeholderHeight })
+  //   dispatch(actions.removePreparedTask())
+  // }, [])
 
   return (
     <>
@@ -117,11 +124,11 @@ const PlaceholderTask: FC<Props> = ({ timestamp, hourSlotsRef, y, timeFromY, pla
         {!isBeingEdited && <TimeWrap><TimeText>{timeFromY}</TimeText></TimeWrap>}
       </PlaceholderTaskWrap>
 
-      {isBeingEdited && (
+      {/* {isBeingEdited && (
         <Modal title="task details" width={17} onOverlayToggle={onModalClose}>
           <AddNewCalendarTask timestamp={timestamp} time={time} onModalClose={onModalClose} />
         </Modal>
-      )}
+      )} */}
     </>
   )
 }

@@ -12,13 +12,13 @@ import { CalendarFormValues } from './shared'
 const Form = styled.form``
 
 interface Props {
-  timestamp: string
-  time: number[]
-  onModalClose(): void
+  onClose(): void
 }
 
-const AddNewCalendarTask: FC<Props> = ({ timestamp, time, onModalClose }) => {
+const AddNewCalendarTask: FC<Props> = ({ onClose }) => {
   const dispatch = useAppDispatch()
+  const { taskBeingPrepared } = useSelector((state: AppState) => state.calendar)
+  const { timestamp, time } = taskBeingPrepared
   const { groups, colors } = useSelector((state: AppState) => state.settings)
   const [selectedGroup, setSelectedGroup] = useState(groups.find(x => x.name === 'improvement'))
   const { register, handleSubmit, errors, watch } = useForm<CalendarFormValues>()
@@ -32,19 +32,20 @@ const AddNewCalendarTask: FC<Props> = ({ timestamp, time, onModalClose }) => {
         group: selectedGroup.name,
       }),
     )
-    onModalClose()
+    onClose()
   }
   const watchedFields = watch()
   const accentColor = selectedGroup ? colors[selectedGroup.colorId] : undefined
 
   useEffect(() => {
-    const { name, from, to } = watchedFields
-    const isFormValuesEmpty = Object.values(watchedFields).every(x => !x)
-    const timeFormatted = isFormValuesEmpty ? time : [Number(from), Number(to)]
-    dispatch(
+    const { name, from = time[0], to = time[1] } = watchedFields
+    const fieldValuesRendered = Object.keys(watchedFields).length > 0
+
+    fieldValuesRendered && dispatch(
       actions.prepareTask({
+        timestamp,
         name,
-        time: timeFormatted,
+        time: [Number(from), Number(to)],
         group: selectedGroup?.name,
       }),
     )
@@ -54,6 +55,7 @@ const AddNewCalendarTask: FC<Props> = ({ timestamp, time, onModalClose }) => {
     <Form onSubmit={handleSubmit(onSubmit)}>
       <TextField
         isInForm
+        defaultValue=""
         theme="light"
         name="name"
         placeholder="name"
