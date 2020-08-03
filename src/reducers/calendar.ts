@@ -1,17 +1,16 @@
-import { createSlice, nanoid, PayloadAction } from '@reduxjs/toolkit'
+import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 import format from 'date-fns/format'
 import { MONTH_DAYS, MONTH_DAYS_STRING, HOURS_IN_DAY } from '../constants'
 import { taskSort } from '../utils'
 
 export interface TaskBeingPrepared {
-  // [key: string]: any,
   timestamp?: string
   time?: number[]
   name?: string
   group?: string
 }
 export interface NewTask {
-  [key: string]: any // TODO: is this really necessary? wtf
+  [key: string]: any
   time: number[]
   name: string
   group: string
@@ -26,15 +25,16 @@ export interface TaskWithMeta extends SavedTask {
   gapBefore?: number
   gapAfter?: number
 }
+interface IAllTasksByDay {
+  [key: string]: {
+    tasks: SavedTask[]
+  }
+}
 interface IInitialState {
   focusedTimestamp: string
   taskBeingPrepared: TaskBeingPrepared
   taskBeingEdited: TaskWithMeta | null
-  allTasksByDay: {
-    [key: string]: {
-      tasks: SavedTask[]
-    }
-  }
+  allTasksByDay: IAllTasksByDay
   hoursAxis: number[]
   daysAxis: string[]
 }
