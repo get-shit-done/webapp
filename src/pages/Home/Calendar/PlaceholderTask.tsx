@@ -68,16 +68,17 @@ interface Props {
   hourSlotsRef: any
   y: number
   timeFromY: number,
-  height30: number
+  placeholderHeight: number
 }
 
-const PlaceholderTask: FC<Props> = ({ timestamp, hourSlotsRef, y, timeFromY, height30 }) => {
+const PlaceholderTask: FC<Props> = ({ timestamp, hourSlotsRef, y, timeFromY, placeholderHeight }) => {
+  console.log('placeholder', placeholderHeight)
   const dispatch = useAppDispatch()
   const { hoursAxis, taskBeingPrepared = { time: [] } } = useSelector((state: AppState) => state.calendar)
   const { groups, colors } = useSelector((state: AppState) => state.settings)
   const colorId = groups.find(x => x.name === taskBeingPrepared.group)?.colorId
 
-  const [{ yFromTime, heightFromTime }, setYAndHeightFromTime] = useState({ yFromTime: undefined, heightFromTime: height30 })
+  const [{ yFromTime, heightFromTime }, setYAndHeightFromTime] = useState({ yFromTime: undefined, heightFromTime: placeholderHeight })
   const [{ isBeingEdited, time }, setTaskDetails] = useState({ isBeingEdited: false, time: [] })
 
   function onPrepareNewTask() {
@@ -90,15 +91,16 @@ const PlaceholderTask: FC<Props> = ({ timestamp, hourSlotsRef, y, timeFromY, hei
   }, [taskBeingPrepared.time[0], taskBeingPrepared.time[1]])
 
   function updateTaskFromTime() {
+    console.log('update placeholder y from time')
     const timeFrom = taskBeingPrepared.time[0]
-    const yAlg = timeFrom * (height30 * 2) - hoursAxis[0] * (height30 * 2)
-    const heightAlg = (taskBeingPrepared.time[1] - taskBeingPrepared.time[0]) * height30 * 2
+    const yAlg = timeFrom * (placeholderHeight * 2) - hoursAxis[0] * (placeholderHeight * 2)
+    const heightAlg = (taskBeingPrepared.time[1] - taskBeingPrepared.time[0]) * placeholderHeight * 2
     setYAndHeightFromTime({ yFromTime: yAlg, heightFromTime: heightAlg })
   }
 
   const onModalClose = useCallback(() => {
     setTaskDetails({ isBeingEdited: false, time: [] })
-    setYAndHeightFromTime({ yFromTime: undefined, heightFromTime: height30 })
+    setYAndHeightFromTime({ yFromTime: undefined, heightFromTime: placeholderHeight })
     dispatch(actions.removePreparedTask())
   }, [])
 
@@ -107,7 +109,7 @@ const PlaceholderTask: FC<Props> = ({ timestamp, hourSlotsRef, y, timeFromY, hei
       <PlaceholderTaskWrap
         isBeingPrepared={isBeingEdited}
         top={yFromTime ?? y}
-        height={heightFromTime}
+        height={isBeingEdited ? heightFromTime : placeholderHeight}
         onClick={onPrepareNewTask}
         accentColor={colors[colorId]}
       >
