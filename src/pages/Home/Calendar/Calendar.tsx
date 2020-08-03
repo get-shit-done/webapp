@@ -1,4 +1,4 @@
-import React, { FC } from 'react'
+import React, { FC, useRef } from 'react'
 import styled from 'styled-components'
 import isToday from 'date-fns/isToday'
 import format from 'date-fns/format'
@@ -8,6 +8,7 @@ import CalendarColumn from './CalendarColumn'
 import { AppState } from '../../../Application/Root'
 import { tasksInCalendar } from '../../../selectors/tasksInCalendar'
 import { SavedTask } from '../../../reducers/calendar'
+import { determinePlaceholderHeight } from '../../../utils'
 
 const Wrap = styled.div<{ scale: { x: number, y: number, duration: number } }>`
   position: relative;
@@ -24,26 +25,24 @@ interface Props {
     y: number
     duration: number,
   },
-  calendarRef: any,
 }
 
-const Calendar: FC<Props> = ({ scale, calendarRef }) => {
-  const { hoursAxis, daysAxis, allTasksByDay } = useSelector((state: AppState) => state.calendar)
-  const placeholderHeightPx = calendarRef.current
-    ? (calendarRef.current.getBoundingClientRect().height - 24) / (hoursAxis.length * 2)
-    : 20
-
+const Calendar: FC<Props> = ({ scale }) => {
+  const wrapRef = useRef(null)
+  const { hoursAxis } = useSelector((state: AppState) => state.calendar)
+  const placeholderHeight = determinePlaceholderHeight({ wrapRef, hoursAxis })
   const tasksMapped: any = useSelector(tasksInCalendar)
+  console.log('calendar', placeholderHeight)
 
   return (
-    <Wrap scale={scale}>
+    <Wrap scale={scale} ref={wrapRef}>
       {tasksMapped.map(({ timestamp, tasks }: { timestamp: string, tasks: SavedTask[] }) => (
         <CalendarColumn
           key={timestamp}
           isCurrentDay={false}
           timestamp={timestamp}
           tasksFiltered={tasks}
-          placeholderHeightPx={placeholderHeightPx}
+          placeholderHeight={placeholderHeight}
         />
       ))}
     </Wrap>
