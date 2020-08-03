@@ -8,7 +8,8 @@ import { homePath } from './paths'
 import Home from '../pages/Home/Home'
 import SWUpdate from '../components/SWUpdate/component'
 import UseServiceWorker from '../hooks/useServiceWorker'
-import { actions } from '../reducers/calendar'
+import { actions as actionsCalendar } from '../reducers/calendar'
+import { actions as actionsSettings } from '../reducers/settings'
 import { useSelector } from 'react-redux'
 import { AppState } from './Root'
 
@@ -28,7 +29,8 @@ const Application = () => {
   const dispatch = useAppDispatch()
 
   useEffect(() => {
-    dispatch(actions.getTasksRequested())
+    dispatch(actionsCalendar.getTasksRequested())
+    dispatch(actionsSettings.getGroupsRequested())
   }, [])
 
   return (
