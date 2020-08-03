@@ -1,9 +1,10 @@
 import { createSelector } from '@reduxjs/toolkit'
 import { SavedTask } from '../reducers/calendar'
+import { AppState } from '../Application/Root'
 
-export const tasksInCalendar: any = createSelector(
-  (state: any) => state.calendar,
-  (state: any) =>
+export const tasksInCalendar = createSelector(
+  (state: AppState) => state.calendar,
+  state =>
     state.daysAxis.map((timestamp: string) => {
       const tasks = state.allTasksByDay[timestamp]?.tasks || []
       return {

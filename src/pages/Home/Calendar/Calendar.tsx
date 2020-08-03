@@ -31,7 +31,7 @@ const Calendar: FC<Props> = ({ scale }) => {
   const wrapRef = useRef(null)
   const { hoursAxis } = useSelector((state: AppState) => state.calendar)
   const placeholderHeight = determinePlaceholderHeight({ wrapRef, hoursAxis })
-  const tasksMapped: any = useSelector(tasksInCalendar)
+  const tasksMapped = useSelector(tasksInCalendar)
   console.log('calendar', placeholderHeight)
 
   return (
