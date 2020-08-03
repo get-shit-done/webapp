@@ -2,7 +2,7 @@ import { createSlice, nanoid, PayloadAction } from '@reduxjs/toolkit'
 import { ENUM_THEMES } from '../enums'
 
 export interface IGroup {
-  id: string
+  _id: string
   name: string
   colorId: string
 }
@@ -96,43 +96,7 @@ const initialState: IInitialState = {
     beige: 'rgb(226, 236, 213)',
     beau_blue: 'rgb(193, 206, 212)',
   },
-  groups: [
-    {
-      id: nanoid(),
-      name: 'essentials',
-      colorId: 'aero_blue',
-    },
-    {
-      id: nanoid(),
-      name: 'work',
-      colorId: 'blanched_almond',
-    },
-    {
-      id: nanoid(),
-      name: 'improvement',
-      colorId: 'mimi_pink',
-    },
-    {
-      id: nanoid(),
-      name: 'leasure',
-      colorId: 'beau_blue',
-    },
-    {
-      id: nanoid(),
-      name: 'productivity break',
-      colorId: 'aero_blue_2',
-    },
-    {
-      id: nanoid(),
-      name: 'laze',
-      colorId: 'light_cyan',
-    },
-    {
-      id: nanoid(),
-      name: 'planning',
-      colorId: 'azure',
-    },
-  ],
+  groups: [],
 }
 
 export const { reducer, actions } = createSlice({
@@ -144,16 +108,29 @@ export const { reducer, actions } = createSlice({
         state[key] = value
       })
     },
-    updateGroup(state, { payload: { groupId, colorId } }: PayloadAction<{ groupId: string; colorId: string }>): void {
-      const groupToUpdate = state.groups.find(x => x.id === groupId)
-      groupToUpdate.colorId = colorId
-    },
-    removeGroup(state, { payload: { id } }: PayloadAction<{ id: string }>): void {
-      state.groups = state.groups.filter(x => x.id !== id)
-    },
     activateTheme(state, { payload: { theme } }: PayloadAction<{ theme: string }>): void {
       state.themeValues = themes[theme]
       state.themeName = theme
+    },
+    getGroupsRequested(): void {},
+    getGroupsSucceeded(state, { payload }: PayloadAction<IGroup[]>): void {
+      // console.log('grt groups succeded', payload)
+      state.groups = payload
+    },
+    getGroupsFailed() {
+      console.log('failed to get groups')
+    },
+    updateGroupRequested(
+      state,
+      { payload: { groupId, colorId } }: PayloadAction<{ groupId: string; colorId: string }>,
+    ): void {
+      const groupToUpdate = state.groups.find(x => x._id === groupId)
+      groupToUpdate.colorId = colorId
+    },
+    updateGroupSucceeded(): void {},
+    updateGroupFailed(): void {},
+    removeGroup(state, { payload: { _id } }: PayloadAction<{ _id: string }>): void {
+      state.groups = state.groups.filter(x => x._id !== _id)
     },
   },
 })
