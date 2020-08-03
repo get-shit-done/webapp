@@ -6,7 +6,7 @@ import { createSelector } from '@reduxjs/toolkit'
 
 import { rgbAdjust, ellipsis } from '../../../styles'
 import CurrentTime from './CurrentTime'
-import PlaceholderTask from './PlaceholderTask'
+// import PlaceholderTask from './PlaceholderTask'
 import { actions as actionsCalendarTasks, TaskWithMeta } from '../../../reducers/calendarTasks'
 import { actions as actionsCalendarAxis } from '../../../reducers/calendarAxis'
 import { Modal } from '../../../components/Modal'
@@ -117,26 +117,12 @@ const CalendarColumn: FC<Props> = ({ timestamp, isCurrentDay, tasksFiltered, pla
   const { colors } = useSelector((state: AppState) => state.settings)
   const dispatch = useAppDispatch()
 
-  const [y, setY] = useState(0)
-  const [timeFromY, setTimeFromY] = useState(0)
+  // const [y, setY] = useState(0)
+  // const [timeFromY, setTimeFromY] = useState(0)
   const [isEditModalOpen, setIsTaskBeingEdited] = useState(false)
   const hourSlotsRef = useRef(null)
   const isInFocusedTimeframe = false
   // const isInFocusedTimeframe = timestamp === focusedTimestamp
-
-  function updatePlaceholderTask(event: React.MouseEvent<HTMLDivElement, MouseEvent>) {
-    if (taskBeingPrepared) return
-
-    const columnTopPx = event.currentTarget.getBoundingClientRect().top
-    const placeholderY = event.clientY - columnTopPx - (placeholderHeightPx / 4)
-    const newY = Math.floor(placeholderY / (placeholderHeightPx / 2)) * (placeholderHeightPx / 2)
-    const isNewNearest = newY !== y
-    if (isNewNearest) {
-      const rounded = determineTimeFromY({ y: newY, ref: hourSlotsRef, hoursAxis: [1, 2, 3] })
-      setY(newY)
-      setTimeFromY(rounded)
-    }
-  }
 
   function onEditTask(_id: string) {
     setIsTaskBeingEdited(true)
@@ -155,17 +141,17 @@ const CalendarColumn: FC<Props> = ({ timestamp, isCurrentDay, tasksFiltered, pla
   console.log('column')
 
   return (
-    <Wrap isCurrentDay={isCurrentDay} isInFocusedTimeframe={isInFocusedTimeframe}>
+    <Wrap isCurrentDay={isCurrentDay} isInFocusedTimeframe={isInFocusedTimeframe} className="column">
       {isCurrentDay && <CurrentTime />}
 
       <HourSlots
         ref={hourSlotsRef}
-        onMouseMove={updatePlaceholderTask}
+        // onMouseMove={updatePlaceholderTask}
         onMouseEnter={saveFocusedTimestamp}
         className={CN_HOUR_SLOTS}
       >
         {tasksFiltered.map(({ _id, heightInFlex, name, group, gapBefore, gapAfter }: any) => {
-          console.log('tasks')
+          // console.log('tasks')
           const { colorId } = (groups.find(x => x.name === group)) || {}
           return (
             <Fragment key={_id}>
@@ -202,13 +188,13 @@ const CalendarColumn: FC<Props> = ({ timestamp, isCurrentDay, tasksFiltered, pla
             </Fragment>
           )
         })}
-        <PlaceholderTask
+        {/* <PlaceholderTask
           timestamp={timestamp}
           hourSlotsRef={hourSlotsRef}
-          y={y}
-          timeFromY={timeFromY}
+          // y={y}
+          // timeFromY={timeFromY}
           height30={placeholderHeightPx}
-        />
+        /> */}
 
         {isEditModalOpen && (
           <Modal title="task details" width={17} onOverlayToggle={() => cancelTaskEditing()}>

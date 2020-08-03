@@ -9,6 +9,7 @@ import CalendarColumn from './CalendarColumn'
 import { AppState } from '../../../Application/Root'
 import { IAllTasksByDay, SavedTask } from '../../../reducers/calendarTasks'
 import { selectTasksMapped } from '../../../selectors/tasks'
+import PlaceholderContainer from './PlaceholderContainer'
 
 const Wrap = styled.div<{ scale: { x: number, y: number, duration: number } }>`
   position: relative;
@@ -29,6 +30,10 @@ interface Props {
 }
 
 const Calendar: FC<Props> = ({ scale, calendarRef }) => {
+  // TODO: add ref here to wrap or to placeholder and pass in
+  // add today styling to column back
+  // width of placehoolder
+  // save current hover to own reducer and use in axis
   const selectHoursAxis = createSelector((state: any) => state.calendarAxis, (axis: any) => axis.hoursAxis)
   const selectDayAxis = createSelector((state: any) => state.calendarAxis, (axis: any) => axis.daysAxis)
 
@@ -43,14 +48,15 @@ const Calendar: FC<Props> = ({ scale, calendarRef }) => {
 
   return (
     <Wrap scale={scale}>
-      {tasksMapped.map((dayTasks: SavedTask[], index: string) => {
+      <PlaceholderContainer height30={placeholderHeightPx} />
+      {tasksMapped.map(({ timestamp, tasks }: { timestamp: string, tasks: SavedTask[] }) => {
 
         return (
           <CalendarColumn
-            key={index}
+            key={timestamp}
             isCurrentDay={false}
-            timestamp={''}
-            tasksFiltered={dayTasks || []}
+            timestamp={timestamp}
+            tasksFiltered={tasks}
             placeholderHeightPx={placeholderHeightPx}
           />
         )
