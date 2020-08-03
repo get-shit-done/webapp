@@ -5,7 +5,6 @@ export const tasksInCalendar: any = createSelector(
   (state: any) => state.calendar,
   (state: any) =>
     state.daysAxis.map((timestamp: string) => {
-      // console.log(timestamp, state.allTasksByDay)
       const tasks = state.allTasksByDay[timestamp]?.tasks || []
       return {
         timestamp,
@@ -17,8 +16,6 @@ export const tasksInCalendar: any = createSelector(
           const isFirstTask = taskIndex === 0
           const isLastTask = taskIndex === tasks.length - 1
           const previousTo = !isFirstTask ? tasks[taskIndex - 1].time[1] : 0
-          // const firstHour = 0
-          // const lastHourAdjusted = 23
           const firstHour = state.hoursAxis[0]
           const lastHourAdjusted = state.hoursAxis[state.hoursAxis.length - 1] + 1
 

@@ -103,13 +103,14 @@ interface Props {
   timestamp: string
   isCurrentDay: boolean
   tasksFiltered: TaskWithMeta[]
-  placeholderHeightPx: number
+  placeholderHeight: number
 }
 
-const CalendarColumn: FC<Props> = ({ timestamp, isCurrentDay, tasksFiltered, placeholderHeightPx }) => {
+const CalendarColumn: FC<Props> = ({ timestamp, isCurrentDay, tasksFiltered, placeholderHeight }) => {
   const { hoursAxis, taskBeingEdited, taskBeingPrepared, focusedTimestamp } = useSelector((state: AppState) => state.calendar)
   const { groups, colors } = useSelector((state: AppState) => state.settings)
   const dispatch = useAppDispatch()
+  console.log('calendarColumn')
 
   const [y, setY] = useState(0)
   const [timeFromY, setTimeFromY] = useState(0)
@@ -121,8 +122,8 @@ const CalendarColumn: FC<Props> = ({ timestamp, isCurrentDay, tasksFiltered, pla
     if (taskBeingPrepared) return
 
     const columnTopPx = event.currentTarget.getBoundingClientRect().top
-    const placeholderY = event.clientY - columnTopPx - (placeholderHeightPx / 4)
-    const newY = Math.floor(placeholderY / (placeholderHeightPx / 2)) * (placeholderHeightPx / 2)
+    const placeholderY = event.clientY - columnTopPx - (placeholderHeight / 4)
+    const newY = Math.floor(placeholderY / (placeholderHeight / 2)) * (placeholderHeight / 2)
     const isNewNearest = newY !== y
     if (isNewNearest) {
       const rounded = determineTimeFromY({ y: newY, ref: hourSlotsRef, hoursAxis })
@@ -142,7 +143,7 @@ const CalendarColumn: FC<Props> = ({ timestamp, isCurrentDay, tasksFiltered, pla
   }
 
   function saveFocusedTimestamp() {
-    dispatch(actions.saveFocusedTimestamp({ timestamp }))
+    // dispatch(actions.saveFocusedTimestamp({ timestamp }))
   }
 
   return (
@@ -197,7 +198,7 @@ const CalendarColumn: FC<Props> = ({ timestamp, isCurrentDay, tasksFiltered, pla
           hourSlotsRef={hourSlotsRef}
           y={y}
           timeFromY={timeFromY}
-          height30={placeholderHeightPx}
+          placeholderHeight={placeholderHeight}
         />
 
         {isEditModalOpen && (
