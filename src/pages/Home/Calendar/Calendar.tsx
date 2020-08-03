@@ -7,7 +7,6 @@ import { useSelector } from 'react-redux'
 import CalendarColumn from './CalendarColumn'
 import { AppState } from '../../../Application/Root'
 import { tasksInCalendar } from '../../../selectors/tasksInCalendar'
-import { SavedTask } from '../../../reducers/calendar'
 import { determinePlaceholderHeight } from '../../../utils'
 
 const Wrap = styled.div<{ scale: { x: number, y: number, duration: number } }>`
@@ -36,7 +35,7 @@ const Calendar: FC<Props> = ({ scale }) => {
 
   return (
     <Wrap scale={scale} ref={wrapRef}>
-      {tasksMapped.map(({ timestamp, tasks }: { timestamp: string, tasks: SavedTask[] }) => (
+      {tasksMapped.map(({ timestamp, tasks }) => (
         <CalendarColumn
           key={timestamp}
           isCurrentDay={false}
