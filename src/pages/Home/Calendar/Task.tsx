@@ -5,7 +5,7 @@ import { useSelector } from 'react-redux'
 import { rgbAdjust, ellipsis } from '../../../styles'
 import { actions, TaskWithMeta } from '../../../reducers/calendar'
 import { AppState, useAppDispatch } from '../../../Application/Root'
-import { taskShadow, taskShadowBeingEdited, CN_COLUMN } from './shared'
+import { taskShadow, taskShadowBeingEdited, CN_COLUMN, CN_TASK_GAP } from './shared'
 import { makeHoursAxis } from '../../../selectors'
 
 
@@ -80,7 +80,7 @@ const Task: FC<IProps> = ({
 
   return (
     <>
-      {gapBefore > 0 && <CellGap flex={gapBefore} />}
+      {gapBefore > 0 && <CellGap className={CN_TASK_GAP} flex={gapBefore} />}
       {heightInFlex > 0 && (
         <Cell
           flex={heightInFlex}
@@ -92,7 +92,7 @@ const Task: FC<IProps> = ({
           {name}
         </Cell>
       )}
-      {gapAfter > 0 && <CellGap flex={gapAfter} />}
+      {gapAfter > 0 && <CellGap className={CN_TASK_GAP} flex={gapAfter} />}
     </>
   )
 }

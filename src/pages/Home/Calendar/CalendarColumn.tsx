@@ -6,13 +6,14 @@ import CurrentTime from './CurrentTime'
 import PlaceholderTask from './PlaceholderTask'
 import { TaskWithMeta } from '../../../reducers/calendar'
 import { AppState } from '../../../Application/Root'
-import { determineTimeFromY, CN_COLUMN, CN_HOUR_SLOTS } from './shared'
+import { determineTimeFromY, CN_COLUMN, CN_HOUR_SLOTS, taskShadow, CN_TASK_GAP } from './shared'
 import Task from './Task'
 import { makeHoursAxis } from '../../../selectors'
 
 interface IWrap {
   theme: { columnBorder: string },
   isCurrentDay: boolean,
+  isDayBeingEdited: boolean
 }
 const Wrap = styled.div<IWrap>`
   display: flex;
@@ -23,6 +24,13 @@ const Wrap = styled.div<IWrap>`
   width: 0;
 
   ${p => p.isCurrentDay && `flex-grow: 2;`};
+  ${p => p.isDayBeingEdited && `
+    background-color: ${p.theme.columnHoverBg};
+
+    .${CN_TASK_GAP} {
+      ${taskShadow(p.theme.columnHoverBg)};
+    };
+  `};
 
   &:hover {
     background-color: ${p => p.theme.columnHoverBg}
@@ -58,7 +66,7 @@ interface Props {
 const CalendarColumn: FC<Props> = ({ timestamp, isCurrentDay, tasksFiltered = [], placeholderHeight }) => {
   const hoursAxis = useSelector(makeHoursAxis)
   const taskBeingEdited = useSelector((state: AppState) => state.calendar.taskBeingEdited)
-  console.log('COMP: CalendarColumn')
+  // console.log('COMP: CalendarColumn')
 
   const [y, setY] = useState(0)
   const [placeholderVisible, setPlaceholderVisible] = useState(false)
@@ -83,7 +91,11 @@ const CalendarColumn: FC<Props> = ({ timestamp, isCurrentDay, tasksFiltered = []
   }
 
   return (
-    <Wrap isCurrentDay={isCurrentDay} className={CN_COLUMN}>
+    <Wrap
+      isCurrentDay={isCurrentDay}
+      className={CN_COLUMN}
+      isDayBeingEdited={tasksFiltered.find(x => x._id === (taskBeingEdited || {})._id) !== undefined}
+    >
       {isCurrentDay && <CurrentTime />}
 
       <HourSlots
