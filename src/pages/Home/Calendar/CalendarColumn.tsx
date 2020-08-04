@@ -1,6 +1,6 @@
 import React, { useState, useRef, memo, FC } from 'react'
 import styled from 'styled-components'
-import { useSelector, shallowEqual } from 'react-redux'
+import { useSelector } from 'react-redux'
 
 import CurrentTime from './CurrentTime'
 import PlaceholderTask from './PlaceholderTask'
