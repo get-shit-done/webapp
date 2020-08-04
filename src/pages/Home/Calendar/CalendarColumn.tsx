@@ -8,7 +8,7 @@ import { TaskWithMeta } from '../../../reducers/calendar'
 import { AppState } from '../../../Application/Root'
 import { determineTimeFromY, CN_COLUMN, CN_HOUR_SLOTS } from './shared'
 import Task from './Task'
-import { makeHoursAxis } from '../../../selectors/tasksInCalendar'
+import { makeHoursAxis } from '../../../selectors'
 
 interface IWrap {
   theme: { columnBorder: string },
@@ -61,6 +61,7 @@ const CalendarColumn: FC<Props> = ({ timestamp, isCurrentDay, tasksFiltered = []
   console.log('COMP: CalendarColumn')
 
   const [y, setY] = useState(0)
+  const [placeholderVisible, setPlaceholderVisible] = useState(false)
   const [timeFromY, setTimeFromY] = useState(0)
   const hourSlotsRef = useRef(null)
 
@@ -78,6 +79,7 @@ const CalendarColumn: FC<Props> = ({ timestamp, isCurrentDay, tasksFiltered = []
 
   function saveFocusedTimestamp() {
     // dispatch(actions.saveFocusedTimestamp({ timestamp }))
+    setPlaceholderVisible(!placeholderVisible)
   }
 
   return (
@@ -88,18 +90,21 @@ const CalendarColumn: FC<Props> = ({ timestamp, isCurrentDay, tasksFiltered = []
         ref={hourSlotsRef}
         onMouseMove={updatePlaceholderTask}
         onMouseEnter={saveFocusedTimestamp}
+        onMouseLeave={saveFocusedTimestamp}
         className={CN_HOUR_SLOTS}
       >
         {tasksFiltered.map(task => (
           <Task key={task._id} task={task} isBeingEdited={taskBeingEdited?._id === task._id} />
         ))}
-        <PlaceholderTask
-          timestamp={timestamp}
-          hourSlotsRef={hourSlotsRef}
-          y={y}
-          timeFromY={timeFromY}
-          placeholderHeight={placeholderHeight}
-        />
+        {placeholderVisible && (
+          <PlaceholderTask
+            timestamp={timestamp}
+            hourSlotsRef={hourSlotsRef}
+            y={y}
+            timeFromY={timeFromY}
+            placeholderHeight={placeholderHeight}
+          />
+        )}
       </HourSlots>
     </Wrap>
   )

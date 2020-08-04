@@ -11,6 +11,9 @@ export const makeAllTasksByDayMapped = createSelector(
   (state: any, hoursAxis: number[]) => hoursAxis,
   (allTasksByDay, hoursAxis) => {
     const mapped: IAllTasksByDay = {}
+    if (Object.values(allTasksByDay).length === 0) {
+      return {}
+    }
     console.log('SELECTOR: all tasks by day mapped')
 
     Object.entries(allTasksByDay).forEach(([datestring, value]) => {

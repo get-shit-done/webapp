@@ -1,4 +1,4 @@
-import React, { Fragment, memo, FC } from 'react'
+import React, { memo, FC } from 'react'
 import styled from 'styled-components'
 import { useSelector } from 'react-redux'
 
@@ -6,7 +6,7 @@ import { rgbAdjust, ellipsis } from '../../../styles'
 import { actions, TaskWithMeta } from '../../../reducers/calendar'
 import { AppState, useAppDispatch } from '../../../Application/Root'
 import { taskShadow, taskShadowBeingEdited, CN_COLUMN } from './shared'
-import { makeHoursAxis } from '../../../selectors/tasksInCalendar'
+import { makeHoursAxis } from '../../../selectors'
 
 
 interface ICell {
@@ -58,19 +58,20 @@ interface IProps {
   task: TaskWithMeta
   isBeingEdited: boolean
 }
-const Task: FC<IProps> = ({ task: { _id, group, timestamp, name, gapBefore, gapAfter, heightInFlex }, isBeingEdited }) => {
-  console.log('COMP: Task - ', name)
+const Task: FC<IProps> = ({
+  task: { _id, group, timestamp, name, gapBefore, gapAfter, heightInFlex },
+  isBeingEdited,
+}) => {
   const hoursAxis = useSelector(makeHoursAxis)
-  const { groups, colors } = useSelector((state: AppState) => state.settings)
+  const groups = useSelector((state: AppState) => state.settings.groups)
+  const colors = useSelector((state: AppState) => state.settings.colors)
   const dispatch = useAppDispatch()
   const { colorId } = groups.find(x => x.name === group)
 
-  function onEditTask() {
-    dispatch(actions.editTaskPrepare({ _id, timestamp }))
-  }
+  const onEditTask = () => { dispatch(actions.editTaskPrepare({ _id, timestamp })) }
 
   return (
-    <Fragment>
+    <>
       {gapBefore > 0 && (
         <Cell
           isGap
@@ -98,7 +99,7 @@ const Task: FC<IProps> = ({ task: { _id, group, timestamp, name, gapBefore, gapA
           isBeingEdited={false}
         />
       )}
-    </Fragment>
+    </>
   )
 }
 

@@ -76,6 +76,7 @@ const PlaceholderTask: FC<Props> = ({ timestamp, hourSlotsRef, y, timeFromY, pla
   const { hoursAxis, taskBeingPrepared } = useSelector((state: AppState) => state.calendar)
   const { groups, colors } = useSelector((state: AppState) => state.settings)
   const [{ yFromTime, heightFromTime }, setYAndHeight] = useState({ yFromTime: y, heightFromTime: placeholderHeight })
+  console.log('COMP: placeholder Task')
 
   const colorId = taskBeingPrepared ? groups.find(x => x.name === taskBeingPrepared.group)?.colorId : undefined
   const isPlaceholderBeingEdited = taskBeingPrepared?.timestamp === timestamp
@@ -89,14 +90,12 @@ const PlaceholderTask: FC<Props> = ({ timestamp, hourSlotsRef, y, timeFromY, pla
       time: [rounded, rounded + 0.5],
     }))
   }
-  // console.log('isPlaceholderBeingEdited', isPlaceholderBeingEdited)
 
   useEffect(() => {
     isPlaceholderBeingEdited && updatePlaceholder()
   }, [taskBeingPrepared?.time])
 
   function updatePlaceholder() {
-    console.log('update placeholder y from time')
     const yAlg = taskBeingPrepared.time[0] * (placeholderHeight * 2) - hoursAxis[0] * (placeholderHeight * 2)
     const heightAlg = (taskBeingPrepared.time[1] - taskBeingPrepared.time[0]) * placeholderHeight * 2
     setYAndHeight({ yFromTime: yAlg, heightFromTime: heightAlg })

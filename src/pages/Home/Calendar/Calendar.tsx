@@ -1,11 +1,11 @@
-import React, { FC, useRef, useCallback } from 'react'
+import React, { FC, useRef, useCallback, useState } from 'react'
 import styled from 'styled-components'
 import isToday from 'date-fns/isToday'
 
 import { useSelector, shallowEqual } from 'react-redux'
 import CalendarColumn from './CalendarColumn'
 import { AppState, useAppDispatch } from '../../../Application/Root'
-import { makeDaysAxis, makeHoursAxis, makeAllTasksByDay, makeAllTasksByDayMapped } from '../../../selectors/tasksInCalendar'
+import { makeDaysAxis, makeHoursAxis, makeAllTasksByDay, makeAllTasksByDayMapped } from '../../../selectors'
 import { determinePlaceholderHeight } from '../../../utils'
 import { Modal } from '../../../components/Modal'
 import EditCalendarTask from './EditCalendarTask'
