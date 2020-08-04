@@ -107,7 +107,7 @@ interface Props {
 
 const CalendarColumn: FC<Props> = ({ timestamp, isCurrentDay, tasksFiltered, placeholderHeight }) => {
   const { hoursAxis, taskBeingPrepared, focusedTimestamp } = useSelector((state: AppState) => state.calendar)
-  console.log('calendarColumn')
+  console.log('COMP: CalendarColumn')
 
   const [y, setY] = useState(0)
   const [timeFromY, setTimeFromY] = useState(0)
@@ -132,7 +132,6 @@ const CalendarColumn: FC<Props> = ({ timestamp, isCurrentDay, tasksFiltered, pla
     // dispatch(actions.saveFocusedTimestamp({ timestamp }))
   }
 
-  // console.log('tasksFiltered', tasksFiltered)
   return (
     <Wrap isCurrentDay={isCurrentDay} isInFocusedTimeframe={isInFocusedTimeframe}>
       {isCurrentDay && <CurrentTime />}

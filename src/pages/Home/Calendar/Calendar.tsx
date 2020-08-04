@@ -38,12 +38,14 @@ const Calendar: FC<Props> = ({ scale }) => {
   const tasksMapped = useSelector(tasksInCalendar)
 
 
-  const onAddNewCancel = useCallback(() => {
-    // setTaskDetails({ isBeingEdited: false, time: [] })
-    // setYAndHeightFromTime({ yFromTime: undefined, heightFromTime: placeholderHeight })
+  const onRemovePreparedTask = useCallback(() => {
     dispatch(actions.removePreparedTask())
   }, [])
-  console.log('calendar', placeholderHeight)
+
+  const onEditTaskCancel = useCallback(() => {
+    dispatch(actions.editTaskCancel())
+  }, [])
+  console.log('COMP: Calendar')
 
   return (
     <Wrap scale={scale} ref={wrapRef}>
@@ -57,14 +59,14 @@ const Calendar: FC<Props> = ({ scale }) => {
         />
       ))}
       {taskBeingEdited && (
-        <Modal title="task details" width={17} onOverlayToggle={() => dispatch(actions.editTaskCancel())}>
+        <Modal title="task details" width={17} onOverlayToggle={onEditTaskCancel}>
           <EditCalendarTask />
         </Modal>
       )}
 
       {taskBeingPrepared !== undefined && (
-        <Modal title="task details" width={17} onOverlayToggle={onAddNewCancel}>
-          <AddNewCalendarTask onClose={onAddNewCancel} />
+        <Modal title="task details" width={17} onOverlayToggle={onRemovePreparedTask}>
+          <AddNewCalendarTask onRemovePreparedTask={onRemovePreparedTask} />
         </Modal>
       )}
     </Wrap>

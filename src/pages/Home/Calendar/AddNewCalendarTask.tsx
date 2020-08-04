@@ -12,10 +12,10 @@ import { CalendarFormValues } from './shared'
 const Form = styled.form``
 
 interface Props {
-  onClose(): void
+  onRemovePreparedTask(): void
 }
 
-const AddNewCalendarTask: FC<Props> = ({ onClose }) => {
+const AddNewCalendarTask: FC<Props> = ({ onRemovePreparedTask }) => {
   const dispatch = useAppDispatch()
   const { taskBeingPrepared } = useSelector((state: AppState) => state.calendar)
   const { timestamp, time } = taskBeingPrepared
@@ -32,7 +32,7 @@ const AddNewCalendarTask: FC<Props> = ({ onClose }) => {
         group: selectedGroup.name,
       }),
     )
-    onClose()
+    onRemovePreparedTask()
   }
   const watchedFields = watch()
   const accentColor = selectedGroup ? colors[selectedGroup.colorId] : undefined

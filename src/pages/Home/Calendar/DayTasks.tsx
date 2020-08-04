@@ -55,7 +55,7 @@ interface IProps {
   task: TaskWithMeta
 }
 const DayTasks: FC<IProps> = ({ task: { _id, group, timestamp, name, gapBefore, gapAfter, heightInFlex } }) => {
-  console.log('day tasks', name)
+  console.log('COMP: DayTasks - ', name)
   const { hoursAxis, taskBeingEdited, focusedTimestamp } = useSelector((state: AppState) => state.calendar)
   const { groups, colors } = useSelector((state: AppState) => state.settings)
   const dispatch = useAppDispatch()
