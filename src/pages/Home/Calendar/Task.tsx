@@ -12,14 +12,13 @@ import { makeHoursAxis } from '../../../selectors'
 interface ICell {
   theme: { bg: string };
   isBeingEdited: boolean;
-  isGap?: boolean;
   flex: number;
-  accentColor?: string;
-  isSmall?: boolean;
+  accentColor: string;
+  isSmall: boolean;
 }
 const Cell = styled.div<ICell>`
   ${ellipsis()};
-  z-index: ${p => (p.isGap ? 0 : 1)};
+  z-index: 1;
   position: relative;
   display: flex;
   flex-grow: ${p => p.flex};
@@ -33,11 +32,11 @@ const Cell = styled.div<ICell>`
   display: block;
   padding: 0 var(--size-sm);
   line-height: 1.5;
-  color: ${p => (p.accentColor ? rgbAdjust(p.accentColor, -80) : 'red')};
+  color: ${p => rgbAdjust(p.accentColor, -80)};
   cursor: pointer;
 
   &:hover {
-    background-color: ${p => p.accentColor ? rgbAdjust(p.accentColor, -10) : 'transparent'};
+    background-color: ${p => rgbAdjust(p.accentColor, -10)};
   };
 
   .${CN_COLUMN}:hover & {
@@ -45,13 +44,27 @@ const Cell = styled.div<ICell>`
   };
 
   ${p => p.isBeingEdited && `
-    background-color: ${p.accentColor ? rgbAdjust(p.accentColor, -10) : 'transparent'};
+    background-color: ${rgbAdjust(p.accentColor, -10)};
     ${taskShadowBeingEdited(p.theme.columnHoverBg)};
   `};
   ${p => p.isSmall && `
     line-height: 0.8;
     font-size: 11px;
   `};
+`
+
+const CellGap = styled.div<{ flex: number }>`
+  z-index: 0;
+  display: flex;
+  flex-grow: ${p => p.flex};
+  flex-shrink: 0;
+  flex-basis: 0;
+  border-radius: 1px;
+  ${p => taskShadow(p.theme.bg)}
+
+  .${CN_COLUMN}:hover & {
+    ${p => taskShadow(p.theme.columnHoverBg)};
+  };
 `
 
 interface IProps {
@@ -72,14 +85,7 @@ const Task: FC<IProps> = ({
 
   return (
     <>
-      {gapBefore > 0 && (
-        <Cell
-          isGap
-          flex={gapBefore}
-          isBeingEdited={false}
-        />
-      )}
-
+      {gapBefore > 0 && <CellGap flex={gapBefore} />}
       {heightInFlex > 0 && (
         <Cell
           flex={heightInFlex}
@@ -91,14 +97,7 @@ const Task: FC<IProps> = ({
           {name}
         </Cell>
       )}
-
-      {gapAfter > 0 && (
-        <Cell
-          isGap
-          flex={gapAfter}
-          isBeingEdited={false}
-        />
-      )}
+      {gapAfter > 0 && <CellGap flex={gapAfter} />}
     </>
   )
 }
