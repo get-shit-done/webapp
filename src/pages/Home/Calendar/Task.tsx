@@ -60,11 +60,6 @@ const CellGap = styled.div<{ flex: number }>`
   flex-shrink: 0;
   flex-basis: 0;
   border-radius: 1px;
-  ${p => taskShadow(p.theme.bg)}
-
-  .${CN_COLUMN}:hover & {
-    ${p => taskShadow(p.theme.columnHoverBg)};
-  };
 `
 
 interface IProps {
