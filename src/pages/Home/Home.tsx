@@ -63,7 +63,7 @@ const Home = () => {
         <HourLabels onHover={onSetCalendarScale} />
         <CalendarWrap ref={calendarRef}>
           <DayLabels onHover={onSetCalendarScale} />
-          <Calendar calendarRef={calendarRef} scale={calendarScale} />
+          <Calendar scale={calendarScale} />
         </CalendarWrap>
         <Toast />
       </Wrap>

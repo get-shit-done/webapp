@@ -1,3 +1,7 @@
+export const CN_HOUR_SLOTS = 'hour-slots'
+export const CN_COLUMN = 'column'
+export const CN_TASK_GAP = 'task-gap'
+
 export type CalendarFormValues = {
   name: string
   from: number

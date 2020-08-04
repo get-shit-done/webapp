@@ -1,9 +1,7 @@
-import React, { FC, useState, useCallback, useEffect } from 'react'
+import React, { FC, useState, useEffect } from 'react'
 import styled from 'styled-components'
 import { useSelector } from 'react-redux'
 import { actions } from '../../../reducers/calendar'
-import { Modal } from '../../../components/Modal'
-import AddNewCalendarTask from './AddNewCalendarTask'
 import { rgbAdjust, ellipsis } from '../../../styles'
 import { AppState, useAppDispatch } from '../../../Application/Root'
 import { determineTimeFromY, taskShadow, placeholderShadow } from './shared'
@@ -68,59 +66,50 @@ interface Props {
   hourSlotsRef: any
   y: number
   timeFromY: number,
-  height30: number
+  placeholderHeight: number
 }
 
-const PlaceholderTask: FC<Props> = ({ timestamp, hourSlotsRef, y, timeFromY, height30 }) => {
+const PlaceholderTask: FC<Props> = ({ timestamp, hourSlotsRef, y, timeFromY, placeholderHeight }) => {
   const dispatch = useAppDispatch()
-  const { hoursAxis, taskBeingPrepared = { time: [] } } = useSelector((state: AppState) => state.calendar)
+  const { hoursAxis, taskBeingPrepared } = useSelector((state: AppState) => state.calendar)
   const { groups, colors } = useSelector((state: AppState) => state.settings)
-  const colorId = groups.find(x => x.name === taskBeingPrepared.group)?.colorId
+  const [{ yFromTime, heightFromTime }, setYAndHeight] = useState({ yFromTime: y, heightFromTime: placeholderHeight })
+  // console.log('COMP: placeholder Task')
 
-  const [{ yFromTime, heightFromTime }, setYAndHeightFromTime] = useState({ yFromTime: undefined, heightFromTime: height30 })
-  const [{ isBeingEdited, time }, setTaskDetails] = useState({ isBeingEdited: false, time: [] })
+  const colorId = taskBeingPrepared ? groups.find(x => x.name === taskBeingPrepared.group)?.colorId : undefined
+  const isPlaceholderBeingEdited = taskBeingPrepared?.timestamp === timestamp
 
   function onPrepareNewTask() {
     const rounded = determineTimeFromY({ y, ref: hourSlotsRef, hoursAxis })
-    setTaskDetails({ isBeingEdited: true, time: [rounded, rounded + 0.5] })
+    dispatch(actions.prepareTask({
+      name: '',
+      group: 'improvement',
+      timestamp,
+      time: [rounded, rounded + 0.5],
+    }))
   }
 
   useEffect(() => {
-    isBeingEdited && updateTaskFromTime()
-  }, [taskBeingPrepared.time[0], taskBeingPrepared.time[1]])
+    isPlaceholderBeingEdited && updatePlaceholder()
+  }, [taskBeingPrepared?.time])
 
-  function updateTaskFromTime() {
-    const timeFrom = taskBeingPrepared.time[0]
-    const yAlg = timeFrom * (height30 * 2) - hoursAxis[0] * (height30 * 2)
-    const heightAlg = (taskBeingPrepared.time[1] - taskBeingPrepared.time[0]) * height30 * 2
-    setYAndHeightFromTime({ yFromTime: yAlg, heightFromTime: heightAlg })
+  function updatePlaceholder() {
+    const yAlg = taskBeingPrepared.time[0] * (placeholderHeight * 2) - hoursAxis[0] * (placeholderHeight * 2)
+    const heightAlg = (taskBeingPrepared.time[1] - taskBeingPrepared.time[0]) * placeholderHeight * 2
+    setYAndHeight({ yFromTime: yAlg, heightFromTime: heightAlg })
   }
 
-  const onModalClose = useCallback(() => {
-    setTaskDetails({ isBeingEdited: false, time: [] })
-    setYAndHeightFromTime({ yFromTime: undefined, heightFromTime: height30 })
-    dispatch(actions.removePreparedTask())
-  }, [])
-
   return (
-    <>
-      <PlaceholderTaskWrap
-        isBeingPrepared={isBeingEdited}
-        top={yFromTime ?? y}
-        height={heightFromTime}
-        onClick={onPrepareNewTask}
-        accentColor={colors[colorId]}
-      >
-        {taskBeingPrepared?.name}
-        {!isBeingEdited && <TimeWrap><TimeText>{timeFromY}</TimeText></TimeWrap>}
-      </PlaceholderTaskWrap>
-
-      {isBeingEdited && (
-        <Modal title="task details" width={17} onOverlayToggle={onModalClose}>
-          <AddNewCalendarTask timestamp={timestamp} time={time} onModalClose={onModalClose} />
-        </Modal>
-      )}
-    </>
+    <PlaceholderTaskWrap
+      isBeingPrepared={isPlaceholderBeingEdited}
+      top={isPlaceholderBeingEdited ? yFromTime : y}
+      height={isPlaceholderBeingEdited ? heightFromTime : placeholderHeight}
+      onClick={onPrepareNewTask}
+      accentColor={colors[colorId]}
+    >
+      {taskBeingPrepared?.name}
+      {!isPlaceholderBeingEdited && <TimeWrap><TimeText>{timeFromY}</TimeText></TimeWrap>}
+    </PlaceholderTaskWrap>
   )
 }
 

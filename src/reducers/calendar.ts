@@ -1,17 +1,17 @@
-import { createSlice, nanoid, PayloadAction } from '@reduxjs/toolkit'
+import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 import format from 'date-fns/format'
 import { MONTH_DAYS, MONTH_DAYS_STRING, HOURS_IN_DAY } from '../constants'
 import { taskSort } from '../utils'
+import { shallowEqual } from 'react-redux'
 
 export interface TaskBeingPrepared {
-  // [key: string]: any,
   timestamp?: string
   time?: number[]
   name?: string
   group?: string
 }
 export interface NewTask {
-  [key: string]: any // TODO: is this really necessary? wtf
+  [key: string]: any
   time: number[]
   name: string
   group: string
@@ -26,22 +26,23 @@ export interface TaskWithMeta extends SavedTask {
   gapBefore?: number
   gapAfter?: number
 }
+export interface IAllTasksByDay {
+  [key: string]: {
+    tasks: SavedTask[]
+  }
+}
 interface IInitialState {
   focusedTimestamp: string
   taskBeingPrepared: TaskBeingPrepared
-  taskBeingEdited: TaskWithMeta | null
-  allTasksByDay: {
-    [key: string]: {
-      tasks: SavedTask[]
-    }
-  }
+  taskBeingEdited: TaskWithMeta | undefined
+  allTasksByDay: IAllTasksByDay
   hoursAxis: number[]
   daysAxis: string[]
 }
 const initialState: IInitialState = {
   focusedTimestamp: undefined,
   taskBeingPrepared: undefined,
-  taskBeingEdited: null,
+  taskBeingEdited: undefined,
   allTasksByDay: {},
   hoursAxis: HOURS_IN_DAY,
   daysAxis: MONTH_DAYS_STRING,
@@ -81,10 +82,11 @@ export const { reducer, actions } = createSlice({
     editTaskCancel(state): void {
       const { _id, timestamp } = state.taskBeingEdited
       const task = state.allTasksByDay[timestamp].tasks.find(x => x._id === _id)
+
       for (const x in task) {
-        task[x] = state.taskBeingEdited[x]
+        task[x] = shallowEqual(state.taskBeingEdited[x], task[x]) ? task[x] : state.taskBeingEdited[x]
       }
-      state.taskBeingEdited = null
+      state.taskBeingEdited = undefined
     },
     saveTaskRequested(state, action) {},
     saveTaskSuccess(state, { payload }: PayloadAction<SavedTask>): void {
@@ -93,12 +95,13 @@ export const { reducer, actions } = createSlice({
       for (const x in task) {
         task[x] = payload[x]
       }
+      state.taskBeingEdited = undefined
     },
     saveTaskFailed() {},
     addTaskRequested(state, { payload: { name, timestamp, group, time } }: PayloadAction<NewTask>): void {
       state.allTasksByDay[timestamp] = state.allTasksByDay[timestamp] || { tasks: [] }
 
-      state.taskBeingEdited = null
+      state.taskBeingEdited = undefined
       state.allTasksByDay[timestamp].tasks.push({
         _id: 'just-added',
         time,

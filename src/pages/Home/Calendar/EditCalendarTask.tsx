@@ -13,10 +13,6 @@ import { CalendarFormValues } from './shared'
 
 const Form = styled.form``
 
-interface Props {
-  timestamp: string
-  taskBeingEdited: TaskWithMeta
-}
 const Remove = styled(Svg)`
   margin-left: var(--size-xlg);
   width: 1.6rem;
@@ -25,14 +21,16 @@ const Remove = styled(Svg)`
 `
 
 // TODO: timestamp should come from taskBeingEdited
-const EditCalendarTask: FC<Props> = ({ timestamp, taskBeingEdited }) => {
+const EditCalendarTask: FC = () => {
   const dispatch = useAppDispatch()
+  const { taskBeingEdited } = useSelector((state: AppState) => state.calendar)
   const { groups, colors } = useSelector((state: AppState) => state.settings)
   const [selectedGroup, setSelectedGroup] = useState(groups.find(x => x.name === taskBeingEdited.group))
   const { _id, time, name, group } = taskBeingEdited
   const accentColor = selectedGroup ? colors[selectedGroup.colorId] : undefined
-  const onRemoveTask = () => dispatch(actions.removeTaskRequested({ _id, timestamp }))
+  const timestamp = taskBeingEdited?.timestamp
 
+  const onRemoveTask = () => dispatch(actions.removeTaskRequested({ _id, timestamp }))
 
   const onSubmit: SubmitHandler<CalendarFormValues> = (data): any => {
     const { name, from, to } = data
