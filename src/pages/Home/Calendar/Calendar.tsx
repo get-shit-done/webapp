@@ -1,17 +1,18 @@
-import React, { FC, useRef, useCallback } from 'react'
+import React, { FC, useRef, useCallback, useMemo } from 'react'
 import styled from 'styled-components'
 import isToday from 'date-fns/isToday'
 import format from 'date-fns/format'
 
-import { useSelector } from 'react-redux'
+import { useSelector, shallowEqual } from 'react-redux'
 import CalendarColumn from './CalendarColumn'
 import { AppState, useAppDispatch } from '../../../Application/Root'
-import { tasksInCalendar } from '../../../selectors/tasksInCalendar'
+import { tasksByDateAndTime, daysAxis } from '../../../selectors/tasksInCalendar'
 import { determinePlaceholderHeight } from '../../../utils'
 import { Modal } from '../../../components/Modal'
 import EditCalendarTask from './EditCalendarTask'
-import { actions } from '../../../reducers/calendar'
+import { actions, SavedTask } from '../../../reducers/calendar'
 import AddNewCalendarTask from './AddNewCalendarTask'
+import { startOfWeekYear } from 'date-fns'
 
 const Wrap = styled.div<{ scale: { x: number, y: number, duration: number } }>`
   position: relative;
@@ -22,6 +23,11 @@ const Wrap = styled.div<{ scale: { x: number, y: number, duration: number } }>`
   transform: ${p => `scale(${p.scale.x}, ${p.scale.y})`};
 `
 
+// const Test = styled.div`
+//   display: flex;
+//   width: 100%;
+// `
+
 interface Props {
   scale: {
     x: number
@@ -30,12 +36,44 @@ interface Props {
   },
 }
 
+// okay okay, maybe this is rerunning because the params need to be memoed
+// COMMIT WHAT I HAVE NOW
+// try memoizing the axis params
+// if that fails, create 2 separate memo fns for axis and tasksByDateAndTime, and loop over axis
+const CalendarColumns: FC<{ daysAxis: string[], hoursAxis: number[] }> = ({ daysAxis, hoursAxis }) => {
+  const tasks = useMemo(tasksByDateAndTime, [])
+  const tasksMemoed = useSelector(state => tasks(state, daysAxis, hoursAxis))
+
+  return (
+    <>
+      {tasksMemoed.map(({ timestamp, tasks }: { timestamp: string, tasks: SavedTask[] }) => (
+        <CalendarColumn
+          key={timestamp}
+          isCurrentDay={false}
+          timestamp={timestamp}
+          tasksFiltered={tasks}
+          placeholderHeight={20}
+        />
+      ))}
+    </>
+  )
+}
+
+const Test = () => {
+  const daysTest: any = useSelector(daysAxis)
+
+  return (
+    <div>
+      {daysTest[0]}
+    </div>
+  )
+}
+
 const Calendar: FC<Props> = ({ scale }) => {
   const wrapRef = useRef(null)
   const dispatch = useAppDispatch()
-  const { hoursAxis, taskBeingEdited, taskBeingPrepared } = useSelector((state: AppState) => state.calendar)
+  const { daysAxis, hoursAxis, taskBeingEdited, taskBeingPrepared } = useSelector((state: AppState) => state.calendar)
   const placeholderHeight = determinePlaceholderHeight({ wrapRef, hoursAxis })
-  const tasksMapped = useSelector(tasksInCalendar)
 
 
   const onRemovePreparedTask = useCallback(() => {
@@ -49,15 +87,9 @@ const Calendar: FC<Props> = ({ scale }) => {
 
   return (
     <Wrap scale={scale} ref={wrapRef}>
-      {tasksMapped.map(({ timestamp, tasks }) => (
-        <CalendarColumn
-          key={timestamp}
-          isCurrentDay={false}
-          timestamp={timestamp}
-          tasksFiltered={tasks}
-          placeholderHeight={placeholderHeight}
-        />
-      ))}
+      <CalendarColumns daysAxis={daysAxis} hoursAxis={hoursAxis} />
+      <Test />
+
       {taskBeingEdited && (
         <Modal title="task details" width={17} onOverlayToggle={onEditTaskCancel}>
           <EditCalendarTask />
