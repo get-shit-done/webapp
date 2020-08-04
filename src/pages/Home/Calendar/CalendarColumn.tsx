@@ -90,7 +90,9 @@ const CalendarColumn: FC<Props> = ({ timestamp, isCurrentDay, tasksFiltered = []
         onMouseEnter={saveFocusedTimestamp}
         className={CN_HOUR_SLOTS}
       >
-        {tasksFiltered.map(task => <Task key={task._id} task={task} isBeingEdited={taskBeingEdited?._id === task._id} />)}
+        {tasksFiltered.map(task => (
+          <Task key={task._id} task={task} isBeingEdited={taskBeingEdited?._id === task._id} />
+        ))}
         <PlaceholderTask
           timestamp={timestamp}
           hourSlotsRef={hourSlotsRef}
