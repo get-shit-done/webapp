@@ -25,7 +25,7 @@ export interface TaskWithMeta extends SavedTask {
   gapBefore?: number
   gapAfter?: number
 }
-interface IAllTasksByDay {
+export interface IAllTasksByDay {
   [key: string]: {
     tasks: SavedTask[]
   }
