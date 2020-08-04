@@ -36,7 +36,8 @@ const CalendarColumns: FC = () => {
     [key: string]: SavedTask[]
   }
   const daysAxis = useSelector(makeDaysAxis)
-  const allTasksByDayMapped: IAllTasksByDay = useSelector(makeAllTasksByDayMapped)
+  const hoursAxis = useSelector(makeHoursAxis)
+  const allTasksByDayMapped: IAllTasksByDay = useSelector(state => makeAllTasksByDayMapped(state, hoursAxis))
 
 
 
@@ -59,7 +60,6 @@ const Calendar: FC<Props> = ({ scale }) => {
   const wrapRef = useRef(null)
   const dispatch = useAppDispatch()
   const { taskBeingEdited, taskBeingPrepared } = useSelector((state: AppState) => state.calendar)
-  // const daysAxis = useSelector(makeDaysAxis)
   // const placeholderHeight = determinePlaceholderHeight({ wrapRef, hoursAxis })
 
 
