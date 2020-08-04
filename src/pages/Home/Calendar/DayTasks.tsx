@@ -6,11 +6,11 @@ import { rgbAdjust, ellipsis } from '../../../styles'
 import { actions, TaskWithMeta } from '../../../reducers/calendar'
 import { AppState, useAppDispatch } from '../../../Application/Root'
 import { taskShadow, taskShadowBeingEdited } from './shared'
+import { makeHoursAxis } from '../../../selectors/tasksInCalendar'
 
 
 interface ICell {
   theme: { bg: string };
-  isInFocusedTimeframe: boolean;
   isBeingEdited: boolean;
   isGap?: boolean;
   flex: number;
@@ -44,7 +44,6 @@ const Cell = styled.div<ICell>`
     background-color: ${p.accentColor ? rgbAdjust(p.accentColor, -10) : 'transparent'};
     ${taskShadowBeingEdited(p.theme.columnHoverBg)};
   `};
-  ${p => (!p.isBeingEdited && p.isInFocusedTimeframe) && taskShadow(p.theme.columnHoverBg)};
   ${p => p.isSmall && `
     line-height: 0.8;
     font-size: 11px;
@@ -56,12 +55,11 @@ interface IProps {
 }
 const DayTasks: FC<IProps> = ({ task: { _id, group, timestamp, name, gapBefore, gapAfter, heightInFlex } }) => {
   console.log('COMP: DayTasks - ', name)
-  const { hoursAxis, taskBeingEdited, focusedTimestamp } = useSelector((state: AppState) => state.calendar)
+  const hoursAxis = useSelector(makeHoursAxis)
+  const taskBeingEdited = useSelector((state: AppState) => state.calendar.taskBeingEdited)
   const { groups, colors } = useSelector((state: AppState) => state.settings)
   const dispatch = useAppDispatch()
   const { colorId } = groups.find(x => x.name === group)
-
-  const isInFocusedTimeframe = timestamp === focusedTimestamp
 
   function onEditTask() {
     dispatch(actions.editTaskPrepare({ _id, timestamp }))
@@ -73,7 +71,6 @@ const DayTasks: FC<IProps> = ({ task: { _id, group, timestamp, name, gapBefore, 
         <Cell
           isGap
           flex={gapBefore}
-          isInFocusedTimeframe={isInFocusedTimeframe}
           isBeingEdited={false}
         />
       )}
@@ -83,7 +80,6 @@ const DayTasks: FC<IProps> = ({ task: { _id, group, timestamp, name, gapBefore, 
           flex={heightInFlex}
           accentColor={colors[colorId]}
           isSmall={hoursAxis.length > 16 && heightInFlex <= 0.25}
-          isInFocusedTimeframe={isInFocusedTimeframe}
           isBeingEdited={taskBeingEdited?._id === _id}
           onClick={onEditTask}
         >
@@ -95,7 +91,6 @@ const DayTasks: FC<IProps> = ({ task: { _id, group, timestamp, name, gapBefore, 
         <Cell
           isGap
           flex={gapAfter}
-          isInFocusedTimeframe={isInFocusedTimeframe}
           isBeingEdited={false}
         />
       )}

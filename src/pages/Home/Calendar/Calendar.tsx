@@ -6,7 +6,7 @@ import format from 'date-fns/format'
 import { useSelector, shallowEqual } from 'react-redux'
 import CalendarColumn from './CalendarColumn'
 import { AppState, useAppDispatch } from '../../../Application/Root'
-import { tasksByDateAndTime, makeDaysAxis, makeHoursAxis, makeAllTasksByDay, makeAllTasksByDayMapped } from '../../../selectors/tasksInCalendar'
+import { makeDaysAxis, makeHoursAxis, makeAllTasksByDay, makeAllTasksByDayMapped } from '../../../selectors/tasksInCalendar'
 import { determinePlaceholderHeight } from '../../../utils'
 import { Modal } from '../../../components/Modal'
 import EditCalendarTask from './EditCalendarTask'
@@ -59,7 +59,8 @@ const CalendarColumns: FC = () => {
 const Calendar: FC<Props> = ({ scale }) => {
   const wrapRef = useRef(null)
   const dispatch = useAppDispatch()
-  const { taskBeingEdited, taskBeingPrepared } = useSelector((state: AppState) => state.calendar)
+  const taskBeingEdited = useSelector((state: AppState) => state.calendar.taskBeingEdited)
+  const taskBeingPrepared = useSelector((state: AppState) => state.calendar.taskBeingPrepared)
   // const placeholderHeight = determinePlaceholderHeight({ wrapRef, hoursAxis })
 
 
