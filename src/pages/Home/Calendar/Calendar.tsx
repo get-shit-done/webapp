@@ -30,12 +30,9 @@ interface Props {
 }
 
 const CalendarColumns: FC<{ wrapRef: React.MutableRefObject<any> }> = ({ wrapRef }) => {
-  interface IAllTasksByDay {
-    [key: string]: SavedTask[]
-  }
   const daysAxis = useSelector(makeDaysAxis)
   const hoursAxis = useSelector(makeHoursAxis)
-  const allTasksByDayMapped: IAllTasksByDay = useSelector(state => makeAllTasksByDayMapped(state, hoursAxis))
+  const allTasksByDayMapped = useSelector(state => makeAllTasksByDayMapped(state, hoursAxis))
   const placeholderHeight = determinePlaceholderHeight({ wrapRef, hoursAxis })
 
   return (
@@ -61,7 +58,7 @@ const Calendar: FC<Props> = ({ scale }) => {
 
   const onRemovePreparedTask = useCallback(() => { dispatch(actions.removePreparedTask()) }, [])
   const onEditTaskCancel = useCallback(() => { dispatch(actions.editTaskCancel()) }, [])
-  console.log('COMP: Calendar')
+  // console.log('COMP: Calendar')
 
   return (
     <Wrap scale={scale} ref={wrapRef}>
