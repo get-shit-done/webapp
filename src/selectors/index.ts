@@ -14,7 +14,7 @@ export const makeAllTasksByDayMapped = createSelector(
     if (Object.values(allTasksByDay).length === 0) {
       return {}
     }
-    console.log('SELECTOR: all tasks by day mapped')
+    // console.log('SELECTOR: all tasks by day mapped')
 
     Object.entries(allTasksByDay).forEach(([datestring, value]) => {
       mapped[datestring] = value.tasks.map((task: SavedTask, taskIndex: number) => {
@@ -47,28 +47,12 @@ export const makeAllTasksByDayMapped = createSelector(
   },
 )
 
-export const makeAllTasksByDay = createSelector(
-  (state: AppState) => state.calendar.allTasksByDay,
-  allTasksByDay => {
-    console.log('SELECTOR: all tasks by day')
-    return allTasksByDay
-  },
-)
-
 export const makeDaysAxis = createSelector(
   (state: AppState) => state.calendar.daysAxis,
-  daysAxis =>
-    daysAxis.map(day => {
-      console.log('SELECTOR: days axis')
-      return day
-    }),
+  daysAxis => daysAxis,
 )
 
 export const makeHoursAxis = createSelector(
   (state: AppState) => state.calendar.hoursAxis,
-  hoursAxis =>
-    hoursAxis.map(day => {
-      console.log('SELECTOR: hours axis')
-      return day
-    }),
+  hoursAxis => hoursAxis,
 )
