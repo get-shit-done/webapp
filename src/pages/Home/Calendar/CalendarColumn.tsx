@@ -1,6 +1,6 @@
 import React, { useState, useRef, memo, FC } from 'react'
 import styled from 'styled-components'
-import { useSelector } from 'react-redux'
+import { useSelector, shallowEqual } from 'react-redux'
 
 import { rgbAdjust, ellipsis } from '../../../styles'
 import CurrentTime from './CurrentTime'
@@ -9,6 +9,7 @@ import { TaskWithMeta } from '../../../reducers/calendar'
 import { AppState } from '../../../Application/Root'
 import { determineTimeFromY, taskShadow, taskShadowBeingEdited } from './shared'
 import DayTasks from './DayTasks'
+import { makeHoursAxis } from '../../../selectors/tasksInCalendar'
 
 const CN_HOUR_SLOTS = 'hour-slots'
 
@@ -105,18 +106,16 @@ interface Props {
   placeholderHeight: number
 }
 
-const CalendarColumn: FC<Props> = ({ timestamp, isCurrentDay, tasksFiltered, placeholderHeight }) => {
-  const { hoursAxis, taskBeingPrepared, focusedTimestamp } = useSelector((state: AppState) => state.calendar)
+const CalendarColumn: FC<Props> = ({ timestamp, isCurrentDay, tasksFiltered = [], placeholderHeight }) => {
+  const hoursAxis = useSelector((state: AppState) => state.calendar.hoursAxis)
   console.log('COMP: CalendarColumn')
 
   const [y, setY] = useState(0)
   const [timeFromY, setTimeFromY] = useState(0)
   const hourSlotsRef = useRef(null)
-  const isInFocusedTimeframe = timestamp === focusedTimestamp
+  // const isInFocusedTimeframe = timestamp === focusedTimestamp
 
   function updatePlaceholderTask(event: React.MouseEvent<HTMLDivElement, MouseEvent>) {
-    if (taskBeingPrepared) return
-
     const columnTopPx = event.currentTarget.getBoundingClientRect().top
     const placeholderY = event.clientY - columnTopPx - (placeholderHeight / 4)
     const newY = Math.floor(placeholderY / (placeholderHeight / 2)) * (placeholderHeight / 2)
@@ -133,7 +132,7 @@ const CalendarColumn: FC<Props> = ({ timestamp, isCurrentDay, tasksFiltered, pla
   }
 
   return (
-    <Wrap isCurrentDay={isCurrentDay} isInFocusedTimeframe={isInFocusedTimeframe}>
+    <Wrap isCurrentDay={isCurrentDay} isInFocusedTimeframe={false}>
       {isCurrentDay && <CurrentTime />}
 
       <HourSlots
