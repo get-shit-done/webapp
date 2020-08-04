@@ -1,7 +1,6 @@
-import React, { FC, useRef, useCallback, useMemo } from 'react'
+import React, { FC, useRef, useCallback } from 'react'
 import styled from 'styled-components'
 import isToday from 'date-fns/isToday'
-import format from 'date-fns/format'
 
 import { useSelector, shallowEqual } from 'react-redux'
 import CalendarColumn from './CalendarColumn'
@@ -12,7 +11,6 @@ import { Modal } from '../../../components/Modal'
 import EditCalendarTask from './EditCalendarTask'
 import { actions, SavedTask } from '../../../reducers/calendar'
 import AddNewCalendarTask from './AddNewCalendarTask'
-import { startOfWeekYear } from 'date-fns'
 
 const Wrap = styled.div<{ scale: { x: number, y: number, duration: number } }>`
   position: relative;
@@ -31,25 +29,24 @@ interface Props {
   },
 }
 
-const CalendarColumns: FC = () => {
+const CalendarColumns: FC<{ wrapRef: React.MutableRefObject<any> }> = ({ wrapRef }) => {
   interface IAllTasksByDay {
     [key: string]: SavedTask[]
   }
   const daysAxis = useSelector(makeDaysAxis)
   const hoursAxis = useSelector(makeHoursAxis)
   const allTasksByDayMapped: IAllTasksByDay = useSelector(state => makeAllTasksByDayMapped(state, hoursAxis))
-
-
+  const placeholderHeight = determinePlaceholderHeight({ wrapRef, hoursAxis })
 
   return (
     <>
       {daysAxis.map((timestamp) => (
         <CalendarColumn
           key={timestamp}
-          isCurrentDay={false}
+          isCurrentDay={isToday(new Date(timestamp))}
           timestamp={timestamp}
           tasksFiltered={allTasksByDayMapped[timestamp]}
-          placeholderHeight={20}
+          placeholderHeight={placeholderHeight}
         />
       ))}
     </>
@@ -61,21 +58,14 @@ const Calendar: FC<Props> = ({ scale }) => {
   const dispatch = useAppDispatch()
   const taskBeingEdited = useSelector((state: AppState) => state.calendar.taskBeingEdited)
   const taskBeingPrepared = useSelector((state: AppState) => state.calendar.taskBeingPrepared)
-  // const placeholderHeight = determinePlaceholderHeight({ wrapRef, hoursAxis })
 
-
-  const onRemovePreparedTask = useCallback(() => {
-    dispatch(actions.removePreparedTask())
-  }, [])
-
-  const onEditTaskCancel = useCallback(() => {
-    dispatch(actions.editTaskCancel())
-  }, [])
+  const onRemovePreparedTask = useCallback(() => { dispatch(actions.removePreparedTask()) }, [])
+  const onEditTaskCancel = useCallback(() => { dispatch(actions.editTaskCancel()) }, [])
   console.log('COMP: Calendar')
 
   return (
     <Wrap scale={scale} ref={wrapRef}>
-      <CalendarColumns />
+      <CalendarColumns wrapRef={wrapRef} />
 
       {taskBeingEdited && (
         <Modal title="task details" width={17} onOverlayToggle={onEditTaskCancel}>
