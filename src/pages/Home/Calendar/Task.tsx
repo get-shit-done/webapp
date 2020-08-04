@@ -1,11 +1,11 @@
-import React, { Fragment, useState, memo, FC } from 'react'
+import React, { Fragment, memo, FC } from 'react'
 import styled from 'styled-components'
 import { useSelector } from 'react-redux'
 
 import { rgbAdjust, ellipsis } from '../../../styles'
 import { actions, TaskWithMeta } from '../../../reducers/calendar'
 import { AppState, useAppDispatch } from '../../../Application/Root'
-import { taskShadow, taskShadowBeingEdited } from './shared'
+import { taskShadow, taskShadowBeingEdited, CN_COLUMN } from './shared'
 import { makeHoursAxis } from '../../../selectors/tasksInCalendar'
 
 
@@ -40,6 +40,10 @@ const Cell = styled.div<ICell>`
     background-color: ${p => p.accentColor ? rgbAdjust(p.accentColor, -10) : 'transparent'};
   };
 
+  .${CN_COLUMN}:hover & {
+    ${p => taskShadow(p.theme.columnHoverBg)};
+  };
+
   ${p => p.isBeingEdited && `
     background-color: ${p.accentColor ? rgbAdjust(p.accentColor, -10) : 'transparent'};
     ${taskShadowBeingEdited(p.theme.columnHoverBg)};
@@ -52,11 +56,11 @@ const Cell = styled.div<ICell>`
 
 interface IProps {
   task: TaskWithMeta
+  isBeingEdited: boolean
 }
-const DayTasks: FC<IProps> = ({ task: { _id, group, timestamp, name, gapBefore, gapAfter, heightInFlex } }) => {
-  console.log('COMP: DayTasks - ', name)
+const Task: FC<IProps> = ({ task: { _id, group, timestamp, name, gapBefore, gapAfter, heightInFlex }, isBeingEdited }) => {
+  console.log('COMP: Task - ', name)
   const hoursAxis = useSelector(makeHoursAxis)
-  const taskBeingEdited = useSelector((state: AppState) => state.calendar.taskBeingEdited)
   const { groups, colors } = useSelector((state: AppState) => state.settings)
   const dispatch = useAppDispatch()
   const { colorId } = groups.find(x => x.name === group)
@@ -80,7 +84,7 @@ const DayTasks: FC<IProps> = ({ task: { _id, group, timestamp, name, gapBefore, 
           flex={heightInFlex}
           accentColor={colors[colorId]}
           isSmall={hoursAxis.length > 16 && heightInFlex <= 0.25}
-          isBeingEdited={taskBeingEdited?._id === _id}
+          isBeingEdited={isBeingEdited}
           onClick={onEditTask}
         >
           {name}
@@ -98,4 +102,4 @@ const DayTasks: FC<IProps> = ({ task: { _id, group, timestamp, name, gapBefore, 
   )
 }
 
-export default memo(DayTasks)
+export default memo(Task)
