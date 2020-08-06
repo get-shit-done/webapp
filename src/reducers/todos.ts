@@ -70,7 +70,7 @@ export const { reducer, actions } = createSlice({
     },
     toggleTodoFailed(state, { payload }) {
       console.log('toggle todo failed')
-      state.asyncStatusTodo = asyncStatusFail('whoops', payload._id)
+      state.asyncStatusTodo = asyncStatusFail(payload.error, payload._id)
     },
     getTodosRequested(state) {
       state.asyncStatusTodos = asyncStatusRequested()

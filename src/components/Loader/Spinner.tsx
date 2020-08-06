@@ -36,8 +36,8 @@ interface Props {
   className?: string
 }
 
-const SpinnerLoader: FC<Props> = ({ id, size = 2, asyncStatus: { idAsync, isBusy }, className }) =>
-  (isBusy && id === idAsync) ? (
+const SpinnerLoader: FC<Props> = ({ id, size = 2, asyncStatus: { asyncId, isBusy }, className }) =>
+  (isBusy && id === asyncId) ? (
     <Wrap className={className}>
       <LoaderStyled size={size} svg={loaderSvg} />
     </Wrap>

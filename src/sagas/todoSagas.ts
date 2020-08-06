@@ -3,6 +3,8 @@ import axios from 'axios'
 import { actions } from '../reducers/todos'
 import { API_TODOS, API_TODOS_BY_ID } from '../api'
 
+const payloadError = ({ _id, error }: { _id: string; error: string }) => ({ _id, error })
+
 function* getTodos() {
   try {
     const response = yield call(axios.get, API_TODOS)
@@ -29,10 +31,13 @@ function* removeTodo({ payload }: any) {
 }
 function* toggleTodo({ payload }: any) {
   try {
-    const response = yield call(axios.patch, API_TODOS_BY_ID(payload._id), payload)
+    const response = yield call(axios.patch, API_TODOS_BY_ID('dfdfdfd'), payload)
     yield put({ type: actions.toggleTodoSucceeded.toString(), payload: response.data.data })
   } catch (error) {
-    yield put({ type: actions.toggleTodoFailed.toString(), payload: error.message })
+    yield put({
+      type: actions.toggleTodoFailed.toString(),
+      payload: payloadError({ _id: payload._id, error: error.message }),
+    })
   }
 }
 export function* todoSagas() {

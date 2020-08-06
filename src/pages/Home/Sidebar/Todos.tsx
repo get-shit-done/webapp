@@ -10,7 +10,7 @@ import { AppState, useAppDispatch } from '../../../Application/Root'
 import AddNewTodo from './AddNewTodo'
 import { SpinnerLoader } from '../../../components/Loader'
 
-const Todo = styled.div<{ isDone: boolean }>`
+const Todo = styled.div<{ isDone: boolean, isError: boolean }>`
   position: relative;
   display: flex;
   align-items: center;
@@ -20,13 +20,21 @@ const Todo = styled.div<{ isDone: boolean }>`
 
   &:hover {
     color: var(--cool-gray);
-  }
+  };
 
   ${p => p.isDone && `
     color: var(--rhythm);
 
     &:hover {
       color: var(--rhythm);
+    };
+  `};
+
+  ${p => p.isError && `
+    color: var(--sunset-orange);
+
+    &:hover {
+      color: var(--sunset-orange);
     };
   `};
 `
@@ -51,7 +59,7 @@ const TodoSpinner = styled(SpinnerLoader)`
   justify-content: right;
 `
 
-const Todos = ({ isActive }: { isActive: boolean }) => {
+const Todos = () => {
   const { addTodoRequested, removeTodoRequested, toggleTodoRequested } = todoActions
   const { todos, asyncStatusTodos, asyncStatusTodo } = useSelector((state: AppState) => state.todos.present)
   const dispatch = useAppDispatch()
@@ -66,10 +74,15 @@ const Todos = ({ isActive }: { isActive: boolean }) => {
       <AddNewTodo addNewTodo={onAddNewTodo} />
       <TodosSpinner size={4} asyncStatus={asyncStatusTodos} />
       {todos.map(({ _id, todoName, isDone }: Todo) => (
-        <Todo isDone={isDone} key={_id} onClick={() => dispatch(toggleTodoRequested({ _id, isDone: !isDone }))}>
+        <Todo
+          isDone={isDone}
+          isError={_id === asyncStatusTodo.asyncId}
+          key={_id}
+          onClick={() => dispatch(toggleTodoRequested({ _id, isDone: !isDone }))}
+        >
           <Name>{todoName}</Name>
           <Actions>
-            {_id !== asyncStatusTodo.idAsync && (
+            {_id !== asyncStatusTodo.asyncId && (
               <Remove
                 isDanger
                 theme="light"
@@ -79,6 +92,7 @@ const Todos = ({ isActive }: { isActive: boolean }) => {
             )}
           </Actions>
           <TodoSpinner id={_id} asyncStatus={asyncStatusTodo} />
+          {asyncStatusTodo.errorMessage && _id === asyncStatusTodo.asyncId && asyncStatusTodo.errorMessage}
         </Todo>
       ))}
     </>
