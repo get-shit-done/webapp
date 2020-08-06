@@ -59,7 +59,7 @@ const Todos = ({ isActive }: { isActive: boolean }) => {
     <>
       <AddNewTodo addNewTodo={onAddNewTodo} />
       {todos.map(({ _id, todoName, isDone }: Todo) => (
-        <Todo isDone={isDone} key={_id} onClick={() => dispatch(toggleTodoRequested({ _id }))}>
+        <Todo isDone={isDone} key={_id} onClick={() => dispatch(toggleTodoRequested({ _id, isDone: !isDone }))}>
           <Name>{todoName}</Name>
           <Actions>
             <Remove isDanger theme="light" svg={binSvg} onClick={() => onRemoveTodo(_id, todoName)} />

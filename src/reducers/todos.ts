@@ -10,6 +10,10 @@ export interface Todo extends NewTodo {
 interface IInitialState {
   todos: Todo[]
 }
+export interface IActionRemove {
+  _id: string
+}
+
 const initialState: IInitialState = {
   todos: [],
 }
@@ -29,12 +33,27 @@ export const { reducer, actions } = createSlice({
       const newTodo = state.todos.find(x => x._id === 'new-todo')
       newTodo._id = payload._id
     },
-    removeTodoRequested(state, { payload }: PayloadAction<{ _id: string }>): void {
+    addTodoFailed(state, { payload }) {
+      console.log('add todo failed')
+    },
+    removeTodoRequested(state, { payload }: PayloadAction<IActionRemove>): void {
       state.todos = state.todos.filter(x => x._id !== payload._id)
     },
-    toggleTodoRequested(state, { payload }: PayloadAction<{ _id: string }>): void {
+    removeTodoSucceeded(state, { payload }) {
+      console.log('remove success')
+    },
+    removeTodoFailed(state, { payload }) {
+      console.log('remove todo failed')
+    },
+    toggleTodoRequested(state, { payload }: PayloadAction<{ _id: string; isDone: boolean }>): void {
       const todo = state.todos.find(x => x._id === payload._id)
-      todo.isDone = !todo.isDone
+      todo.isDone = payload.isDone
+    },
+    toggleTodoSucceeded(state, { payload }) {
+      console.log('toggle todo succeded')
+    },
+    toggleTodoFailed(state, { payload }) {
+      console.log('toggle todo failed')
     },
     getTodosRequested() {
       //
@@ -44,7 +63,7 @@ export const { reducer, actions } = createSlice({
       state.todos = payload
     },
     getTodosFailed(state, action) {
-      console.log(action)
+      console.log('get todos failed')
     },
   },
 })
