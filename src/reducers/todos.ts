@@ -1,5 +1,37 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 
+interface AsyncStatus {
+  isInitial: boolean
+  isBusy: boolean
+  isDone: boolean
+  errorMessage?: string
+  id?: string
+}
+const asyncStatusInitial = {
+  isInitial: true,
+  isBusy: false,
+  isDone: false,
+}
+const asyncStatusRequested = (id?: string) => ({
+  isInitial: false,
+  isBusy: true,
+  isDone: false,
+  id,
+})
+const asyncStatusSuccess = (id?: string) => ({
+  isInitial: false,
+  isBusy: false,
+  isDone: true,
+  id,
+})
+const asyncStatusFail = (errorMessage: string, id?: string): AsyncStatus => ({
+  isInitial: false,
+  isBusy: false,
+  isDone: false,
+  errorMessage,
+  id,
+})
+
 export interface NewTodo {
   todoName: string
 }
@@ -9,12 +41,13 @@ export interface Todo extends NewTodo {
 }
 interface IInitialState {
   todos: Todo[]
-}
-export interface IActionRemove {
-  _id: string
+  asyncStatusTodos: AsyncStatus
+  asyncStatusTodo: AsyncStatus
 }
 
 const initialState: IInitialState = {
+  asyncStatusTodos: asyncStatusInitial,
+  asyncStatusTodo: asyncStatusInitial,
   todos: [],
 }
 
@@ -36,7 +69,7 @@ export const { reducer, actions } = createSlice({
     addTodoFailed(state, { payload }) {
       console.log('add todo failed')
     },
-    removeTodoRequested(state, { payload }: PayloadAction<IActionRemove>): void {
+    removeTodoRequested(state, { payload }: PayloadAction<{ _id: string }>): void {
       state.todos = state.todos.filter(x => x._id !== payload._id)
     },
     removeTodoSucceeded(state, { payload }) {
@@ -48,15 +81,18 @@ export const { reducer, actions } = createSlice({
     toggleTodoRequested(state, { payload }: PayloadAction<{ _id: string; isDone: boolean }>): void {
       const todo = state.todos.find(x => x._id === payload._id)
       todo.isDone = payload.isDone
+      state.asyncStatusTodo = asyncStatusRequested(payload._id)
     },
     toggleTodoSucceeded(state, { payload }) {
       console.log('toggle todo succeded')
+      state.asyncStatusTodo = asyncStatusSuccess(payload._id)
     },
     toggleTodoFailed(state, { payload }) {
       console.log('toggle todo failed')
+      state.asyncStatusTodo = asyncStatusFail('whoops', payload._id)
     },
-    getTodosRequested() {
-      //
+    getTodosRequested(state) {
+      state.asyncStatusTodos = asyncStatusRequested()
     },
     getTodosSucceeded(state, { payload }: PayloadAction<Todo[]>) {
       console.log(payload)

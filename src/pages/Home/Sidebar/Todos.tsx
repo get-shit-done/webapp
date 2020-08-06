@@ -47,7 +47,7 @@ const Remove = styled(Svg)`
 
 const Todos = ({ isActive }: { isActive: boolean }) => {
   const { addTodoRequested, removeTodoRequested, toggleTodoRequested } = todoActions
-  const { todos } = useSelector((state: AppState) => state.todos.present)
+  const { todos, asyncStatusTodos, asyncStatusTodo } = useSelector((state: AppState) => state.todos.present)
   const dispatch = useAppDispatch()
   const onAddNewTodo = (todo: NewTodo) => { dispatch(addTodoRequested(todo)) }
   const onRemoveTodo = (_id: string, todoName: string) => {
@@ -64,6 +64,8 @@ const Todos = ({ isActive }: { isActive: boolean }) => {
           <Actions>
             <Remove isDanger theme="light" svg={binSvg} onClick={() => onRemoveTodo(_id, todoName)} />
           </Actions>
+          {asyncStatusTodo.isBusy && asyncStatusTodo.id === _id && 'yes'}
+          {/* <Loader id={_id} /> */}
         </Todo>
       ))}
     </>
