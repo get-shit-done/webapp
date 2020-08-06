@@ -8,6 +8,7 @@ import Svg from '../../../components/Svg/component'
 import { AppState, useAppDispatch } from '../../../Application/Root'
 
 import AddNewTodo from './AddNewTodo'
+import { SpinnerLoader } from '../../../components/Loader'
 
 const Todo = styled.div<{ isDone: boolean }>`
   position: relative;
@@ -44,6 +45,9 @@ const Remove = styled(Svg)`
   height: 1.6rem;
   cursor: pointer;
 `
+const TodoSpinner = styled(SpinnerLoader)`
+  justify-content: right;
+`
 
 const Todos = ({ isActive }: { isActive: boolean }) => {
   const { addTodoRequested, removeTodoRequested, toggleTodoRequested } = todoActions
@@ -64,8 +68,7 @@ const Todos = ({ isActive }: { isActive: boolean }) => {
           <Actions>
             <Remove isDanger theme="light" svg={binSvg} onClick={() => onRemoveTodo(_id, todoName)} />
           </Actions>
-          {asyncStatusTodo.isBusy && asyncStatusTodo.id === _id && 'yes'}
-          {/* <Loader id={_id} /> */}
+          <TodoSpinner id={_id} asyncStatus={asyncStatusTodo} />
         </Todo>
       ))}
     </>

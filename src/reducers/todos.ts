@@ -1,36 +1,11 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
-
-interface AsyncStatus {
-  isInitial: boolean
-  isBusy: boolean
-  isDone: boolean
-  errorMessage?: string
-  id?: string
-}
-const asyncStatusInitial = {
-  isInitial: true,
-  isBusy: false,
-  isDone: false,
-}
-const asyncStatusRequested = (id?: string) => ({
-  isInitial: false,
-  isBusy: true,
-  isDone: false,
-  id,
-})
-const asyncStatusSuccess = (id?: string) => ({
-  isInitial: false,
-  isBusy: false,
-  isDone: true,
-  id,
-})
-const asyncStatusFail = (errorMessage: string, id?: string): AsyncStatus => ({
-  isInitial: false,
-  isBusy: false,
-  isDone: false,
-  errorMessage,
-  id,
-})
+import {
+  AsyncStatus,
+  asyncStatusInitial,
+  asyncStatusRequested,
+  asyncStatusSuccess,
+  asyncStatusFail,
+} from '../constants'
 
 export interface NewTodo {
   todoName: string
