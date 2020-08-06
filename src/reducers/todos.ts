@@ -93,13 +93,13 @@ export const { reducer, actions } = createSlice({
       const todo = todos.find(x => x.id === payload)
       todo.isDone = !todo.isDone
     },
-    apiGet() {
+    getTodosRequested() {
       //
     },
-    apiSuccess(state, action) {
+    getTodosSucceeded(state, action) {
       console.log(action)
     },
-    apiFail(state, action) {
+    getTodosFailed(state, action) {
       console.log(action)
     },
   },
