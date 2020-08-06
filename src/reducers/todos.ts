@@ -36,22 +36,28 @@ export const { reducer, actions } = createSlice({
         isDone: false,
         todoName,
       })
+      state.asyncStatusTodo = asyncStatusRequested('new-todo')
     },
     addTodoSucceeded(state, { payload }: PayloadAction<{ _id: string }>): void {
       const newTodo = state.todos.find(x => x._id === 'new-todo')
       newTodo._id = payload._id
+      state.asyncStatusTodo = asyncStatusSuccess
     },
     addTodoFailed(state, { payload }) {
       console.log('add todo failed')
+      state.asyncStatusTodo = asyncStatusFail('fail fail', 'new-todo')
     },
     removeTodoRequested(state, { payload }: PayloadAction<{ _id: string }>): void {
       state.todos = state.todos.filter(x => x._id !== payload._id)
+      state.asyncStatusTodo = asyncStatusRequested(payload._id)
     },
     removeTodoSucceeded(state, { payload }) {
       console.log('remove success')
+      state.asyncStatusTodo = asyncStatusSuccess
     },
     removeTodoFailed(state, { payload }) {
       console.log('remove todo failed')
+      state.asyncStatusTodo = asyncStatusFail('fail fail', payload._id)
     },
     toggleTodoRequested(state, { payload }: PayloadAction<{ _id: string; isDone: boolean }>): void {
       const todo = state.todos.find(x => x._id === payload._id)
@@ -60,7 +66,7 @@ export const { reducer, actions } = createSlice({
     },
     toggleTodoSucceeded(state, { payload }) {
       console.log('toggle todo succeded')
-      state.asyncStatusTodo = asyncStatusSuccess(payload._id)
+      state.asyncStatusTodo = asyncStatusSuccess
     },
     toggleTodoFailed(state, { payload }) {
       console.log('toggle todo failed')
@@ -72,9 +78,11 @@ export const { reducer, actions } = createSlice({
     getTodosSucceeded(state, { payload }: PayloadAction<Todo[]>) {
       console.log(payload)
       state.todos = payload
+      state.asyncStatusTodos = asyncStatusSuccess
     },
     getTodosFailed(state, action) {
       console.log('get todos failed')
+      state.asyncStatusTodos = asyncStatusFail('fail')
     },
   },
 })

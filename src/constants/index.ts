@@ -30,12 +30,11 @@ export const asyncStatusRequested = (idAsync?: string) => ({
   isDone: false,
   idAsync,
 })
-export const asyncStatusSuccess = (idAsync?: string) => ({
+export const asyncStatusSuccess = {
   isInitial: false,
   isBusy: false,
   isDone: true,
-  idAsync,
-})
+}
 export const asyncStatusFail = (errorMessage: string, idAsync?: string): AsyncStatus => ({
   isInitial: false,
   isBusy: false,

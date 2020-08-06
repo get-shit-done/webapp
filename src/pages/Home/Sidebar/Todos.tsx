@@ -45,6 +45,8 @@ const Remove = styled(Svg)`
   height: 1.6rem;
   cursor: pointer;
 `
+const TodosSpinner = styled(SpinnerLoader)`
+`
 const TodoSpinner = styled(SpinnerLoader)`
   justify-content: right;
 `
@@ -62,11 +64,19 @@ const Todos = ({ isActive }: { isActive: boolean }) => {
   return (
     <>
       <AddNewTodo addNewTodo={onAddNewTodo} />
+      <TodosSpinner size={4} asyncStatus={asyncStatusTodos} />
       {todos.map(({ _id, todoName, isDone }: Todo) => (
         <Todo isDone={isDone} key={_id} onClick={() => dispatch(toggleTodoRequested({ _id, isDone: !isDone }))}>
           <Name>{todoName}</Name>
           <Actions>
-            <Remove isDanger theme="light" svg={binSvg} onClick={() => onRemoveTodo(_id, todoName)} />
+            {_id !== asyncStatusTodo.idAsync && (
+              <Remove
+                isDanger
+                theme="light"
+                svg={binSvg}
+                onClick={() => onRemoveTodo(_id, todoName)}
+              />
+            )}
           </Actions>
           <TodoSpinner id={_id} asyncStatus={asyncStatusTodo} />
         </Todo>
