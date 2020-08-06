@@ -4,6 +4,7 @@ import { useSelector } from 'react-redux'
 import { actions as todoActions, NewTodo, Todo } from '../../../reducers/todos'
 import { actions as toastActions } from '../../../components/Toast/reducer'
 import binSvg from '../../../assets/svg/bin.svg'
+import errorApiSvg from '../../../assets/svg/error-api.svg'
 import Svg from '../../../components/Svg/component'
 import { AppState, useAppDispatch } from '../../../Application/Root'
 
@@ -54,6 +55,11 @@ const Remove = styled(Svg)`
   height: 1.6rem;
   cursor: pointer;
 `
+const ErrorSvg = styled(Svg)`
+  width: 1.6rem;
+  height: 1.6rem;
+  cursor: pointer;
+`
 const TodosSpinner = styled(SpinnerLoader)`
 `
 const TodoSpinner = styled(SpinnerLoader)`
@@ -95,7 +101,7 @@ const Todos = () => {
           <TodoSpinner id={_id} asyncStatus={asyncStatusTodo} />
           {/* {asyncStatusTodo.errorMessage && _id === asyncStatusTodo.asyncId && asyncStatusTodo.errorMessage} */}
           <Tooltip isVisible={asyncStatusTodo.errorMessage && _id === asyncStatusTodo.asyncId} tooltipText={asyncStatusTodo.errorMessage}>
-            BOOM
+            <ErrorSvg isDanger theme="light" svg={errorApiSvg} />
           </Tooltip>
         </Todo>
       ))}
