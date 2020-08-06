@@ -9,6 +9,7 @@ import { AppState, useAppDispatch } from '../../../Application/Root'
 
 import AddNewTodo from './AddNewTodo'
 import { SpinnerLoader } from '../../../components/Loader'
+import Tooltip from '../../../components/Tooltip/Tooltip'
 
 const Todo = styled.div<{ isDone: boolean, isError: boolean }>`
   position: relative;
@@ -92,7 +93,10 @@ const Todos = () => {
             )}
           </Actions>
           <TodoSpinner id={_id} asyncStatus={asyncStatusTodo} />
-          {asyncStatusTodo.errorMessage && _id === asyncStatusTodo.asyncId && asyncStatusTodo.errorMessage}
+          {/* {asyncStatusTodo.errorMessage && _id === asyncStatusTodo.asyncId && asyncStatusTodo.errorMessage} */}
+          <Tooltip isVisible={asyncStatusTodo.errorMessage && _id === asyncStatusTodo.asyncId} tooltipText={asyncStatusTodo.errorMessage}>
+            BOOM
+          </Tooltip>
         </Todo>
       ))}
     </>
