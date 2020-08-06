@@ -1,7 +1,7 @@
 import React from 'react'
 import styled from 'styled-components'
 import { useSelector } from 'react-redux'
-import { actions as todoActions, Todo } from '../../../reducers/todos'
+import { actions as todoActions, NewTodo, Todo } from '../../../reducers/todos'
 import { actions as toastActions } from '../../../components/Toast/reducer'
 import binSvg from '../../../assets/svg/bin.svg'
 import Svg from '../../../components/Svg/component'
@@ -46,25 +46,23 @@ const Remove = styled(Svg)`
 `
 
 const Todos = ({ isActive }: { isActive: boolean }) => {
-  const { add, remove, toggleIsDone } = todoActions
+  const { addTodoRequested, removeTodoRequested, toggleTodoRequested } = todoActions
   const { todos } = useSelector((state: AppState) => state.todos.present)
   const dispatch = useAppDispatch()
-  const onAddNewTodo = ({ todo }: { todo: Todo }) => {
-    dispatch(add(todo))
-  }
-  const onRemoveTodo = (id: string, name: string) => {
-    dispatch(remove(id))
-    dispatch(toastActions.addToast({ prefix: 'task removed', message: name }))
+  const onAddNewTodo = (todo: NewTodo) => { dispatch(addTodoRequested(todo)) }
+  const onRemoveTodo = (_id: string, todoName: string) => {
+    dispatch(removeTodoRequested({ _id }))
+    dispatch(toastActions.addToast({ prefix: 'task removed', message: todoName }))
   }
 
   return (
     <>
       <AddNewTodo addNewTodo={onAddNewTodo} />
-      {todos.map(({ id, todoName, isDone }: Todo) => (
-        <Todo isDone={isDone} key={id} onClick={() => dispatch(toggleIsDone(id))}>
+      {todos.map(({ _id, todoName, isDone }: Todo) => (
+        <Todo isDone={isDone} key={_id} onClick={() => dispatch(toggleTodoRequested({ _id }))}>
           <Name>{todoName}</Name>
           <Actions>
-            <Remove isDanger theme="light" svg={binSvg} onClick={() => onRemoveTodo(id, todoName)} />
+            <Remove isDanger theme="light" svg={binSvg} onClick={() => onRemoveTodo(_id, todoName)} />
           </Actions>
         </Todo>
       ))}
