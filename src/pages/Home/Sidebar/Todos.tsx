@@ -64,35 +64,38 @@ const TodoSpinner = styled(SpinnerLoader)`
 
 const Todos = () => {
   const { addTodoRequested, removeTodoRequested, toggleTodoRequested } = todoActions
-  const { todos, asyncStatusTodos, asyncStatusTodo } = useSelector((state: AppState) => state.todos.present)
+  const { todos, asyncStatus } = useSelector((state: AppState) => state.todos.present)
+  // const { }
   const dispatch = useAppDispatch()
   const onAddNewTodo = (todo: NewTodo) => { dispatch(addTodoRequested(todo)) }
   const onRemoveTodo = (_id: string, todoName: string) => {
     dispatch(removeTodoRequested({ _id }))
     dispatch(toastActions.addToast({ prefix: 'task removed', message: todoName }))
   }
+  // console.log(todoFocusId)
 
   return (
     <>
       <AddNewTodo addNewTodo={onAddNewTodo} />
-      <TodosSpinner size={4} asyncStatus={asyncStatusTodos} />
+      <TodosSpinner size={4} asyncStatus={asyncStatus.getAll} />
       {todos.map(({ _id, todoName, isDone }: Todo) => (
         <Todo
           isDone={isDone}
-          isError={_id === asyncStatusTodo.asyncId}
+          isError={asyncStatus.toggle[_id]?.isError}
           key={_id}
           onClick={() => dispatch(toggleTodoRequested({ _id, isDone: !isDone }))}
         >
           <Name>{todoName}</Name>
           <Actions>
-            {_id !== asyncStatusTodo.asyncId && (
+            {/* TODO: show if none are in progress */}
+            {/* {asyncStatusTodo.asyncIds.includes(_id) && _id !== todoFocusId && (
               <Remove theme="light" svg={binSvg} onClick={() => onRemoveTodo(_id, todoName)} />
-            )}
+            )} */}
           </Actions>
-          <TodoSpinner id={_id} asyncStatus={asyncStatusTodo} />
+          <TodoSpinner asyncStatus={asyncStatus.toggle[_id]} />
           <Tooltip
-            isVisible={asyncStatusTodo.errorMessage && _id === asyncStatusTodo.asyncId}
-            tooltipText={asyncStatusTodo.errorMessage}
+            isVisible={asyncStatus.toggle[_id]?.isError}
+            tooltipText={asyncStatus.toggle[_id]?.errorMessage}
           >
             <ErrorSvg svg={errorApiSvg} />
           </Tooltip>

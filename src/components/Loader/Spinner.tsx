@@ -30,14 +30,15 @@ const LoaderStyled = styled(Svg)`
 `
 
 interface Props {
+  focusId?: string
   id?: string
   size?: number
   asyncStatus: AsyncStatus
   className?: string
 }
 
-const SpinnerLoader: FC<Props> = ({ id, size = 2, asyncStatus: { asyncId, isBusy }, className }) =>
-  (isBusy && id === asyncId) ? (
+const SpinnerLoader: FC<Props> = ({ size = 2, asyncStatus = {}, className }) =>
+  asyncStatus.isBusy ? (
     <Wrap className={className}>
       <LoaderStyled size={size} svg={loaderSvg} />
     </Wrap>

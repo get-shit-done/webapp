@@ -16,29 +16,32 @@ export interface AsyncStatus {
   isInitial: boolean
   isBusy: boolean
   isDone: boolean
+  isError: boolean
   errorMessage?: string
-  asyncId?: string
 }
-export const asyncStatusInitial = {
+
+export const asyncStatusInitial: AsyncStatus = {
   isInitial: true,
   isBusy: false,
   isDone: false,
+  isError: false,
 }
-export const asyncStatusRequested = (asyncId?: string) => ({
+export const asyncStatusRequested = {
   isInitial: false,
   isBusy: true,
   isDone: false,
-  asyncId,
-})
+  isError: false,
+}
 export const asyncStatusSuccess = {
   isInitial: false,
   isBusy: false,
   isDone: true,
+  isError: false,
 }
-export const asyncStatusFail = (errorMessage: string, asyncId?: string): AsyncStatus => ({
+export const asyncStatusFail = (errorMessage: string) => ({
   isInitial: false,
   isBusy: false,
   isDone: false,
+  isError: true,
   errorMessage,
-  asyncId,
 })
