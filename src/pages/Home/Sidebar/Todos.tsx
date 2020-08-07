@@ -5,7 +5,7 @@ import { actions as todoActions, NewTodo, Todo } from '../../../reducers/todos'
 import { actions as toastActions } from '../../../components/Toast/reducer'
 import binSvg from '../../../assets/svg/bin.svg'
 import errorApiSvg from '../../../assets/svg/error-api.svg'
-import Svg from '../../../components/Svg/component'
+import Svg, { styleDanger, styleDangerHover } from '../../../components/Svg/component'
 import { AppState, useAppDispatch } from '../../../Application/Root'
 
 import AddNewTodo from './AddNewTodo'
@@ -51,14 +51,10 @@ const Actions = styled.div`
   }
 `
 const Remove = styled(Svg)`
-  width: 1.6rem;
-  height: 1.6rem;
-  cursor: pointer;
+  ${styleDangerHover};
 `
 const ErrorSvg = styled(Svg)`
-  width: 1.6rem;
-  height: 1.6rem;
-  cursor: pointer;
+  ${styleDanger};
 `
 const TodosSpinner = styled(SpinnerLoader)`
 `
@@ -90,18 +86,15 @@ const Todos = () => {
           <Name>{todoName}</Name>
           <Actions>
             {_id !== asyncStatusTodo.asyncId && (
-              <Remove
-                isDanger
-                theme="light"
-                svg={binSvg}
-                onClick={() => onRemoveTodo(_id, todoName)}
-              />
+              <Remove theme="light" svg={binSvg} onClick={() => onRemoveTodo(_id, todoName)} />
             )}
           </Actions>
           <TodoSpinner id={_id} asyncStatus={asyncStatusTodo} />
-          {/* {asyncStatusTodo.errorMessage && _id === asyncStatusTodo.asyncId && asyncStatusTodo.errorMessage} */}
-          <Tooltip isVisible={asyncStatusTodo.errorMessage && _id === asyncStatusTodo.asyncId} tooltipText={asyncStatusTodo.errorMessage}>
-            <ErrorSvg isDanger theme="light" svg={errorApiSvg} />
+          <Tooltip
+            isVisible={asyncStatusTodo.errorMessage && _id === asyncStatusTodo.asyncId}
+            tooltipText={asyncStatusTodo.errorMessage}
+          >
+            <ErrorSvg svg={errorApiSvg} />
           </Tooltip>
         </Todo>
       ))}

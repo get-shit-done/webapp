@@ -104,7 +104,7 @@ const EditCalendarTask: FC = () => {
           Save task
         </Button>
 
-        <Remove isDanger theme="light" svg={binSvg} onClick={onRemoveTask} />
+        <Remove theme="light" svg={binSvg} onClick={onRemoveTask} />
       </ModalFooter>
     </Form>
   )

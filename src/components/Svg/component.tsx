@@ -3,25 +3,37 @@ import styled from 'styled-components'
 
 export const CN_SVG = 'svg'
 
-const Wrap = styled.span<{ size: number; isDanger: boolean; theme: string }>`
+export const styleDanger = `
+  fill: var(--sunset-orange);
+  &:hover {
+    fill: var(--sunset-orange);
+  };
+`
+export const styleDangerHover = `
+  &:hover {
+    fill: var(--sunset-orange);
+  };
+`
+const Wrap = styled.span<{ size: number; theme: string }>`
   display: flex;
   flex-shrink: 0;
   width: ${props => props.size}rem;
   height: ${props => props.size}rem;
   fill: ${p => (p.theme === 'light' ? 'var(--sonic-silver)' : 'red')};
+  cursor: pointer;
 
+  /* TODO: remove theme here and do it properly */
   &:hover {
-    fill: ${p => (p.isDanger ? 'var(--sunset-orange)' : p.theme === 'light' ? 'var(--gainsboro)' : 'var(--jet)')};
-  }
+    fill: ${p => p.theme === 'light' ? 'var(--gainsboro)' : 'var(--jet)'};
+  };
 
   svg {
     width: 100%;
     height: 100%;
-  }
+  };
 `
 
 interface Props {
-  isDanger?: boolean
   theme?: string
   svg: string
   size?: number
@@ -29,9 +41,8 @@ interface Props {
   onClick?(event: React.MouseEvent<HTMLSpanElement, MouseEvent>): void
 }
 
-const Svg: FC<Props> = ({ isDanger, theme = 'light', svg, size = 2.4, className, onClick }) => (
+const Svg: FC<Props> = ({ theme = 'light', svg, size = 1.6, className, onClick }) => (
   <Wrap
-    isDanger={isDanger}
     theme={theme}
     size={size}
     className={`${className} ${CN_SVG}`}
