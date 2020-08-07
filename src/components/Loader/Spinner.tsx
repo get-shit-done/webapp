@@ -3,6 +3,7 @@ import styled from 'styled-components'
 import { AsyncStatus } from '../../constants'
 import loaderSvg from '../../assets/svg/loader.svg'
 import Svg from '../Svg/component'
+import { determineAsyncStatus } from '../../utils'
 
 const Wrap = styled.div`
   display: flex;
@@ -33,15 +34,20 @@ interface Props {
   focusId?: string
   id?: string
   size?: number
-  asyncStatus: AsyncStatus
+  asyncStatus: AsyncStatus | AsyncStatus[]
   className?: string
 }
 
-const SpinnerLoader: FC<Props> = ({ size = 2, asyncStatus = {}, className }) =>
-  asyncStatus.isBusy ? (
-    <Wrap className={className}>
-      <LoaderStyled size={size} svg={loaderSvg} />
-    </Wrap>
-  ) : null
+const SpinnerLoader: FC<Props> = ({ size = 2, asyncStatus, className }) => {
+  const { isBusy } = determineAsyncStatus(asyncStatus)
+  // return null
+  return (
+    isBusy ? (
+      <Wrap className={className}>
+        <LoaderStyled size={size} svg={loaderSvg} />
+      </Wrap>
+    ) : null
+  )
+}
 
 export default memo(SpinnerLoader)

@@ -11,6 +11,7 @@ import { AppState, useAppDispatch } from '../../../Application/Root'
 import AddNewTodo from './AddNewTodo'
 import { SpinnerLoader } from '../../../components/Loader'
 import Tooltip from '../../../components/Tooltip/Tooltip'
+import { determineAsyncStatus } from '../../../utils'
 
 const Todo = styled.div<{ isDone: boolean, isError: boolean }>`
   position: relative;
@@ -65,7 +66,7 @@ const TodoSpinner = styled(SpinnerLoader)`
 const Todos = () => {
   const { addTodoRequested, removeTodoRequested, toggleTodoRequested } = todoActions
   const { todos, asyncStatus } = useSelector((state: AppState) => state.todos.present)
-  // const { }
+  const { getAll, add, toggle, remove } = asyncStatus
   const dispatch = useAppDispatch()
   const onAddNewTodo = (todo: NewTodo) => { dispatch(addTodoRequested(todo)) }
   const onRemoveTodo = (_id: string, todoName: string) => {
@@ -78,29 +79,28 @@ const Todos = () => {
     <>
       <AddNewTodo addNewTodo={onAddNewTodo} />
       <TodosSpinner size={4} asyncStatus={asyncStatus.getAll} />
-      {todos.map(({ _id, todoName, isDone }: Todo) => (
-        <Todo
-          isDone={isDone}
-          isError={asyncStatus.toggle[_id]?.isError}
-          key={_id}
-          onClick={() => dispatch(toggleTodoRequested({ _id, isDone: !isDone }))}
-        >
-          <Name>{todoName}</Name>
-          <Actions>
-            {/* TODO: show if none are in progress */}
-            {/* {asyncStatusTodo.asyncIds.includes(_id) && _id !== todoFocusId && (
-              <Remove theme="light" svg={binSvg} onClick={() => onRemoveTodo(_id, todoName)} />
-            )} */}
-          </Actions>
-          <TodoSpinner asyncStatus={asyncStatus.toggle[_id]} />
-          <Tooltip
-            isVisible={asyncStatus.toggle[_id]?.isError}
-            tooltipText={asyncStatus.toggle[_id]?.errorMessage}
+      {todos.map(({ _id, todoName, isDone }: Todo) => {
+        const asyncStatusList = [toggle[_id], add[_id], remove[_id]]
+        const { isBusy, isError } = determineAsyncStatus(asyncStatusList)
+
+        return (
+          <Todo
+            isDone={isDone}
+            isError={isError}
+            key={_id}
+            onClick={() => dispatch(toggleTodoRequested({ _id, isDone: !isDone }))}
           >
-            <ErrorSvg svg={errorApiSvg} />
-          </Tooltip>
-        </Todo>
-      ))}
+            <Name>{todoName}</Name>
+            <Actions>
+              {!isBusy && !isError && <Remove theme="light" svg={binSvg} onClick={() => onRemoveTodo(_id, todoName)} />}
+            </Actions>
+            <TodoSpinner asyncStatus={asyncStatusList} />
+            <Tooltip isVisible={isError} tooltipText={toggle[_id]?.errorMessage}>
+              <ErrorSvg svg={errorApiSvg} />
+            </Tooltip>
+          </Todo>
+        )
+      })}
     </>
   )
 }
