@@ -23,11 +23,9 @@ const Wrap = styled.button<{ accentColor: string }>`
   &:hover {
     background-color: #58cbff;
     color: var(--white);
-  }
+  };
 
-  ${p =>
-    p.accentColor &&
-    `
+  ${p => p.accentColor && `
     background-color: ${p.accentColor};
     color: ${rgbAdjust(p.accentColor, -100)};
 
@@ -41,7 +39,7 @@ const Wrap = styled.button<{ accentColor: string }>`
     pointer-events: none;
     background-color: var(--independence);
     color: var(--lavender);
-  }
+  };
 `
 const Content = styled.div<{ isBusy: boolean }>`
   opacity: ${p => p.isBusy ? 0 : 1};
