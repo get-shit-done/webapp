@@ -2,7 +2,7 @@ import React, { FC } from 'react'
 import { useForm } from 'react-hook-form'
 import styled from 'styled-components'
 import { TextField } from '../../../components/form'
-import Button from '../../../components/Button/component'
+import { DumbButton } from '../../../components/Button'
 import binSvg from '../../../assets/svg/bin.svg'
 import Svg, { styleDangerHover } from '../../../components/Svg/component'
 import { useAppDispatch, AppState } from '../../../Application/Root'
@@ -101,9 +101,9 @@ const Settings: FC = () => {
 
       <br /><br />
 
-      <Button type="submit">
+      <DumbButton type="submit">
         save
-      </Button>
+      </DumbButton>
     </Form>
   )
 }

@@ -2,7 +2,7 @@ import React, { useState, useEffect, memo, FC } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 import { useForm } from 'react-hook-form'
 import styled from 'styled-components'
-import Button from '../../../components/Button/component'
+import { DumbButton } from '../../../components/Button'
 import { Dropdown, TextField } from '../../../components/form'
 import { actions } from '../../../reducers/calendar'
 import { AppState, useAppDispatch } from '../../../Application/Root'
@@ -84,14 +84,14 @@ const AddNewCalendarTask: FC = () => {
         inputRef={register({ required: true, maxLength: 80 })}
       />
       <ModalFooter>
-        <Button
+        <DumbButton
           isDisabled={Object.entries(errors).length > 0}
           accentColor={accentColor}
           type="submit"
           asyncStatus={asyncStatus.addTask}
         >
           Add new task
-        </Button>
+        </DumbButton>
       </ModalFooter>
     </Form>
   )
