@@ -52,12 +52,11 @@ interface IProps {
   className?: string
 }
 const Tooltip: FC<IProps> = ({ isVisible, tooltipText, children, className }) => {
+  // TODO: see if isVisible needs to be passed in
   return (
     !isVisible ? null : (
       <Wrap className={className}>
-        <TooltipText isError={false}>
-          {tooltipText}
-        </TooltipText>
+        {tooltipText && <TooltipText isError={false}>{tooltipText}</TooltipText>}
         <Content>
           {children}
         </Content>
