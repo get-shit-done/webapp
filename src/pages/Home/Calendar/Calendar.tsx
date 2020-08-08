@@ -84,7 +84,7 @@ const Calendar: FC<Props> = ({ scale }) => {
 
       {taskBeingPrepared && (
         <Modal title="task details" width={17} onOverlayToggle={onRemovePreparedTask}>
-          <AddNewCalendarTask onRemovePreparedTask={onRemovePreparedTask} />
+          <AddNewCalendarTask />
         </Modal>
       )}
     </Wrap>

@@ -17,6 +17,7 @@ function* addTask({ payload }: any) {
   try {
     const response = yield call(axios.post, API_TASKS, payload)
     yield put({ type: actions.sortTasks.toString(), payload })
+    yield put({ type: actions.removePreparedTask.toString() })
     yield put({ type: actions.addTaskSuccess.toString(), payload: response.data.data })
   } catch (error) {
     yield put({

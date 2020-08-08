@@ -124,22 +124,14 @@ export const { reducer, actions } = createSlice({
     saveTaskFailed(state, { payload }: PayloadAction<{ error: string }>) {
       state.asyncStatus.saveTask = asyncStatusFail(payload.error)
     },
-    addTaskRequested(state, { payload: { name, timestamp, group, time } }: PayloadAction<NewTask>): void {
-      state.allTasksByDay[timestamp] = state.allTasksByDay[timestamp] || { tasks: [] }
-
-      state.taskBeingEdited = undefined
-      state.allTasksByDay[timestamp].tasks.push({
-        _id: 'just-added',
-        time,
-        name,
-        group,
-        timestamp,
-      })
+    addTaskRequested(state, { payload }: PayloadAction<NewTask>): void {
       state.asyncStatus.addTask = asyncStatusRequested
     },
-    addTaskSuccess(state, { payload: { _id, timestamp } }: PayloadAction<SavedTask>): void {
-      const taskAdded = state.allTasksByDay[timestamp].tasks.find(x => x._id === 'just-added')
-      taskAdded._id = _id
+    addTaskSuccess(state, { payload }: PayloadAction<SavedTask>): void {
+      const affectedDay = state.allTasksByDay[payload.timestamp] || { tasks: [] }
+      affectedDay.tasks.push(payload)
+
+      state.taskBeingEdited = undefined
       state.asyncStatus.addTask = asyncStatusSuccess
     },
     addTaskFailed(state, { payload }: PayloadAction<{ error: string }>) {

@@ -11,13 +11,9 @@ import { CalendarFormValues } from './shared'
 
 const Form = styled.form``
 
-interface Props {
-  onRemovePreparedTask(): void
-}
-
-const AddNewCalendarTask: FC<Props> = ({ onRemovePreparedTask }) => {
+const AddNewCalendarTask: FC = () => {
   const dispatch = useAppDispatch()
-  const { taskBeingPrepared } = useSelector((state: AppState) => state.calendar)
+  const { taskBeingPrepared, asyncStatus } = useSelector((state: AppState) => state.calendar)
   const { timestamp, time } = taskBeingPrepared
   const { groups, colors } = useSelector((state: AppState) => state.settings)
   const [selectedGroup, setSelectedGroup] = useState(groups.find(x => x.name === 'improvement'))
@@ -32,7 +28,6 @@ const AddNewCalendarTask: FC<Props> = ({ onRemovePreparedTask }) => {
         group: selectedGroup.name,
       }),
     )
-    onRemovePreparedTask()
   }
   const watchedFields = watch()
   const accentColor = selectedGroup ? colors[selectedGroup.colorId] : undefined
@@ -93,6 +88,7 @@ const AddNewCalendarTask: FC<Props> = ({ onRemovePreparedTask }) => {
           isDisabled={Object.entries(errors).length > 0}
           accentColor={accentColor}
           type="submit"
+          asyncStatus={asyncStatus.addTask}
         >
           Add new task
         </Button>
