@@ -5,25 +5,27 @@ import styled from 'styled-components'
 import { TextField, Dropdown } from '../../../components/form'
 import Button from '../../../components/Button/component'
 import binSvg from '../../../assets/svg/bin.svg'
-import Svg from '../../../components/Svg/component'
-import { actions, TaskWithMeta } from '../../../reducers/calendar'
+import Svg, { styleDangerHover } from '../../../components/Svg/component'
+import { actions } from '../../../reducers/calendar'
 import { AppState, useAppDispatch } from '../../../Application/Root'
 import { ModalFooter } from '../../../components/Modal'
 import { CalendarFormValues } from './shared'
+import SvgButton from '../../../components/Button/SvgButton'
 
 const Form = styled.form``
 
-const Remove = styled(Svg)`
+const RemoveButton = styled(SvgButton)`
   margin-left: var(--size-xlg);
-  width: 1.6rem;
-  height: 1.6rem;
-  cursor: pointer;
+`
+const RemoveSvg = styled(Svg)`
+  ${styleDangerHover};
 `
 
 // TODO: timestamp should come from taskBeingEdited
 const EditCalendarTask: FC = () => {
+  // console.log('COMP: Edit form')
   const dispatch = useAppDispatch()
-  const { taskBeingEdited } = useSelector((state: AppState) => state.calendar)
+  const { taskBeingEdited, asyncStatus } = useSelector((state: AppState) => state.calendar)
   const { groups, colors } = useSelector((state: AppState) => state.settings)
   const [selectedGroup, setSelectedGroup] = useState(groups.find(x => x.name === taskBeingEdited.group))
   const { _id, time, name, group } = taskBeingEdited
@@ -47,6 +49,7 @@ const EditCalendarTask: FC = () => {
   }
   const { register, handleSubmit, watch, errors } = useForm<CalendarFormValues>()
   const watchedFields = watch()
+  const hasValidationErrors = Object.entries(errors).length > 0
 
   useEffect(() => {
     if (Object.values(watchedFields).every(x => !x)) return
@@ -100,11 +103,18 @@ const EditCalendarTask: FC = () => {
         inputRef={register({ required: true, maxLength: 80 })}
       />
       <ModalFooter>
-        <Button isDisabled={Object.entries(errors).length > 0} accentColor={accentColor} type="submit">
+        <Button
+          isDisabled={hasValidationErrors}
+          accentColor={accentColor}
+          type="submit"
+          asyncStatus={asyncStatus.saveTask}
+        >
           Save task
         </Button>
 
-        <Remove theme="light" svg={binSvg} onClick={onRemoveTask} />
+        <RemoveButton asyncStatus={asyncStatus.removeTask}>
+          <RemoveSvg theme="light" svg={binSvg} onClick={onRemoveTask} />
+        </RemoveButton>
       </ModalFooter>
     </Form>
   )
