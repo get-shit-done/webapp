@@ -2,7 +2,7 @@ import React, { FC, memo, useState } from 'react'
 
 import Placeholder from './Placeholder'
 import { SvgStyled, Input, Wrap } from './shared'
-import ErrorField from '../error/Field/component'
+import { FieldError } from '../error'
 
 interface Props {
   isInForm?: boolean
@@ -50,7 +50,7 @@ const Field: FC<Props> = ({
         ref={inputRef}
       />
       {svg && <SvgStyled svg={svg} />}
-      <ErrorField errorMessage={errorMessage} />
+      <FieldError errorMessage={errorMessage} />
     </Wrap>
   )
 }

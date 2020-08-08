@@ -1,15 +1,20 @@
 import React from 'react'
 import styled from 'styled-components'
 import { useSelector } from 'react-redux'
-import { actions as todoActions, Todo } from '../../../reducers/todos'
+import { actions as todoActions, NewTodo, Todo } from '../../../reducers/todos'
 import { actions as toastActions } from '../../../components/Toast/reducer'
 import binSvg from '../../../assets/svg/bin.svg'
-import Svg from '../../../components/Svg/component'
+import errorApiSvg from '../../../assets/svg/error-api.svg'
+import Svg, { styleDanger, styleDangerHover } from '../../../components/Svg/component'
 import { AppState, useAppDispatch } from '../../../Application/Root'
 
 import AddNewTodo from './AddNewTodo'
+import { SpinnerLoader } from '../../../components/Loader'
+import Tooltip from '../../../components/Tooltip/Tooltip'
+import { determineAsyncStatus } from '../../../utils'
+import { TextError } from '../../../components/error'
 
-const Todo = styled.div<{ isDone: boolean }>`
+const Todo = styled.div<{ isDone: boolean, isError: boolean }>`
   position: relative;
   display: flex;
   align-items: center;
@@ -19,7 +24,7 @@ const Todo = styled.div<{ isDone: boolean }>`
 
   &:hover {
     color: var(--cool-gray);
-  }
+  };
 
   ${p => p.isDone && `
     color: var(--rhythm);
@@ -28,8 +33,18 @@ const Todo = styled.div<{ isDone: boolean }>`
       color: var(--rhythm);
     };
   `};
+
+  ${p => p.isError && `
+    color: var(--sunset-orange);
+
+    &:hover {
+      color: var(--sunset-orange);
+    };
+  `};
 `
-const Name = styled.div``
+const Name = styled.div`
+  flex-grow: 1;
+`
 const Actions = styled.div`
   display: none;
   position: absolute;
@@ -40,34 +55,53 @@ const Actions = styled.div`
   }
 `
 const Remove = styled(Svg)`
-  width: 1.6rem;
-  height: 1.6rem;
-  cursor: pointer;
+  ${styleDangerHover};
+`
+const ErrorSvg = styled(Svg)`
+  ${styleDanger};
+`
+const TodosSpinner = styled(SpinnerLoader)`
+`
+const TodoSpinner = styled(SpinnerLoader)`
+  justify-content: right;
 `
 
-const Todos = ({ isActive }: { isActive: boolean }) => {
-  const { add, remove, toggleIsDone } = todoActions
-  const { todos } = useSelector((state: AppState) => state.todos.present)
+const Todos = () => {
+  const { addTodoRequested, removeTodoRequested, toggleTodoRequested } = todoActions
+  const { todos, asyncStatus } = useSelector((state: AppState) => state.todos.present)
+  const { getAll, add, toggle, remove } = asyncStatus
   const dispatch = useAppDispatch()
-  const onAddNewTodo = ({ todo }: { todo: Todo }) => {
-    dispatch(add(todo))
+  const onAddNewTodo = (todo: NewTodo) => { dispatch(addTodoRequested(todo)) }
+  const onRemoveTodo = (_id: string, todoName: string) => {
+    dispatch(removeTodoRequested({ _id }))
+    dispatch(toastActions.addToast({ prefix: 'task removed', message: todoName }))
   }
-  const onRemoveTodo = (id: string, name: string) => {
-    dispatch(remove(id))
-    dispatch(toastActions.addToast({ prefix: 'task removed', message: name }))
-  }
+  // console.log(todoFocusId)
 
   return (
     <>
       <AddNewTodo addNewTodo={onAddNewTodo} />
-      {todos.map(({ id, todoName, isDone }: Todo) => (
-        <Todo isDone={isDone} key={id} onClick={() => dispatch(toggleIsDone(id))}>
-          <Name>{todoName}</Name>
-          <Actions>
-            <Remove isDanger theme="light" svg={binSvg} onClick={() => onRemoveTodo(id, todoName)} />
-          </Actions>
-        </Todo>
-      ))}
+      <TodosSpinner size={4} asyncStatus={getAll} />
+      <TextError asyncStatus={getAll} />
+      {todos.map(({ _id, todoName, isDone }: Todo) => {
+        const asyncStatusList = [toggle[_id], add[_id], remove[_id]]
+        const { isBusy, isError, errorMessage } = determineAsyncStatus(asyncStatusList)
+
+        return (
+          <Todo isDone={isDone} isError={isError} key={_id}>
+            <Name onClick={() => dispatch(toggleTodoRequested({ _id, isDone: !isDone }))}>{todoName}</Name>
+            <Actions>
+              {!isBusy && !isError &&
+                <Remove theme="light" svg={binSvg} onClick={() => onRemoveTodo(_id, todoName)} />
+              }
+            </Actions>
+            <TodoSpinner asyncStatus={asyncStatusList} />
+            <Tooltip isVisible={isError && !isBusy} tooltipText={errorMessage}>
+              <ErrorSvg svg={errorApiSvg} />
+            </Tooltip>
+          </Todo>
+        )
+      })}
     </>
   )
 }

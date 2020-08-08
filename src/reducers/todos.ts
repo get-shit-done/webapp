@@ -1,106 +1,95 @@
-import { createSlice, nanoid, PayloadAction } from '@reduxjs/toolkit'
+import { createSlice, PayloadAction } from '@reduxjs/toolkit'
+import {
+  AsyncStatus,
+  asyncStatusInitial,
+  asyncStatusRequested,
+  asyncStatusSuccess,
+  asyncStatusFail,
+} from '../constants'
 
-export interface Todo {
-  id: string
+export interface NewTodo {
   todoName: string
+}
+export interface Todo extends NewTodo {
+  _id: string
   isDone: boolean
 }
+interface IInitialState {
+  todos: Todo[]
+  asyncStatus: {
+    getAll: AsyncStatus
+    add: {
+      [key: string]: AsyncStatus
+    }
+    toggle: {
+      [key: string]: AsyncStatus
+    }
+    remove: {
+      [key: string]: AsyncStatus
+    }
+  }
+}
 
-const initialState = {
-  groups: [
-    {
-      groupName: 'development',
-      id: nanoid(),
-    },
-    {
-      groupName: 'career',
-      id: nanoid(),
-    },
-    {
-      groupName: 'health',
-      id: nanoid(),
-    },
-  ],
-  todos: [
-    {
-      id: nanoid(),
-      todoName: 'finish this todo',
-      isDone: false,
-    },
-    {
-      id: nanoid(),
-      todoName: 'add an input to add new todos',
-      isDone: false,
-    },
-    {
-      id: nanoid(),
-      todoName: 'add validation to input',
-      isDone: false,
-    },
-    {
-      id: nanoid(),
-      todoName: 'add toast for removing todos',
-      isDone: false,
-    },
-    {
-      id: nanoid(),
-      todoName: 'add conditional styling for isDone',
-      isDone: false,
-    },
-    {
-      id: nanoid(),
-      todoName: 'add grouping',
-      isDone: false,
-    },
-    {
-      id: nanoid(),
-      todoName: 'finalise resume',
-      isDone: false,
-    },
-    {
-      id: nanoid(),
-      todoName: 'complete courses',
-      isDone: false,
-    },
-    {
-      id: nanoid(),
-      todoName: 'stretch',
-      isDone: false,
-    },
-    {
-      id: nanoid(),
-      todoName: 'make Mai a kickass meal',
-      isDone: false,
-    },
-  ],
+const initialState: IInitialState = {
+  asyncStatus: {
+    getAll: asyncStatusInitial,
+    add: {},
+    toggle: {},
+    remove: {},
+  },
+  todos: [],
 }
 
 export const { reducer, actions } = createSlice({
   name: 'todos',
-  initialState: initialState,
+  initialState,
   reducers: {
-    add({ todos }, { payload: { todoName } }: PayloadAction<Todo>): void {
-      todos.push({
-        id: nanoid(),
+    addTodoRequested(state, { payload: { todoName } }: PayloadAction<NewTodo>): void {
+      state.todos.push({
+        _id: 'new-todo',
         isDone: false,
         todoName,
       })
+      state.asyncStatus.add['new-todo'] = asyncStatusRequested
     },
-    remove(state, { payload }: PayloadAction<string>): void {
-      state.todos = state.todos.filter(x => x.id !== payload)
+    addTodoSucceeded(state, { payload }: PayloadAction<{ _id: string }>): void {
+      const newTodo = state.todos.find(x => x._id === 'new-todo')
+      newTodo._id = payload._id
+      state.asyncStatus.add['new-todo'] = asyncStatusSuccess
     },
-    toggleIsDone({ todos }, { payload }: PayloadAction<string>): void {
-      const todo = todos.find(x => x.id === payload)
-      todo.isDone = !todo.isDone
+    addTodoFailed(state, { payload }) {
+      state.asyncStatus.add['new-todo'] = asyncStatusFail(payload.error)
     },
-    apiGet() {
-      //
+    removeTodoRequested(state, { payload }: PayloadAction<{ _id: string }>): void {
+      state.asyncStatus.remove[payload._id] = asyncStatusRequested
     },
-    apiSuccess(state, action) {
-      console.log(action)
+    removeTodoSucceeded(state, { payload }) {
+      state.todos = state.todos.filter(x => x._id !== payload._id)
+      state.asyncStatus.remove[payload._id] = asyncStatusSuccess
     },
-    apiFail(state, action) {
-      console.log(action)
+    removeTodoFailed(state, { payload }) {
+      state.asyncStatus.remove[payload._id] = asyncStatusFail(payload.error)
+    },
+    toggleTodoRequested(state, { payload }: PayloadAction<{ _id: string; isDone: boolean }>): void {
+      const todo = state.todos.find(x => x._id === payload._id)
+      todo.isDone = payload.isDone
+      state.asyncStatus.toggle[payload._id] = asyncStatusRequested
+    },
+    toggleTodoSucceeded(state, { payload }) {
+      state.asyncStatus.toggle[payload._id] = asyncStatusSuccess
+    },
+    toggleTodoFailed(state, { payload }) {
+      state.asyncStatus.toggle[payload._id] = asyncStatusFail(payload.error)
+    },
+    getTodosRequested(state) {
+      state.asyncStatus.getAll = asyncStatusRequested
+    },
+    getTodosSucceeded(state, { payload }: PayloadAction<Todo[]>) {
+      state.todos = payload
+      state.asyncStatus.getAll = asyncStatusSuccess
+    },
+    getTodosFailed(state, { payload }) {
+      state.asyncStatus.getAll = asyncStatusFail(payload.error)
     },
   },
 })

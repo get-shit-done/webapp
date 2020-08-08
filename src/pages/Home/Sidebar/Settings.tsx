@@ -4,7 +4,7 @@ import styled from 'styled-components'
 import { TextField } from '../../../components/form'
 import Button from '../../../components/Button/component'
 import binSvg from '../../../assets/svg/bin.svg'
-import Svg from '../../../components/Svg/component'
+import Svg, { styleDangerHover } from '../../../components/Svg/component'
 import { useAppDispatch, AppState } from '../../../Application/Root'
 import { useSelector } from 'react-redux'
 import { actions } from '../../../reducers/settings'
@@ -35,9 +35,7 @@ const Actions = styled.div`
 `
 const Remove = styled(Svg)`
   margin-left: var(--size-lg);
-  width: 1.6rem;
-  height: 1.6rem;
-  cursor: pointer;
+  ${styleDangerHover};
 `
 
 const Settings: FC = () => {
@@ -94,7 +92,7 @@ const Settings: FC = () => {
                 setSelectedColor={(selectedColor) => onColorSelect({ selectedColor, _id })}
               />
               <Actions>
-                <Remove isDanger theme="light" svg={binSvg} onClick={() => onRemoveGroup(_id)} />
+                <Remove theme="light" svg={binSvg} onClick={() => onRemoveGroup(_id)} />
               </Actions>
             </Group>
           );

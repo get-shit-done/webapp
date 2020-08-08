@@ -5,3 +5,6 @@ export const API_TASKS_BY_ID = (id: string) => `${URL}/tasks/${id}`
 
 export const API_GROUPS = `${URL}/groups`
 export const API_GROUPS_BY_ID = (id: string) => `${URL}/groups/${id}`
+
+export const API_TODOS = `${URL}/todos`
+export const API_TODOS_BY_ID = (id: string) => `${URL}/todos/${id}`
