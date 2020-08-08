@@ -41,7 +41,9 @@ const Todo = styled.div<{ isDone: boolean, isError: boolean }>`
     };
   `};
 `
-const Name = styled.div``
+const Name = styled.div`
+  flex-grow: 1;
+`
 const Actions = styled.div`
   display: none;
   position: absolute;
@@ -84,20 +86,15 @@ const Todos = () => {
         const { isBusy, isError, errorMessage } = determineAsyncStatus(asyncStatusList)
 
         return (
-          <Todo
-            isDone={isDone}
-            isError={isError}
-            key={_id}
-            onClick={() => dispatch(toggleTodoRequested({ _id, isDone: !isDone }))}
-          >
-            <Name>{todoName}</Name>
+          <Todo isDone={isDone} isError={isError} key={_id}>
+            <Name onClick={() => dispatch(toggleTodoRequested({ _id, isDone: !isDone }))}>{todoName}</Name>
             <Actions>
               {!isBusy && !isError &&
                 <Remove theme="light" svg={binSvg} onClick={() => onRemoveTodo(_id, todoName)} />
               }
             </Actions>
             <TodoSpinner asyncStatus={asyncStatusList} />
-            <Tooltip isVisible={isError} tooltipText={errorMessage}>
+            <Tooltip isVisible={isError && !isBusy} tooltipText={errorMessage}>
               <ErrorSvg svg={errorApiSvg} />
             </Tooltip>
           </Todo>
