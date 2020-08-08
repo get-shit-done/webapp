@@ -2,8 +2,7 @@ import { put, takeLatest, takeEvery, call } from 'redux-saga/effects'
 import axios from 'axios'
 import { actions } from '../reducers/todos'
 import { API_TODOS, API_TODOS_BY_ID } from '../api'
-
-const payloadError = ({ _id, error }: { _id?: string; error: string }) => ({ _id, error })
+import { payloadError } from '../utils'
 
 function* getTodos() {
   try {
@@ -26,7 +25,7 @@ function* addTodo({ payload }: any) {
 }
 function* removeTodo({ payload }: any) {
   try {
-    const response = yield call(axios.delete, API_TODOS_BY_ID('sdsd'), payload)
+    const response = yield call(axios.delete, API_TODOS_BY_ID(payload._id), payload)
     yield put({ type: actions.removeTodoSucceeded.toString(), payload: response.data.data })
   } catch (error) {
     yield put({

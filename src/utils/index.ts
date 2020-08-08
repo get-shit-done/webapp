@@ -27,3 +27,5 @@ export const determineAsyncStatus = (params: AsyncStatus | AsyncStatus[]) => {
   }
   return async
 }
+
+export const payloadError = ({ _id, error }: { _id?: string; error: string }) => ({ _id, error })
