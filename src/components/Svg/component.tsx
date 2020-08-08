@@ -5,6 +5,8 @@ export const CN_SVG = 'svg'
 
 export const styleDanger = `
   fill: var(--sunset-orange);
+  cursor: inherit;
+  
   &:hover {
     fill: var(--sunset-orange);
   };

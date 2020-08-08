@@ -12,6 +12,7 @@ import AddNewTodo from './AddNewTodo'
 import { SpinnerLoader } from '../../../components/Loader'
 import Tooltip from '../../../components/Tooltip/Tooltip'
 import { determineAsyncStatus } from '../../../utils'
+import { TextError } from '../../../components/error'
 
 const Todo = styled.div<{ isDone: boolean, isError: boolean }>`
   position: relative;
@@ -80,7 +81,8 @@ const Todos = () => {
   return (
     <>
       <AddNewTodo addNewTodo={onAddNewTodo} />
-      <TodosSpinner size={4} asyncStatus={asyncStatus.getAll} />
+      <TodosSpinner size={4} asyncStatus={getAll} />
+      <TextError asyncStatus={getAll} />
       {todos.map(({ _id, todoName, isDone }: Todo) => {
         const asyncStatusList = [toggle[_id], add[_id], remove[_id]]
         const { isBusy, isError, errorMessage } = determineAsyncStatus(asyncStatusList)
