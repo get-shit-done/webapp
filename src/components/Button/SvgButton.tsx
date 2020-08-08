@@ -17,13 +17,14 @@ const ErrorSvg = styled(Svg)`
 interface Props {
   children: React.ReactNode
   asyncStatus?: AsyncStatus | AsyncStatus[]
+  className?: string
 }
 
-const SvgButton: FC<Props> = ({ children, asyncStatus }) => {
+const SvgButton: FC<Props> = ({ children, asyncStatus, className }) => {
   const { isBusy, isError, errorMessage } = determineAsyncStatus(asyncStatus)
 
   return (
-    <Wrap>
+    <Wrap type="button" className={className}>
       <SpinnerLoader isAbsolute={false} size={1.6} asyncStatus={asyncStatus} />
       <Tooltip isVisible={isError && !isBusy} tooltipText={errorMessage}>
         <ErrorSvg svg={errorApiSvg} />
