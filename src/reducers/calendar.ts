@@ -130,6 +130,7 @@ export const { reducer, actions } = createSlice({
     addTaskSuccess(state, { payload }: PayloadAction<SavedTask>): void {
       const affectedDay = state.allTasksByDay[payload.timestamp] || { tasks: [] }
       affectedDay.tasks.push(payload)
+      state.allTasksByDay[payload.timestamp] = affectedDay
 
       state.taskBeingEdited = undefined
       state.asyncStatus.addTask = asyncStatusSuccess
