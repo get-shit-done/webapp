@@ -25,7 +25,6 @@ interface Props {
 
 const AsyncButton: FC<Props> = ({ accentColor, type = 'button', children, asyncStatus, className }) => {
   const { isBusy, isError, errorMessage } = determineAsyncStatus(asyncStatus)
-  const showButtonText = !isBusy && !isError
 
   return (
     <Tooltip isVisible tooltipText={errorMessage}>
@@ -36,8 +35,8 @@ const AsyncButton: FC<Props> = ({ accentColor, type = 'button', children, asyncS
         className={className}
       >
         <SpinnerLoader size={1.6} asyncStatus={asyncStatus} />
-        {!showButtonText && <ErrorSvg svg={errorApiSvg} />}
-        <ButtonContent isShow={showButtonText}>{children}</ButtonContent>
+        {isError && !isBusy && <ErrorSvg svg={errorApiSvg} />}
+        <ButtonContent isShow={!isError && !isBusy}>{children}</ButtonContent>
       </ButtonStyledWrap>
     </Tooltip>
   )
