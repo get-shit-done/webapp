@@ -4,8 +4,8 @@ import styled from 'styled-components'
 
 const Wrap = styled.div`
   display: flex;
-  position: absolute;
-  right: 0;
+  /* position: absolute; */
+  /* right: 0; */
   align-items: center;
   cursor: pointer;
 `
