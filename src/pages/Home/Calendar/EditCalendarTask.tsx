@@ -3,14 +3,13 @@ import { useSelector } from 'react-redux'
 import { useForm, SubmitHandler } from 'react-hook-form'
 import styled from 'styled-components'
 import { TextField, Dropdown } from '../../../components/form'
-import Button from '../../../components/Button/component'
 import binSvg from '../../../assets/svg/bin.svg'
 import Svg, { styleDangerHover } from '../../../components/Svg/component'
 import { actions } from '../../../reducers/calendar'
 import { AppState, useAppDispatch } from '../../../Application/Root'
 import { ModalFooter } from '../../../components/Modal'
 import { CalendarFormValues } from './shared'
-import SvgButton from '../../../components/Button/SvgButton'
+import { AsyncButton, SvgButton } from '../../../components/Button'
 
 const Form = styled.form``
 
@@ -103,14 +102,14 @@ const EditCalendarTask: FC = () => {
         inputRef={register({ required: true, maxLength: 80 })}
       />
       <ModalFooter>
-        <Button
-          isDisabled={hasValidationErrors}
+        <AsyncButton
+          // isDisabled={hasValidationErrors}
           accentColor={accentColor}
           type="submit"
           asyncStatus={asyncStatus.saveTask}
         >
           Save task
-        </Button>
+        </AsyncButton>
 
         <RemoveButton asyncStatus={asyncStatus.removeTask}>
           <RemoveSvg theme="light" svg={binSvg} onClick={onRemoveTask} />
