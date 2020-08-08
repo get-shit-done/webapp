@@ -1,9 +1,13 @@
 import React, { FC } from 'react'
 import styled from 'styled-components'
 import { rgbAdjust } from '../../styles'
+import { AsyncStatus } from '../../constants'
+import { SpinnerLoader } from '../Loader'
+import { determineAsyncStatus } from '../../utils'
 
 const Wrap = styled.button<{ accentColor: string }>`
   display: flex;
+  position: relative;
   justify-content: center;
   align-items: center;
   padding: 0 var(--size-lg);
@@ -39,6 +43,10 @@ const Wrap = styled.button<{ accentColor: string }>`
     color: var(--lavender);
   }
 `
+const Content = styled.div<{ isBusy: boolean }>`
+  opacity: ${p => p.isBusy ? 0 : 1};
+  visibility: ${p => p.isBusy ? 'hidden' : 'visible'};
+`
 
 interface Props {
   isDisabled?: boolean
@@ -46,12 +54,17 @@ interface Props {
   type: 'submit' | 'button' | 'reset'
   children: React.ReactNode
   onClick?: (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => void
+  asyncStatus?: AsyncStatus
 }
 
-const Button: FC<Props> = ({ isDisabled, accentColor, type, children, onClick }) => (
-  <Wrap disabled={isDisabled} accentColor={accentColor} type={type} onClick={onClick}>
-    {children}
-  </Wrap>
-)
+const Button: FC<Props> = ({ isDisabled, accentColor, type, children, onClick, asyncStatus }) => {
+  const { isBusy } = determineAsyncStatus(asyncStatus)
+  return (
+    <Wrap disabled={isDisabled} accentColor={accentColor} type={type} onClick={onClick}>
+      <Content isBusy={isBusy}>{children}</Content>
+      {isBusy && <SpinnerLoader size={1.8} asyncStatus={asyncStatus} />}
+    </Wrap>
+  )
+}
 
 export default Button
