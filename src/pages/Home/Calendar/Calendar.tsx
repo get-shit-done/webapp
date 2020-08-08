@@ -11,6 +11,7 @@ import { Modal } from '../../../components/Modal'
 import EditCalendarTask from './EditCalendarTask'
 import { actions, SavedTask } from '../../../reducers/calendar'
 import AddNewCalendarTask from './AddNewCalendarTask'
+import { SpinnerLoader, LoaderSvg } from '../../../components/Loader'
 
 const Wrap = styled.div<{ scale: { x: number, y: number, duration: number } }>`
   position: relative;
@@ -19,6 +20,14 @@ const Wrap = styled.div<{ scale: { x: number, y: number, duration: number } }>`
   transform-origin: bottom right;
   transition: transform ${p => p.scale.duration}s var(--transition-type);
   transform: ${p => `scale(${p.scale.x}, ${p.scale.y})`};
+`
+const CalendarLoader = styled(SpinnerLoader)`
+  ${LoaderSvg} {
+    padding: var(--size-sm);
+    border: 1px solid #eee;
+    border-radius: 50%;
+    background-color: #fff;
+  };
 `
 
 interface Props {
@@ -34,6 +43,7 @@ const CalendarColumns: FC<{ wrapRef: React.MutableRefObject<any> }> = ({ wrapRef
   const hoursAxis = useSelector(makeHoursAxis)
   const allTasksByDayMapped = useSelector(state => makeAllTasksByDayMapped(state, hoursAxis))
   const placeholderHeight = determinePlaceholderHeight({ wrapRef, hoursAxis })
+  console.log('COMP: Calendar columns')
 
   return (
     <>
@@ -53,15 +63,17 @@ const CalendarColumns: FC<{ wrapRef: React.MutableRefObject<any> }> = ({ wrapRef
 const Calendar: FC<Props> = ({ scale }) => {
   const wrapRef = useRef(null)
   const dispatch = useAppDispatch()
+  const { getTasks } = useSelector((state: AppState) => state.calendar.asyncStatus)
   const taskBeingEdited = useSelector((state: AppState) => state.calendar.taskBeingEdited)
   const taskBeingPrepared = useSelector((state: AppState) => state.calendar.taskBeingPrepared)
 
   const onRemovePreparedTask = useCallback(() => { dispatch(actions.removePreparedTask()) }, [])
   const onEditTaskCancel = useCallback(() => { dispatch(actions.editTaskCancel()) }, [])
-  // console.log('COMP: Calendar')
+  console.log('COMP: Calendar')
 
   return (
     <Wrap scale={scale} ref={wrapRef}>
+      <CalendarLoader size={10} asyncStatus={getTasks} />
       <CalendarColumns wrapRef={wrapRef} />
 
       {taskBeingEdited && (
