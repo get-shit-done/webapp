@@ -2,43 +2,53 @@ import { call, put, takeLatest } from 'redux-saga/effects'
 import axios from 'axios'
 import { API_TASKS, API_TASKS_BY_ID } from '../api'
 import { actions } from '../reducers/calendar'
+import { payloadError } from '../utils'
 
 function* fetchTasks() {
   try {
     const response = yield call(axios.get, API_TASKS)
     yield put({ type: actions.getTasksSuccess.toString(), payload: response.data })
   } catch (error) {
-    yield put({ type: actions.getTasksFail.toString(), payload: error.message })
+    yield put({ type: actions.getTasksFail.toString(), payload: payloadError({ error: error.message }) })
   }
 }
 
-function* addTask(data: any) {
+function* addTask({ payload }: any) {
   try {
-    yield put({ type: actions.sortTasks.toString(), payload: data.payload })
-    const response = yield call(axios.post, API_TASKS, data.payload)
+    const response = yield call(axios.post, API_TASKS, payload)
+    yield put({ type: actions.sortTasks.toString(), payload })
     yield put({ type: actions.addTaskSuccess.toString(), payload: response.data.data })
   } catch (error) {
-    yield put({ type: actions.addTaskFailed.toString(), payload: error.message })
+    yield put({
+      type: actions.addTaskFailed.toString(),
+      payload: payloadError({ _id: payload._id, error: error.message }),
+    })
   }
 }
 
-function* saveTask(data: any) {
+function* saveTask({ payload }: any) {
   try {
-    yield put({ type: actions.sortTasks.toString(), payload: data.payload })
-    const response = yield call(axios.patch, API_TASKS_BY_ID(data.payload._id), data.payload)
+    const response = yield call(axios.patch, API_TASKS_BY_ID(payload._id), payload)
+    yield put({ type: actions.sortTasks.toString(), payload: payload })
     yield put({ type: actions.saveTaskSuccess.toString(), payload: response.data.data })
   } catch (error) {
-    yield put({ type: actions.saveTaskFailed.toString(), payload: error.message })
+    yield put({
+      type: actions.saveTaskFailed.toString(),
+      payload: payloadError({ _id: payload._id, error: error.message }),
+    })
   }
 }
 
-function* removeTask(data: any) {
+function* removeTask({ payload }: any) {
   try {
-    yield put({ type: actions.sortTasks.toString(), payload: data.payload })
-    const response = yield call(axios.delete, API_TASKS_BY_ID(data.payload._id))
+    const response = yield call(axios.delete, API_TASKS_BY_ID('sds'))
+    yield put({ type: actions.sortTasks.toString(), payload })
     yield put({ type: actions.removeTaskSucceeded.toString(), payload: response.data })
   } catch (error) {
-    yield put({ type: actions.removeTaskFailed.toString(), payload: error.message })
+    yield put({
+      type: actions.removeTaskFailed.toString(),
+      payload: payloadError({ _id: payload._id, error: error.message }),
+    })
   }
 }
 

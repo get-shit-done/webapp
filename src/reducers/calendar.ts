@@ -1,6 +1,15 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 import format from 'date-fns/format'
-import { MONTH_DAYS, MONTH_DAYS_STRING, HOURS_IN_DAY } from '../constants'
+import {
+  MONTH_DAYS,
+  MONTH_DAYS_STRING,
+  HOURS_IN_DAY,
+  asyncStatusInitial,
+  AsyncStatus,
+  asyncStatusRequested,
+  asyncStatusSuccess,
+  asyncStatusFail,
+} from '../constants'
 import { taskSort } from '../utils'
 import { shallowEqual } from 'react-redux'
 
@@ -38,6 +47,12 @@ interface IInitialState {
   allTasksByDay: IAllTasksByDay
   hoursAxis: number[]
   daysAxis: string[]
+  asyncStatus: {
+    getTasks: AsyncStatus
+    saveTask: AsyncStatus
+    removeTask: AsyncStatus
+    addTask: AsyncStatus
+  }
 }
 const initialState: IInitialState = {
   focusedTimestamp: undefined,
@@ -46,6 +61,12 @@ const initialState: IInitialState = {
   allTasksByDay: {},
   hoursAxis: HOURS_IN_DAY,
   daysAxis: MONTH_DAYS_STRING,
+  asyncStatus: {
+    getTasks: asyncStatusInitial,
+    saveTask: asyncStatusInitial,
+    removeTask: asyncStatusInitial,
+    addTask: asyncStatusInitial,
+  },
 }
 
 export const { reducer, actions } = createSlice({
@@ -88,7 +109,9 @@ export const { reducer, actions } = createSlice({
       }
       state.taskBeingEdited = undefined
     },
-    saveTaskRequested(state, action) {},
+    saveTaskRequested(state, action: any) {
+      state.asyncStatus.saveTask = asyncStatusRequested
+    },
     saveTaskSuccess(state, { payload }: PayloadAction<SavedTask>): void {
       const { _id, timestamp } = payload
       const task: SavedTask = state.allTasksByDay[timestamp].tasks.find(x => x._id === _id)
@@ -96,8 +119,11 @@ export const { reducer, actions } = createSlice({
         task[x] = payload[x]
       }
       state.taskBeingEdited = undefined
+      state.asyncStatus.saveTask = asyncStatusSuccess
     },
-    saveTaskFailed() {},
+    saveTaskFailed(state, { payload }: PayloadAction<{ error: string }>) {
+      state.asyncStatus.saveTask = asyncStatusFail(payload.error)
+    },
     addTaskRequested(state, { payload: { name, timestamp, group, time } }: PayloadAction<NewTask>): void {
       state.allTasksByDay[timestamp] = state.allTasksByDay[timestamp] || { tasks: [] }
 
@@ -109,22 +135,38 @@ export const { reducer, actions } = createSlice({
         group,
         timestamp,
       })
+      state.asyncStatus.addTask = asyncStatusRequested
     },
     addTaskSuccess(state, { payload: { _id, timestamp } }: PayloadAction<SavedTask>): void {
       const taskAdded = state.allTasksByDay[timestamp].tasks.find(x => x._id === 'just-added')
       taskAdded._id = _id
+      state.asyncStatus.addTask = asyncStatusSuccess
     },
-    addTaskFailed() {},
-    getTasksRequested() {},
-    getTasksSuccess(state, { payload: { data } }) {
+    addTaskFailed(state, { payload }: PayloadAction<{ error: string }>) {
+      state.asyncStatus.addTask = asyncStatusFail(payload.error)
+    },
+    getTasksRequested(state) {
+      state.asyncStatus.getTasks = asyncStatusRequested
+    },
+    getTasksSuccess(state, { payload: { data } }: PayloadAction<{ data: IAllTasksByDay }>) {
       state.allTasksByDay = data
+      state.asyncStatus.getTasks = asyncStatusSuccess
     },
-    getTasksFail(state, action) {},
-    removeTaskRequested(state, { payload: { _id, timestamp } }): void {
+    getTasksFail(state, { payload }: PayloadAction<{ error: string }>) {
+      state.asyncStatus.getTasks = asyncStatusFail(payload.error)
+    },
+    removeTaskRequested(state, action): void {
+      state.asyncStatus.removeTask = asyncStatusRequested
+    },
+    removeTaskSucceeded(state, { payload: { _id, timestamp } }) {
+      // TODO: just moved this filter from asyncStatusRequested, make sure it actually works
+      // TODO: reset remove async status on modal close
       state.allTasksByDay[timestamp].tasks = state.allTasksByDay[timestamp].tasks.filter(x => x._id !== _id)
+      state.asyncStatus.removeTask = asyncStatusSuccess
     },
-    removeTaskSucceeded() {},
-    removeTaskFailed() {},
+    removeTaskFailed(state, { payload }: PayloadAction<{ error: string }>) {
+      state.asyncStatus.removeTask = asyncStatusFail(payload.error)
+    },
     sortTasks(state, { payload: { timestamp } }): void {
       state.allTasksByDay[timestamp].tasks.sort(taskSort)
     },
