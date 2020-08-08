@@ -4,15 +4,14 @@ import { useSelector } from 'react-redux'
 import { actions as todoActions, NewTodo, Todo } from '../../../reducers/todos'
 import { actions as toastActions } from '../../../components/Toast/reducer'
 import binSvg from '../../../assets/svg/bin.svg'
-import errorApiSvg from '../../../assets/svg/error-api.svg'
-import Svg, { styleDanger, styleDangerHover } from '../../../components/Svg/component'
+import Svg, { styleDangerHover } from '../../../components/Svg/component'
 import { AppState, useAppDispatch } from '../../../Application/Root'
 
 import AddNewTodo from './AddNewTodo'
 import { SpinnerLoader } from '../../../components/Loader'
-import Tooltip from '../../../components/Tooltip/Tooltip'
 import { determineAsyncStatus } from '../../../utils'
 import { TextError } from '../../../components/error'
+import SvgButton from '../../../components/Button/SvgButton'
 
 const Todo = styled.div<{ isDone: boolean, isError: boolean }>`
   position: relative;
@@ -46,24 +45,14 @@ const Name = styled.div`
   flex-grow: 1;
 `
 const Actions = styled.div`
-  display: none;
   position: absolute;
   right: 0;
-
-  ${Todo}:hover & {
-    display: flex;
-  }
+  display: flex;
 `
 const Remove = styled(Svg)`
   ${styleDangerHover};
 `
-const ErrorSvg = styled(Svg)`
-  ${styleDanger};
-`
 const TodosSpinner = styled(SpinnerLoader)`
-`
-const TodoSpinner = styled(SpinnerLoader)`
-  justify-content: right;
 `
 
 const Todos = () => {
@@ -76,7 +65,6 @@ const Todos = () => {
     dispatch(removeTodoRequested({ _id }))
     dispatch(toastActions.addToast({ prefix: 'task removed', message: todoName }))
   }
-  // console.log(todoFocusId)
 
   return (
     <>
@@ -85,20 +73,16 @@ const Todos = () => {
       <TextError asyncStatus={getAll} />
       {todos.map(({ _id, todoName, isDone }: Todo) => {
         const asyncStatusList = [toggle[_id], add[_id], remove[_id]]
-        const { isBusy, isError, errorMessage } = determineAsyncStatus(asyncStatusList)
+        const { isError } = determineAsyncStatus(asyncStatusList)
 
         return (
           <Todo isDone={isDone} isError={isError} key={_id}>
             <Name onClick={() => dispatch(toggleTodoRequested({ _id, isDone: !isDone }))}>{todoName}</Name>
             <Actions>
-              {!isBusy && !isError &&
+              <SvgButton asyncStatus={asyncStatusList}>
                 <Remove theme="light" svg={binSvg} onClick={() => onRemoveTodo(_id, todoName)} />
-              }
+              </SvgButton>
             </Actions>
-            <TodoSpinner asyncStatus={asyncStatusList} />
-            <Tooltip isVisible={isError && !isBusy} tooltipText={errorMessage}>
-              <ErrorSvg svg={errorApiSvg} />
-            </Tooltip>
           </Todo>
         )
       })}
