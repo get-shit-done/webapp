@@ -8,6 +8,7 @@ const Wrap = styled.div`
 `
 const Toggle = styled.div`
   display: flex;
+  align-items: center;
 `;
 const ColorCircle = styled.div<{ isOpen: boolean; color: string }>`
   position: relative;
