@@ -11,7 +11,7 @@ import AddNewTodo from './AddNewTodo'
 import { SpinnerLoader } from '../../../components/Loader'
 import { determineAsyncStatus } from '../../../utils'
 import { TextError } from '../../../components/error'
-import SvgButton from '../../../components/Button/SvgButton'
+import { SvgButton } from '../../../components/Button'
 
 const Todo = styled.div<{ isDone: boolean, isError: boolean }>`
   position: relative;
