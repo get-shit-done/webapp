@@ -81,7 +81,7 @@ const Todos = () => {
       <TodosSpinner size={4} asyncStatus={asyncStatus.getAll} />
       {todos.map(({ _id, todoName, isDone }: Todo) => {
         const asyncStatusList = [toggle[_id], add[_id], remove[_id]]
-        const { isBusy, isError } = determineAsyncStatus(asyncStatusList)
+        const { isBusy, isError, errorMessage } = determineAsyncStatus(asyncStatusList)
 
         return (
           <Todo
@@ -92,10 +92,12 @@ const Todos = () => {
           >
             <Name>{todoName}</Name>
             <Actions>
-              {!isBusy && !isError && <Remove theme="light" svg={binSvg} onClick={() => onRemoveTodo(_id, todoName)} />}
+              {!isBusy && !isError &&
+                <Remove theme="light" svg={binSvg} onClick={() => onRemoveTodo(_id, todoName)} />
+              }
             </Actions>
             <TodoSpinner asyncStatus={asyncStatusList} />
-            <Tooltip isVisible={isError} tooltipText={toggle[_id]?.errorMessage}>
+            <Tooltip isVisible={isError} tooltipText={errorMessage}>
               <ErrorSvg svg={errorApiSvg} />
             </Tooltip>
           </Todo>

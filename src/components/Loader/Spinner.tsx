@@ -40,7 +40,6 @@ interface Props {
 
 const SpinnerLoader: FC<Props> = ({ size = 2, asyncStatus, className }) => {
   const { isBusy } = determineAsyncStatus(asyncStatus)
-  // return null
   return (
     isBusy ? (
       <Wrap className={className}>
