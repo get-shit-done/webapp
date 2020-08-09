@@ -37,6 +37,11 @@ export const ButtonStyledWrap = styled.button<{ isError?: boolean, accentColor: 
   ${p => p.isError && `
     background-color: var(--sunset-orange);
     color: var(--charcoal);
+
+    &:hover {
+      background-color: var(--red-orange);
+      color: var(--charcoal);
+    };
   `};
 
   &:disabled {

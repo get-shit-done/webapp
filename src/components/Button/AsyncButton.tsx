@@ -10,7 +10,11 @@ import { ButtonStyledWrap, ButtonContent } from './shared'
 
 const ErrorSvg = styled(Svg)`
   position: absolute;
-  fill: var(--white);
+  fill: var(--charcoal);
+
+  &:hover {
+    fill: var(--charcoal);
+  };
 `
 
 interface Props {
