@@ -111,7 +111,7 @@ const EditCalendarTask: FC = () => {
           Save task
         </AsyncButton>
 
-        <RemoveButton asyncStatus={asyncStatus.removeTask}>
+        <RemoveButton tooltipPosition="right" asyncStatus={asyncStatus.removeTask}>
           <RemoveSvg theme="light" svg={binSvg} onClick={onRemoveTask} />
         </RemoveButton>
       </ModalFooter>
