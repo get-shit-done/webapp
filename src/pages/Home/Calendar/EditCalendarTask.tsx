@@ -103,7 +103,7 @@ const EditCalendarTask: FC = () => {
       />
       <ModalFooter>
         <AsyncButton
-          // isDisabled={hasValidationErrors}
+          isDisabled={hasValidationErrors}
           accentColor={accentColor}
           type="submit"
           asyncStatus={asyncStatus.saveTask}

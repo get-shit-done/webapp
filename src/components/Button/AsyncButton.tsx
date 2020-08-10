@@ -27,12 +27,13 @@ interface Props {
   className?: string
 }
 
-const AsyncButton: FC<Props> = ({ accentColor, type = 'button', children, asyncStatus, className }) => {
+const AsyncButton: FC<Props> = ({ isDisabled, accentColor, type = 'button', children, asyncStatus, className }) => {
   const { isBusy, isError, errorMessage } = determineAsyncStatus(asyncStatus)
 
   return (
     <Tooltip isVisible tooltipText={errorMessage}>
       <ButtonStyledWrap
+        disabled={isDisabled}
         isError={isError}
         accentColor={accentColor}
         type={type}
