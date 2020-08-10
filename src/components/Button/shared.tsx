@@ -1,6 +1,22 @@
 import styled from "styled-components";
 import { rgbAdjust } from "../../styles";
 import { styleDanger } from "../Svg/component";
+import { AsyncStatus } from "../../constants";
+
+
+export interface IDumbButtonProps {
+  isDisabled?: boolean
+  accentColor?: string
+  type: 'submit' | 'button' | 'reset'
+  children: React.ReactNode
+  onClick?: (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => void
+  className?: string
+}
+
+export interface IAsyncButtonProps extends IDumbButtonProps {
+  tooltipPosition?: 'left' | 'right'
+  asyncStatus: AsyncStatus | AsyncStatus[]
+}
 
 export const SvgButtonWrap = styled.button<{ isError?: boolean }>`
   position: relative;
