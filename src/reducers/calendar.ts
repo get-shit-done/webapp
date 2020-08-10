@@ -9,6 +9,7 @@ import {
   asyncStatusRequested,
   asyncStatusSuccess,
   asyncStatusFail,
+  asyncStatusRequestedInherit,
 } from '../constants'
 import { taskSort } from '../utils'
 import { shallowEqual } from 'react-redux'
@@ -81,6 +82,11 @@ export const { reducer, actions } = createSlice({
         day.toString(),
       )
     },
+    resetAsyncStatus(state) {
+      state.asyncStatus.removeTask = asyncStatusInitial
+      state.asyncStatus.addTask = asyncStatusInitial
+      state.asyncStatus.saveTask = asyncStatusInitial
+    },
     saveFocusedTimestamp(state, { payload }: PayloadAction<{ timestamp: string }>): void {
       state.focusedTimestamp = payload.timestamp
     },
@@ -110,7 +116,7 @@ export const { reducer, actions } = createSlice({
       state.taskBeingEdited = undefined
     },
     saveTaskRequested(state, action: any) {
-      state.asyncStatus.saveTask = asyncStatusRequested
+      state.asyncStatus.saveTask = asyncStatusRequestedInherit(state.asyncStatus.saveTask)
     },
     saveTaskSuccess(state, { payload }: PayloadAction<SavedTask>): void {
       const { _id, timestamp } = payload
@@ -124,8 +130,8 @@ export const { reducer, actions } = createSlice({
     saveTaskFailed(state, { payload }: PayloadAction<{ error: string }>) {
       state.asyncStatus.saveTask = asyncStatusFail(payload.error)
     },
-    addTaskRequested(state, { payload }: PayloadAction<NewTask>): void {
-      state.asyncStatus.addTask = asyncStatusRequested
+    addTaskRequested(state, action: PayloadAction<NewTask>): void {
+      state.asyncStatus.addTask = asyncStatusRequestedInherit(state.asyncStatus.addTask)
     },
     addTaskSuccess(state, { payload }: PayloadAction<SavedTask>): void {
       const affectedDay = state.allTasksByDay[payload.timestamp] || { tasks: [] }
@@ -149,12 +155,11 @@ export const { reducer, actions } = createSlice({
       state.asyncStatus.getTasks = asyncStatusFail(payload.error)
     },
     removeTaskRequested(state, action): void {
-      state.asyncStatus.removeTask = asyncStatusRequested
+      state.asyncStatus.removeTask = asyncStatusRequestedInherit(state.asyncStatus.removeTask)
     },
-    removeTaskSucceeded(state, { payload: { _id, timestamp } }) {
-      // TODO: just moved this filter from asyncStatusRequested, make sure it actually works
-      // TODO: reset remove async status on modal close
+    removeTaskSucceeded(state, { payload: { _id, timestamp } }: PayloadAction<SavedTask>) {
       state.allTasksByDay[timestamp].tasks = state.allTasksByDay[timestamp].tasks.filter(x => x._id !== _id)
+      state.taskBeingEdited = undefined
       state.asyncStatus.removeTask = asyncStatusSuccess
     },
     removeTaskFailed(state, { payload }: PayloadAction<{ error: string }>) {
