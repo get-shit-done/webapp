@@ -67,8 +67,14 @@ const Calendar: FC<Props> = ({ scale }) => {
   const taskBeingEdited = useSelector((state: AppState) => state.calendar.taskBeingEdited)
   const taskBeingPrepared = useSelector((state: AppState) => state.calendar.taskBeingPrepared)
 
-  const onRemovePreparedTask = useCallback(() => { dispatch(actions.removePreparedTask()) }, [])
-  const onEditTaskCancel = useCallback(() => { dispatch(actions.editTaskCancel()) }, [])
+  const onRemovePreparedTask = useCallback(() => {
+    dispatch(actions.removePreparedTask())
+    dispatch(actions.resetAsyncStatus())
+  }, [])
+  const onEditTaskCancel = useCallback(() => {
+    dispatch(actions.editTaskCancel())
+    dispatch(actions.resetAsyncStatus())
+  }, [])
   console.log('COMP: Calendar')
 
   return (
