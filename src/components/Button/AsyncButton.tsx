@@ -6,7 +6,7 @@ import { determineAsyncStatus } from '../../utils'
 import Svg, { styleDanger } from '../Svg/component'
 import errorApiSvg from '../../assets/svg/error-api.svg'
 import Tooltip from '../Tooltip/Tooltip'
-import { ButtonStyledWrap, ButtonContent } from './shared'
+import { ButtonStyledWrap, AsyncButtonContent } from './shared'
 
 const ErrorSvg = styled(Svg)`
   position: absolute;
@@ -41,7 +41,7 @@ const AsyncButton: FC<Props> = ({ isDisabled, accentColor, type = 'button', chil
       >
         <SpinnerLoader size={1.6} asyncStatus={asyncStatus} />
         {isError && !isBusy && <ErrorSvg svg={errorApiSvg} />}
-        <ButtonContent isShow={!isError && !isBusy}>{children}</ButtonContent>
+        <AsyncButtonContent isShow={!isError && !isBusy}>{children}</AsyncButtonContent>
       </ButtonStyledWrap>
     </Tooltip>
   )

@@ -58,7 +58,7 @@ export const ButtonStyledWrap = styled.button<{ isError?: boolean, accentColor: 
   };
 `
 
-export const ButtonContent = styled.div<{ isShow: boolean }>`
+export const AsyncButtonContent = styled.div<{ isShow: boolean }>`
   opacity: ${p => p.isShow ? 1 : 0};
   visibility: ${p => p.isShow ? 'visible' : 'hidden'};
 `

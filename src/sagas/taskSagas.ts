@@ -15,6 +15,7 @@ function* fetchTasks() {
 
 function* addTask({ payload }: any) {
   try {
+    // const response = yield call(axios.post, 'sdsd', payload)
     const response = yield call(axios.post, API_TASKS, payload)
     yield put({ type: actions.removePreparedTask.toString() })
     yield put({ type: actions.addTaskSuccess.toString(), payload: response.data.data })
@@ -29,6 +30,7 @@ function* addTask({ payload }: any) {
 
 function* saveTask({ payload }: any) {
   try {
+    // const response = yield call(axios.patch, API_TASKS_BY_ID('sdsds'), payload)
     const response = yield call(axios.patch, API_TASKS_BY_ID(payload._id), payload)
     yield put({ type: actions.saveTaskSuccess.toString(), payload: response.data.data })
     yield put({ type: actions.sortTasks.toString(), payload: payload })
@@ -42,8 +44,9 @@ function* saveTask({ payload }: any) {
 
 function* removeTask({ payload }: any) {
   try {
-    const response = yield call(axios.delete, API_TASKS_BY_ID('sds'))
-    yield put({ type: actions.removeTaskSucceeded.toString(), payload: response.data })
+    // const response = yield call(axios.delete, API_TASKS_BY_ID('sds'))
+    const response = yield call(axios.delete, API_TASKS_BY_ID(payload._id))
+    yield put({ type: actions.removeTaskSucceeded.toString(), payload })
     yield put({ type: actions.sortTasks.toString(), payload })
   } catch (error) {
     yield put({

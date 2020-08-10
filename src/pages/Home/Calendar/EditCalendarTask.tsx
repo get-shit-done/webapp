@@ -9,11 +9,11 @@ import { actions } from '../../../reducers/calendar'
 import { AppState, useAppDispatch } from '../../../Application/Root'
 import { ModalFooter } from '../../../components/Modal'
 import { CalendarFormValues } from './shared'
-import { AsyncButton, SvgButton } from '../../../components/Button'
+import { AsyncButton, AsyncSvgButton } from '../../../components/Button'
 
 const Form = styled.form``
 
-const RemoveButton = styled(SvgButton)`
+const RemoveButton = styled(AsyncSvgButton)`
   margin-left: var(--size-xlg);
 `
 const RemoveSvg = styled(Svg)`

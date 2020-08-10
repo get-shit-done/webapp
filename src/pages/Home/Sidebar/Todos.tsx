@@ -11,7 +11,7 @@ import AddNewTodo from './AddNewTodo'
 import { SpinnerLoader } from '../../../components/Loader'
 import { determineAsyncStatus } from '../../../utils'
 import { TextError } from '../../../components/error'
-import { SvgButton } from '../../../components/Button'
+import { AsyncSvgButton } from '../../../components/Button'
 
 const Todo = styled.div<{ isDone: boolean, isError: boolean }>`
   position: relative;
@@ -79,9 +79,9 @@ const Todos = () => {
           <Todo isDone={isDone} isError={isError} key={_id}>
             <Name onClick={() => dispatch(toggleTodoRequested({ _id, isDone: !isDone }))}>{todoName}</Name>
             <Actions>
-              <SvgButton asyncStatus={asyncStatusList}>
+              <AsyncSvgButton asyncStatus={asyncStatusList}>
                 <Remove theme="light" svg={binSvg} onClick={() => onRemoveTodo(_id, todoName)} />
-              </SvgButton>
+              </AsyncSvgButton>
             </Actions>
           </Todo>
         )

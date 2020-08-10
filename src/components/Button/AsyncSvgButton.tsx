@@ -3,7 +3,7 @@ import { AsyncStatus } from '../../constants'
 import { SpinnerLoader } from '../Loader'
 import { determineAsyncStatus } from '../../utils'
 import Tooltip from '../Tooltip/Tooltip'
-import { SvgButtonWrap, ButtonContent } from './shared'
+import { SvgButtonWrap, AsyncButtonContent } from './shared'
 
 interface Props {
   tooltipPosition?: 'left' | 'right'
@@ -12,19 +12,19 @@ interface Props {
   className?: string
 }
 
-const AsyncButton: FC<Props> = ({ tooltipPosition, children, asyncStatus, className }) => {
+const AsyncSvgButton: FC<Props> = ({ tooltipPosition, children, asyncStatus, className }) => {
   const { isBusy, isError, errorMessage } = determineAsyncStatus(asyncStatus)
 
   return (
     <SvgButtonWrap isError={isError} type="button" className={className}>
       <SpinnerLoader size={1.6} asyncStatus={asyncStatus} />
       <Tooltip isVisible tooltipPosition={tooltipPosition} tooltipText={errorMessage}>
-        <ButtonContent isShow={!isBusy}>
+        <AsyncButtonContent isShow={!isBusy}>
           {children}
-        </ButtonContent>
+        </AsyncButtonContent>
       </Tooltip>
     </SvgButtonWrap>
   )
 }
 
-export default AsyncButton
+export default AsyncSvgButton
