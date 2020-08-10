@@ -2,13 +2,13 @@ import React, { memo, FC } from 'react'
 import styled from 'styled-components'
 import { AsyncStatus } from '../../constants'
 import loaderSvg from '../../assets/svg/loader.svg'
-import Svg from '../Svg/component'
 import { determineAsyncStatus } from '../../utils'
+import { LoaderSvg } from './shared'
 
-const Wrap = styled.div`
+const Wrap = styled.div<{ isAbsolute: boolean }>`
   display: flex;
   z-index: 1;
-  position: absolute;
+  position: ${p => p.isAbsolute ? 'absolute' : 'static'};
   top: 0;
   right: 0;
   bottom: 0;
@@ -17,33 +17,19 @@ const Wrap = styled.div`
   align-items: center;
 `
 
-const LoaderStyled = styled(Svg)`
-  display: flex;
-  path {
-    &:nth-child(1) {
-      opacity: 1;
-      fill: rgba(0, 0, 0, 0.2);
-    };
-    &:nth-child(2) {
-      fill: rgba(0, 0, 0, 0.3);
-    };
-  };
-`
-
 interface Props {
-  focusId?: string
-  id?: string
+  isAbsolute?: boolean
   size?: number
   asyncStatus: AsyncStatus | AsyncStatus[]
   className?: string
 }
 
-const SpinnerLoader: FC<Props> = ({ size = 2, asyncStatus, className }) => {
+const SpinnerLoader: FC<Props> = ({ isAbsolute = true, size = 2, asyncStatus, className }) => {
   const { isBusy } = determineAsyncStatus(asyncStatus)
   return (
     isBusy ? (
-      <Wrap className={className}>
-        <LoaderStyled size={size} svg={loaderSvg} />
+      <Wrap isAbsolute={isAbsolute} className={className}>
+        <LoaderSvg size={size} svg={loaderSvg} />
       </Wrap>
     ) : null
   )

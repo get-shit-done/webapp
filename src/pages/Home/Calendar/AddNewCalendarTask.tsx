@@ -2,7 +2,7 @@ import React, { useState, useEffect, memo, FC } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 import { useForm } from 'react-hook-form'
 import styled from 'styled-components'
-import Button from '../../../components/Button/component'
+import { AsyncButton } from '../../../components/Button'
 import { Dropdown, TextField } from '../../../components/form'
 import { actions } from '../../../reducers/calendar'
 import { AppState, useAppDispatch } from '../../../Application/Root'
@@ -11,13 +11,9 @@ import { CalendarFormValues } from './shared'
 
 const Form = styled.form``
 
-interface Props {
-  onRemovePreparedTask(): void
-}
-
-const AddNewCalendarTask: FC<Props> = ({ onRemovePreparedTask }) => {
+const AddNewCalendarTask: FC = () => {
   const dispatch = useAppDispatch()
-  const { taskBeingPrepared } = useSelector((state: AppState) => state.calendar)
+  const { taskBeingPrepared, asyncStatus } = useSelector((state: AppState) => state.calendar)
   const { timestamp, time } = taskBeingPrepared
   const { groups, colors } = useSelector((state: AppState) => state.settings)
   const [selectedGroup, setSelectedGroup] = useState(groups.find(x => x.name === 'improvement'))
@@ -32,7 +28,6 @@ const AddNewCalendarTask: FC<Props> = ({ onRemovePreparedTask }) => {
         group: selectedGroup.name,
       }),
     )
-    onRemovePreparedTask()
   }
   const watchedFields = watch()
   const accentColor = selectedGroup ? colors[selectedGroup.colorId] : undefined
@@ -89,13 +84,14 @@ const AddNewCalendarTask: FC<Props> = ({ onRemovePreparedTask }) => {
         inputRef={register({ required: true, maxLength: 80 })}
       />
       <ModalFooter>
-        <Button
+        <AsyncButton
           isDisabled={Object.entries(errors).length > 0}
           accentColor={accentColor}
           type="submit"
+          asyncStatus={asyncStatus.addTask}
         >
           Add new task
-        </Button>
+        </AsyncButton>
       </ModalFooter>
     </Form>
   )

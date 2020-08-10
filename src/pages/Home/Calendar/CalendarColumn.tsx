@@ -66,12 +66,14 @@ interface Props {
 const CalendarColumn: FC<Props> = ({ timestamp, isCurrentDay, tasksFiltered = [], placeholderHeight }) => {
   const hoursAxis = useSelector(makeHoursAxis)
   const taskBeingEdited = useSelector((state: AppState) => state.calendar.taskBeingEdited)
+  const taskBeingPrepared = useSelector((state: AppState) => state.calendar.taskBeingPrepared)
   // console.log('COMP: CalendarColumn')
 
   const [y, setY] = useState(0)
-  const [placeholderVisible, setPlaceholderVisible] = useState(false)
+  const [showPlaceholder, setPlaceholderShow] = useState(false)
   const [timeFromY, setTimeFromY] = useState(0)
   const hourSlotsRef = useRef(null)
+  const isPlaceholderBeingEdited = taskBeingPrepared?.timestamp === timestamp
 
   function updatePlaceholderTask(event: React.MouseEvent<HTMLDivElement, MouseEvent>) {
     const columnTopPx = event.currentTarget.getBoundingClientRect().top
@@ -87,7 +89,7 @@ const CalendarColumn: FC<Props> = ({ timestamp, isCurrentDay, tasksFiltered = []
 
   function saveFocusedTimestamp() {
     // dispatch(actions.saveFocusedTimestamp({ timestamp }))
-    setPlaceholderVisible(!placeholderVisible)
+    setPlaceholderShow(!showPlaceholder)
   }
 
   return (
@@ -108,8 +110,9 @@ const CalendarColumn: FC<Props> = ({ timestamp, isCurrentDay, tasksFiltered = []
         {tasksFiltered.map(task => (
           <Task key={task._id} task={task} isBeingEdited={taskBeingEdited?._id === task._id} />
         ))}
-        {placeholderVisible && (
+        {(showPlaceholder || isPlaceholderBeingEdited) && (
           <PlaceholderTask
+            isPlaceholderBeingEdited={isPlaceholderBeingEdited}
             timestamp={timestamp}
             hourSlotsRef={hourSlotsRef}
             y={y}

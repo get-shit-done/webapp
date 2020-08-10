@@ -62,6 +62,7 @@ const TimeText = styled.div`
 `
 
 interface Props {
+  isPlaceholderBeingEdited: boolean
   timestamp: string
   hourSlotsRef: any
   y: number
@@ -69,15 +70,21 @@ interface Props {
   placeholderHeight: number
 }
 
-const PlaceholderTask: FC<Props> = ({ timestamp, hourSlotsRef, y, timeFromY, placeholderHeight }) => {
+const PlaceholderTask: FC<Props> = ({
+  isPlaceholderBeingEdited,
+  timestamp,
+  hourSlotsRef,
+  y,
+  timeFromY,
+  placeholderHeight,
+}) => {
+  // console.log('COMP: placeholder Task', taskBeingPrepared)
   const dispatch = useAppDispatch()
   const { hoursAxis, taskBeingPrepared } = useSelector((state: AppState) => state.calendar)
   const { groups, colors } = useSelector((state: AppState) => state.settings)
   const [{ yFromTime, heightFromTime }, setYAndHeight] = useState({ yFromTime: y, heightFromTime: placeholderHeight })
-  // console.log('COMP: placeholder Task')
 
   const colorId = taskBeingPrepared ? groups.find(x => x.name === taskBeingPrepared.group)?.colorId : undefined
-  const isPlaceholderBeingEdited = taskBeingPrepared?.timestamp === timestamp
 
   function onPrepareNewTask() {
     const rounded = determineTimeFromY({ y, ref: hourSlotsRef, hoursAxis })
