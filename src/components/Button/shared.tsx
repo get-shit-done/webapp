@@ -1,8 +1,15 @@
 import styled from "styled-components";
 import { rgbAdjust } from "../../styles";
+import { styleDanger } from "../Svg/component";
 
-export const ButtonUnstyledWrap = styled.button`
+export const SvgButtonWrap = styled.button<{ isError?: boolean }>`
+  position: relative;
   cursor: pointer;
+  ${p => p.isError && `
+    * {
+      ${styleDanger};
+    };
+  `};
 `
 
 export const ButtonStyledWrap = styled.button<{ isError?: boolean, accentColor: string }>`

@@ -1,16 +1,9 @@
 import React, { FC } from 'react'
-import styled from 'styled-components'
 import { AsyncStatus } from '../../constants'
 import { SpinnerLoader } from '../Loader'
 import { determineAsyncStatus } from '../../utils'
-import Svg, { styleDanger } from '../Svg/component'
-import errorApiSvg from '../../assets/svg/error-api.svg'
 import Tooltip from '../Tooltip/Tooltip'
-import { ButtonUnstyledWrap } from './shared'
-
-const ErrorSvg = styled(Svg)`
-  ${styleDanger};
-`
+import { SvgButtonWrap, ButtonContent } from './shared'
 
 interface Props {
   tooltipPosition?: 'left' | 'right'
@@ -23,13 +16,14 @@ const AsyncButton: FC<Props> = ({ tooltipPosition, children, asyncStatus, classN
   const { isBusy, isError, errorMessage } = determineAsyncStatus(asyncStatus)
 
   return (
-    <ButtonUnstyledWrap type="button" className={className}>
-      <SpinnerLoader isAbsolute={false} size={1.6} asyncStatus={asyncStatus} />
-      <Tooltip isVisible={isError && !isBusy} tooltipPosition={tooltipPosition} tooltipText={errorMessage}>
-        <ErrorSvg svg={errorApiSvg} />
+    <SvgButtonWrap isError={isError} type="button" className={className}>
+      <SpinnerLoader size={1.6} asyncStatus={asyncStatus} />
+      <Tooltip isVisible tooltipPosition={tooltipPosition} tooltipText={errorMessage}>
+        <ButtonContent isShow={!isBusy}>
+          {children}
+        </ButtonContent>
       </Tooltip>
-      {!isBusy && !isError && children}
-    </ButtonUnstyledWrap>
+    </SvgButtonWrap>
   )
 }
 
