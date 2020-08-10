@@ -32,6 +32,13 @@ export const asyncStatusRequested = {
   isDone: false,
   isError: false,
 }
+export const asyncStatusRequestedInherit = ({ isError, errorMessage }: AsyncStatus) => ({
+  isInitial: false,
+  isBusy: true,
+  isDone: false,
+  isError,
+  errorMessage,
+})
 export const asyncStatusSuccess = {
   isInitial: false,
   isBusy: false,
