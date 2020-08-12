@@ -74,7 +74,7 @@ const Task: FC<IProps> = ({
   const groups = useSelector((state: AppState) => state.settings.groups)
   const colors = useSelector((state: AppState) => state.settings.colors)
   const dispatch = useAppDispatch()
-  const { colorId } = groups.find(x => x.name === group)
+  const { colorId } = (groups.find(x => x.name === group) || {})
 
   const onEditTask = () => { dispatch(actions.editTaskPrepare({ _id, timestamp })) }
 

@@ -2,31 +2,48 @@
 // https://jsperf.com/color-darken
 
 export function rgbAdjust(color: string, amount: number): string {
-  const colorValues = color.match(/[0-9]+/g).map(x => Number(x))
-  const primary = Math.max(...colorValues)
-  const colorValuesUpdated = colorValues.map(x => x === primary ? x + (Math.round(amount / 1.5)) : x + amount).join(',')
+  if (!color) return;
 
-  return `rgb(${colorValuesUpdated})`
+  const colorValues = color.match(/[0-9]+/g).map(x => Number(x));
+  const primary = Math.max(...colorValues);
+  const colorValuesUpdated = colorValues
+    .map(x => (x === primary ? x + Math.round(amount / 1.5) : x + amount))
+    .join(",");
+
+  return `rgb(${colorValuesUpdated})`;
 }
 
-export const flex = ({ grow, shrink, basis, isCenter }: { grow: number, shrink: number, basis: number, isCenter: boolean }) => `
+export const flex = ({
+  grow,
+  shrink,
+  basis,
+  isCenter,
+}: {
+  grow: number;
+  shrink: number;
+  basis: number;
+  isCenter: boolean;
+}) => `
   display: flex;
   flex-grow: ${grow};
   flex-shrink: ${shrink};
   flex-basis: ${basis};
 
-  ${isCenter && `
+  ${
+    isCenter &&
+    `
     justify-content: center;
     align-items: center;
     text-align: center;
-  `};
-`
+  `
+  };
+`;
 
 export const ellipsis = () => `
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-`
+`;
 
 export const scrollbarMinLight = () => `
   ::-webkit-scrollbar {
@@ -53,15 +70,14 @@ export const scrollbarMinLight = () => `
   ::-webkit-scrollbar-corner {
     background-color: transparent;
   }
-`
-
+`;
 
 // media query
-const customMediaQuery = (minWidth: number) => `@media (min-width: ${minWidth}px)`
+const customMediaQuery = (minWidth: number) => `@media (min-width: ${minWidth}px)`;
 
 export const media = {
   custom: customMediaQuery,
   sm: customMediaQuery(540),
   md: customMediaQuery(940),
   lg: customMediaQuery(1140),
-}
+};
