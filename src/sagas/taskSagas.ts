@@ -5,11 +5,14 @@ import { API_TASKS, API_TASKS_BY_ID } from "../api";
 import { actions } from "../reducers/calendar";
 import { payloadError } from "../utils";
 
-function* fetchTasks() {
+function* fetchTasks({ payload }: any) {
   try {
-    const currentMonthName = format(new Date(), "MMM");
-    const response = yield call(axios.get, `${API_TASKS}?month=${currentMonthName}`);
-    yield put({ type: actions.getTasksSuccess.toString(), payload: response.data });
+    const formattedMonth = format(payload.date, "MMM");
+    const response = yield call(axios.get, `${API_TASKS}?month=${formattedMonth}`);
+    yield put({
+      type: actions.getTasksSuccess.toString(),
+      payload: { response: response.data.data, date: payload.date },
+    });
   } catch (error) {
     yield put({ type: actions.getTasksFail.toString(), payload: payloadError({ error: error.message }) });
   }

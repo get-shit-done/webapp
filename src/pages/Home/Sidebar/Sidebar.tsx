@@ -1,9 +1,12 @@
 import React, { Suspense, FC, useState } from 'react'
 import styled from 'styled-components'
+import sub from 'date-fns/sub'
 import { STYLE_SIDEBAR_WIDTH_UNIT } from '../../../styles'
 import listSvg from '../../../assets/svg/list.svg'
 import cogSvg from '../../../assets/svg/cog.svg'
 import fullscreenSvg from '../../../assets/svg/fullscreen.svg'
+import chevronLeftSvg from '../../../assets/svg/chevron-left.svg'
+import chevronRightSvg from '../../../assets/svg/chevron-right.svg'
 import sunSvg from '../../../assets/svg/sun.svg'
 import moonSvg from '../../../assets/svg/moon.svg'
 import Svg from '../../../components/Svg/component'
@@ -11,7 +14,8 @@ import UseFullscreenToggle from '../../../hooks/useFullscreenToggle'
 import TabHOC from './TabHOC'
 import { useAppDispatch, AppState } from '../../../Application/Root'
 import { useSelector } from 'react-redux'
-import { actions } from '../../../reducers/settings'
+import { actions as settingsActions } from '../../../reducers/settings'
+import { actions as calendarActions } from '../../../reducers/calendar'
 import { ENUM_THEMES } from '../../../enums'
 
 const Todos = React.lazy(() => import('./Todos'))
@@ -130,6 +134,10 @@ const Sidebar: FC<Props> = ({ isOpen, setIsOpen }) => {
     !activeTabId && setIsOpen(true)
     activeTabId === id && setIsOpen(false)
   }
+  const handleMonthClick = () => {
+    const updatedDate = sub(new Date, { months: 1 })
+    dispatch(calendarActions.getTasksRequested({ date: updatedDate }))
+  }
 
   return (
     <Wrap>
@@ -140,8 +148,9 @@ const Sidebar: FC<Props> = ({ isOpen, setIsOpen }) => {
             <Toggle
               isActive
               svg={themeName === dark ? moonSvg : sunSvg}
-              onClick={() => dispatch(actions.activateTheme({ theme: themeName === dark ? light : dark }))}
+              onClick={() => dispatch(settingsActions.activateTheme({ theme: themeName === dark ? light : dark }))}
             />
+            <Toggle isActive={isFullscreen} svg={chevronLeftSvg} onClick={handleMonthClick} />
           </Toggles>
 
           {tabs.map(({ id, svg }) => (

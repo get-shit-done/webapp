@@ -1,5 +1,5 @@
-import { createSlice, PayloadAction } from '@reduxjs/toolkit'
-import format from 'date-fns/format'
+import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+import format from "date-fns/format";
 import {
   MONTH_DAYS,
   MONTH_DAYS_STRING,
@@ -10,50 +10,50 @@ import {
   asyncStatusSuccess,
   asyncStatusFail,
   asyncStatusRequestedInherit,
-} from '../constants'
-import { taskSort } from '../utils'
-import { shallowEqual } from 'react-redux'
+} from "../constants";
+import { taskSort } from "../utils";
+import { shallowEqual } from "react-redux";
 
 export interface TaskBeingPrepared {
-  timestamp?: string
-  time?: number[]
-  name?: string
-  group?: string
+  timestamp?: string;
+  time?: number[];
+  name?: string;
+  group?: string;
 }
 export interface NewTask {
-  [key: string]: any
-  time: number[]
-  name: string
-  group: string
-  timestamp: string
+  [key: string]: any;
+  time: number[];
+  name: string;
+  group: string;
+  timestamp: string;
 }
 export interface SavedTask extends NewTask {
-  _id: string
+  _id: string;
 }
 
 export interface TaskWithMeta extends SavedTask {
-  heightInFlex?: number
-  gapBefore?: number
-  gapAfter?: number
+  heightInFlex?: number;
+  gapBefore?: number;
+  gapAfter?: number;
 }
 export interface IAllTasksByDay {
   [key: string]: {
-    tasks: SavedTask[]
-  }
+    tasks: SavedTask[];
+  };
 }
 interface IInitialState {
-  focusedTimestamp: string
-  taskBeingPrepared: TaskBeingPrepared
-  taskBeingEdited: TaskWithMeta | undefined
-  allTasksByDay: IAllTasksByDay
-  hoursAxis: number[]
-  daysAxis: string[]
+  focusedTimestamp: string;
+  taskBeingPrepared: TaskBeingPrepared;
+  taskBeingEdited: TaskWithMeta | undefined;
+  allTasksByDay: IAllTasksByDay;
+  hoursAxis: number[];
+  daysAxis: string[];
   asyncStatus: {
-    getTasks: AsyncStatus
-    saveTask: AsyncStatus
-    removeTask: AsyncStatus
-    addTask: AsyncStatus
-  }
+    getTasks: AsyncStatus;
+    saveTask: AsyncStatus;
+    removeTask: AsyncStatus;
+    addTask: AsyncStatus;
+  };
 }
 const initialState: IInitialState = {
   focusedTimestamp: undefined,
@@ -61,112 +61,113 @@ const initialState: IInitialState = {
   taskBeingEdited: undefined,
   allTasksByDay: {},
   hoursAxis: HOURS_IN_DAY,
-  daysAxis: MONTH_DAYS_STRING,
+  daysAxis: MONTH_DAYS_STRING(),
   asyncStatus: {
     getTasks: asyncStatusInitial,
     saveTask: asyncStatusInitial,
     removeTask: asyncStatusInitial,
     addTask: asyncStatusInitial,
   },
-}
+};
 
 export const { reducer, actions } = createSlice({
-  name: 'calendar',
+  name: "calendar",
   initialState,
   reducers: {
     filterHours(state, { payload: { from, to } }: PayloadAction<{ from: number; to: number }>): void {
-      state.hoursAxis = HOURS_IN_DAY.filter(hour => hour >= from && hour <= to)
+      state.hoursAxis = HOURS_IN_DAY.filter(hour => hour >= from && hour <= to);
     },
     filterDays(state, { payload: { from, to } }: PayloadAction<{ from: string | number; to: string | number }>): void {
-      state.daysAxis = MONTH_DAYS.filter(day => format(day, 'd') >= from && format(day, 'd') <= to).map(day =>
-        day.toString(),
-      )
+      state.daysAxis = MONTH_DAYS()
+        .filter(day => format(day, "d") >= from && format(day, "d") <= to)
+        .map(day => day.toString());
     },
     resetAsyncStatus(state) {
-      state.asyncStatus.removeTask = asyncStatusInitial
-      state.asyncStatus.addTask = asyncStatusInitial
-      state.asyncStatus.saveTask = asyncStatusInitial
+      state.asyncStatus.removeTask = asyncStatusInitial;
+      state.asyncStatus.addTask = asyncStatusInitial;
+      state.asyncStatus.saveTask = asyncStatusInitial;
     },
     saveFocusedTimestamp(state, { payload }: PayloadAction<{ timestamp: string }>): void {
-      state.focusedTimestamp = payload.timestamp
+      state.focusedTimestamp = payload.timestamp;
     },
     prepareTask(state, { payload }: PayloadAction<TaskBeingPrepared>): void {
-      state.taskBeingPrepared = payload
+      state.taskBeingPrepared = payload;
     },
     removePreparedTask(state) {
-      state.taskBeingPrepared = undefined
+      state.taskBeingPrepared = undefined;
     },
     editTaskPrepare(state, { payload: { _id, timestamp } }: PayloadAction<{ _id: string; timestamp: string }>): void {
-      state.taskBeingEdited = state.allTasksByDay[timestamp].tasks.find(x => x._id === _id)
+      state.taskBeingEdited = state.allTasksByDay[timestamp].tasks.find(x => x._id === _id);
     },
     editTaskReplaceValues(state, { payload }: PayloadAction<SavedTask>): void {
-      const { _id, timestamp } = payload
-      const task = state.allTasksByDay[timestamp].tasks.find(x => x._id === _id)
+      const { _id, timestamp } = payload;
+      const task = state.allTasksByDay[timestamp].tasks.find(x => x._id === _id);
       for (const x in task) {
-        task[x] = payload[x] ?? task[x]
+        task[x] = payload[x] ?? task[x];
       }
     },
     editTaskCancel(state): void {
-      const { _id, timestamp } = state.taskBeingEdited
-      const task = state.allTasksByDay[timestamp].tasks.find(x => x._id === _id)
+      const { _id, timestamp } = state.taskBeingEdited;
+      const task = state.allTasksByDay[timestamp].tasks.find(x => x._id === _id);
 
       for (const x in task) {
-        task[x] = shallowEqual(state.taskBeingEdited[x], task[x]) ? task[x] : state.taskBeingEdited[x]
+        task[x] = shallowEqual(state.taskBeingEdited[x], task[x]) ? task[x] : state.taskBeingEdited[x];
       }
-      state.taskBeingEdited = undefined
+      state.taskBeingEdited = undefined;
     },
     saveTaskRequested(state, action: any) {
-      state.asyncStatus.saveTask = asyncStatusRequestedInherit(state.asyncStatus.saveTask)
+      state.asyncStatus.saveTask = asyncStatusRequestedInherit(state.asyncStatus.saveTask);
     },
     saveTaskSuccess(state, { payload }: PayloadAction<SavedTask>): void {
-      const { _id, timestamp } = payload
-      const task: SavedTask = state.allTasksByDay[timestamp].tasks.find(x => x._id === _id)
+      const { _id, timestamp } = payload;
+      const task: SavedTask = state.allTasksByDay[timestamp].tasks.find(x => x._id === _id);
       for (const x in task) {
-        task[x] = payload[x]
+        task[x] = payload[x];
       }
-      state.taskBeingEdited = undefined
-      state.asyncStatus.saveTask = asyncStatusSuccess
+      state.taskBeingEdited = undefined;
+      state.asyncStatus.saveTask = asyncStatusSuccess;
     },
     saveTaskFailed(state, { payload }: PayloadAction<{ error: string }>) {
-      state.asyncStatus.saveTask = asyncStatusFail(payload.error)
+      state.asyncStatus.saveTask = asyncStatusFail(payload.error);
     },
     addTaskRequested(state, action: PayloadAction<NewTask>): void {
-      state.asyncStatus.addTask = asyncStatusRequestedInherit(state.asyncStatus.addTask)
+      state.asyncStatus.addTask = asyncStatusRequestedInherit(state.asyncStatus.addTask);
     },
     addTaskSuccess(state, { payload }: PayloadAction<SavedTask>): void {
-      const affectedDay = state.allTasksByDay[payload.timestamp] || { tasks: [] }
-      affectedDay.tasks.push(payload)
-      state.allTasksByDay[payload.timestamp] = affectedDay
+      const affectedDay = state.allTasksByDay[payload.timestamp] || { tasks: [] };
+      affectedDay.tasks.push(payload);
+      state.allTasksByDay[payload.timestamp] = affectedDay;
 
-      state.taskBeingEdited = undefined
-      state.asyncStatus.addTask = asyncStatusSuccess
+      state.taskBeingEdited = undefined;
+      state.asyncStatus.addTask = asyncStatusSuccess;
     },
     addTaskFailed(state, { payload }: PayloadAction<{ error: string }>) {
-      state.asyncStatus.addTask = asyncStatusFail(payload.error)
+      state.asyncStatus.addTask = asyncStatusFail(payload.error);
     },
-    getTasksRequested(state) {
-      state.asyncStatus.getTasks = asyncStatusRequested
+    getTasksRequested(state, { payload }: PayloadAction<{ date: Date }>) {
+      state.asyncStatus.getTasks = asyncStatusRequested;
     },
-    getTasksSuccess(state, { payload: { data } }: PayloadAction<{ data: IAllTasksByDay }>) {
-      state.allTasksByDay = data
-      state.asyncStatus.getTasks = asyncStatusSuccess
+    getTasksSuccess(state, { payload: { response, date } }: PayloadAction<{ response: IAllTasksByDay; date: Date }>) {
+      state.allTasksByDay = response;
+      state.asyncStatus.getTasks = asyncStatusSuccess;
+      state.daysAxis = MONTH_DAYS_STRING(date);
     },
     getTasksFail(state, { payload }: PayloadAction<{ error: string }>) {
-      state.asyncStatus.getTasks = asyncStatusFail(payload.error)
+      state.asyncStatus.getTasks = asyncStatusFail(payload.error);
     },
     removeTaskRequested(state, action): void {
-      state.asyncStatus.removeTask = asyncStatusRequestedInherit(state.asyncStatus.removeTask)
+      state.asyncStatus.removeTask = asyncStatusRequestedInherit(state.asyncStatus.removeTask);
     },
     removeTaskSucceeded(state, { payload: { _id, timestamp } }: PayloadAction<SavedTask>) {
-      state.allTasksByDay[timestamp].tasks = state.allTasksByDay[timestamp].tasks.filter(x => x._id !== _id)
-      state.taskBeingEdited = undefined
-      state.asyncStatus.removeTask = asyncStatusSuccess
+      state.allTasksByDay[timestamp].tasks = state.allTasksByDay[timestamp].tasks.filter(x => x._id !== _id);
+      state.taskBeingEdited = undefined;
+      state.asyncStatus.removeTask = asyncStatusSuccess;
     },
     removeTaskFailed(state, { payload }: PayloadAction<{ error: string }>) {
-      state.asyncStatus.removeTask = asyncStatusFail(payload.error)
+      state.asyncStatus.removeTask = asyncStatusFail(payload.error);
     },
     sortTasks(state, { payload: { timestamp } }): void {
-      state.allTasksByDay[timestamp].tasks.sort(taskSort)
+      state.allTasksByDay[timestamp].tasks.sort(taskSort);
     },
   },
-})
+});

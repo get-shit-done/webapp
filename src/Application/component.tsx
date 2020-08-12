@@ -30,7 +30,7 @@ const Application = () => {
   const dispatch = useAppDispatch()
 
   useEffect(() => {
-    dispatch(actionsCalendar.getTasksRequested())
+    dispatch(actionsCalendar.getTasksRequested({ date: new Date() }))
     dispatch(actionsSettings.getGroupsRequested())
     dispatch(actionsTodos.getTodosRequested())
   }, [])
