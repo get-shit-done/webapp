@@ -17,7 +17,7 @@ EXPOSE 3002
 FROM base as dev
 ENV NODE_ENV=development
 RUN npm i --only=development
-CMD ["webpack-dev-server", "--config webpack.dev.js", "--progress"]
+CMD ["webpack-dev-server", "--config", "webpack.dev.js"]
 
 
 
