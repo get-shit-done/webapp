@@ -6,7 +6,7 @@ const path = require('path')
 const MiniCssExtractPlugin = require('mini-css-extract-plugin')
 
 const entryPath = './src/index.tsx'
-const outputPath = './public'
+const outputPath = './build'
 const PUBLIC_PATH = '/'
 
 const supportedLocales = ['en']

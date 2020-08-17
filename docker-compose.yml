@@ -1,0 +1,16 @@
+version: '3.4'
+
+services:
+  webapp:
+    build:
+      context: .
+      target: dev
+    ports:
+      - "3002:80"
+    volumes:
+      - .:/app
+      - /app/node_modules
+  tasks-api:
+    image: vincentza/get-shit-done-backend:0.1
+    ports:
+      - 3005:3005
