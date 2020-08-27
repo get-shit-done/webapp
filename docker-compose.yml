@@ -11,6 +11,6 @@ services:
       - .:/app
       - /app/node_modules
   tasks-api:
-    image: vincentza/get-shit-done-backend:0.1
+    image: vincentza/get-shit-done-backend:0.2
     ports:
       - 3005:3005

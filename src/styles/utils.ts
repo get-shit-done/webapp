@@ -13,32 +13,6 @@ export function rgbAdjust(color: string, amount: number): string {
   return `rgb(${colorValuesUpdated})`;
 }
 
-export const flex = ({
-  grow,
-  shrink,
-  basis,
-  isCenter,
-}: {
-  grow: number;
-  shrink: number;
-  basis: number;
-  isCenter: boolean;
-}) => `
-  display: flex;
-  flex-grow: ${grow};
-  flex-shrink: ${shrink};
-  flex-basis: ${basis};
-
-  ${
-    isCenter &&
-    `
-    justify-content: center;
-    align-items: center;
-    text-align: center;
-  `
-  };
-`;
-
 export const ellipsis = () => `
   white-space: nowrap;
   overflow: hidden;
