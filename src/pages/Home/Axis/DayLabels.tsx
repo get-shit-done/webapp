@@ -8,7 +8,6 @@ import UseHighlightFilteredRange from '../../../hooks/useHighlightFIlteredRange'
 import { useSelector } from 'react-redux'
 import { actions } from '../../../reducers/calendar'
 import { MONTH_DAYS } from '../../../constants'
-import { flex } from '../../../styles'
 import { AppState } from '../../../Application/Root'
 
 const Wrap = styled.div<{ theme: { axisBg: string }, isBeingFiltered: boolean }>`
@@ -41,7 +40,11 @@ const DayLabel = styled.div<{
   isFiltered: boolean;
   isFocusedTimestamp: boolean;
 }>`
-  ${flex({ grow: 1, shrink: 0, basis: 0, isCenter: true })};
+  display: flex;
+  flex-grow: 1;
+  flex-shrink: 0;
+  flex-basis: 0;
+  justify-content: center;
   position: relative;
   border-bottom: 4px solid ${p => p.theme.axisBg};
   border-left: 1px solid transparent;
