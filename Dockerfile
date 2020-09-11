@@ -14,14 +14,14 @@ WORKDIR /app
 ENV PATH=/app/node_modules/.bin:$PATH
 COPY package*.json ./
 RUN npm ci && npm cache clean --force
-EXPOSE 3002
+EXPOSE 3010
 
 
 
 FROM base as dev
 ENV NODE_ENV=development
 RUN npm i --only=development
-CMD ["webpack-dev-server", "--config", "webpack.dev.js"]
+CMD ["webpack-dev-server", "--config", "webpack.dev.js", "--host", "0.0.0.0"]
 
 
 

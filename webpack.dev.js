@@ -7,7 +7,7 @@ module.exports = merge(common, {
   mode: 'development',
   devServer: {
     inline: true,
-    port: 3002,
+    port: 3010,
     historyApiFallback: true,
   },
   devtool: 'source-map',
