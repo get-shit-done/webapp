@@ -81,15 +81,15 @@ export const { reducer, actions } = createSlice({
     toggleTodoFailed(state, { payload }) {
       state.asyncStatus.toggle[payload._id] = asyncStatusFail(payload.error)
     },
-    getTodosRequested(state) {
-      state.asyncStatus.getAll = asyncStatusRequested
-    },
-    getTodosSucceeded(state, { payload }: PayloadAction<Todo[]>) {
-      state.todos = payload
-      state.asyncStatus.getAll = asyncStatusSuccess
-    },
-    getTodosFailed(state, { payload }) {
-      state.asyncStatus.getAll = asyncStatusFail(payload.error)
-    },
+    // getTodosRequested(state) {
+    //   state.asyncStatus.getAll = asyncStatusRequested
+    // },
+    // getTodosSucceeded(state, { payload }: PayloadAction<Todo[]>) {
+    //   state.todos = payload
+    //   state.asyncStatus.getAll = asyncStatusSuccess
+    // },
+    // getTodosFailed(state, { payload }) {
+    //   state.asyncStatus.getAll = asyncStatusFail(payload.error)
+    // },
   },
 })

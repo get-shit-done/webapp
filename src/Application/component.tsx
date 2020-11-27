@@ -1,5 +1,6 @@
 import React, { useEffect } from 'react'
 import { Route, Switch, Redirect } from 'react-router-dom'
+import { ReactQueryDevtools } from 'react-query-devtools'
 import styled, { createGlobalStyle, ThemeProvider } from 'styled-components'
 import { useAppDispatch } from './Root/store'
 import { reset } from '../styles'
@@ -10,7 +11,7 @@ import SWUpdate from '../components/SWUpdate/component'
 import UseServiceWorker from '../hooks/useServiceWorker'
 import { actions as actionsCalendar } from '../reducers/calendar'
 import { actions as actionsSettings } from '../reducers/settings'
-import { actions as actionsTodos } from '../reducers/todos'
+// import { actions as actionsTodos } from '../reducers/todos'
 import { useSelector } from 'react-redux'
 import { AppState } from './Root'
 
@@ -23,6 +24,8 @@ const PageWrap = styled.div`
   width: 100%;
   height: 100vh;
 `
+// refetchOnMount, refetchOnWindowFocus
+
 
 const Application = () => {
   const [isUpdateAvailable] = UseServiceWorker(false)
@@ -32,11 +35,12 @@ const Application = () => {
   useEffect(() => {
     dispatch(actionsCalendar.getTasksRequested({ date: new Date() }))
     dispatch(actionsSettings.getGroupsRequested())
-    dispatch(actionsTodos.getTodosRequested())
+    // dispatch(actionsTodos.getTodosRequested())
   }, [])
 
   return (
     <div>
+      <ReactQueryDevtools initialIsOpen />
       <GlobalStyle />
       <ThemeProvider theme={themeValues}>
         <PageWrap>

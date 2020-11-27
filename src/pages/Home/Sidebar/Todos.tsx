@@ -12,6 +12,9 @@ import { SpinnerLoader } from '../../../components/Loader'
 import { determineAsyncStatus } from '../../../utils'
 import { TextError } from '../../../components/error'
 import { AsyncSvgButton } from '../../../components/Button'
+import axios from 'axios'
+import { API_TODOS } from '../../../api'
+import { useQuery } from 'react-query'
 
 const Todo = styled.div<{ isDone: boolean, isError: boolean }>`
   position: relative;
@@ -55,10 +58,22 @@ const Remove = styled(Svg)`
 const TodosSpinner = styled(SpinnerLoader)`
 `
 
+
+export function useTodos() {
+  return useQuery<Todo[], Error>(
+    'todos',
+    () => axios.get(API_TODOS).then(res => res.data.data)
+  )
+}
+
 const Todos = () => {
+  const { isLoading, isError, data: todos = [], error } = useTodos()
+  console.log('datatat', todos)
+
+
   const { addTodoRequested, removeTodoRequested, toggleTodoRequested } = todoActions
-  const { todos, asyncStatus } = useSelector((state: AppState) => state.todos.present)
-  const { getAll, add, toggle, remove } = asyncStatus
+  const { asyncStatus } = useSelector((state: AppState) => state.todos.present)
+  // const { getAll, add, toggle, remove } = asyncStatus
   const dispatch = useAppDispatch()
   const onAddNewTodo = (todo: NewTodo) => { dispatch(addTodoRequested(todo)) }
   const onRemoveTodo = (_id: string, todoName: string) => {
@@ -68,20 +83,22 @@ const Todos = () => {
 
   return (
     <>
+      {isLoading && <div>LOADING:ADINGLOADING</div>}
+      {isError && <div>Error: {error.message}</div>}
       <AddNewTodo addNewTodo={onAddNewTodo} />
-      <TodosSpinner size={4} asyncStatus={getAll} />
-      <TextError asyncStatus={getAll} />
+      {/* <TodosSpinner size={4} asyncStatus={getAll} />
+      <TextError asyncStatus={getAll} /> */}
       {todos.map(({ _id, todoName, isDone }: Todo) => {
-        const asyncStatusList = [toggle[_id], add[_id], remove[_id]]
-        const { isError } = determineAsyncStatus(asyncStatusList)
+        // const asyncStatusList = [toggle[_id], add[_id], remove[_id]]
+        // const { isError } = determineAsyncStatus(asyncStatusList)
 
         return (
           <Todo isDone={isDone} isError={isError} key={_id}>
             <Name onClick={() => dispatch(toggleTodoRequested({ _id, isDone: !isDone }))}>{todoName}</Name>
             <Actions>
-              <AsyncSvgButton asyncStatus={asyncStatusList}>
+              {/* <AsyncSvgButton asyncStatus={asyncStatusList}> */}
                 <Remove theme="light" svg={binSvg} onClick={() => onRemoveTodo(_id, todoName)} />
-              </AsyncSvgButton>
+              {/* </AsyncSvgButton> */}
             </Actions>
           </Todo>
         )

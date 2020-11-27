@@ -4,14 +4,14 @@ import { actions } from '../reducers/todos'
 import { API_TODOS, API_TODOS_BY_ID } from '../api'
 import { payloadError } from '../utils'
 
-function* getTodos() {
-  try {
-    const response = yield call(axios.get, API_TODOS)
-    yield put({ type: actions.getTodosSucceeded.toString(), payload: response.data.data })
-  } catch (error) {
-    yield put({ type: actions.getTodosFailed.toString(), payload: payloadError({ error: error.message }) })
-  }
-}
+// function* getTodos() {
+//   try {
+//     const response = yield call(axios.get, API_TODOS)
+//     yield put({ type: actions.getTodosSucceeded.toString(), payload: response.data.data })
+//   } catch (error) {
+//     yield put({ type: actions.getTodosFailed.toString(), payload: payloadError({ error: error.message }) })
+//   }
+// }
 function* addTodo({ payload }: any) {
   try {
     const response = yield call(axios.post, API_TODOS, payload)
@@ -46,7 +46,7 @@ function* toggleTodo({ payload }: any) {
   }
 }
 export function* todoSagas() {
-  yield takeLatest(actions.getTodosRequested.toString(), getTodos),
+  // yield takeLatest(actions.getTodosRequested.toString(), getTodos),
     yield takeLatest(actions.addTodoRequested.toString(), addTodo),
     yield takeEvery(actions.removeTodoRequested.toString(), removeTodo),
     yield takeEvery(actions.toggleTodoRequested.toString(), toggleTodo)
