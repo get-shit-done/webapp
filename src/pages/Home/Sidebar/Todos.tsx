@@ -13,7 +13,7 @@ import { determineAsyncStatus } from '../../../utils'
 import { TextError } from '../../../components/error'
 import { AsyncSvgButton } from '../../../components/Button'
 import axios from 'axios'
-import { API_TODOS, API_TODOS_BY_ID, getTodos, updateTodo } from '../../../api'
+import { API_TODOS, API_TODOS_BY_ID, getTodos, updateTodo, removeTodo } from '../../../api'
 import { useMutation, useQuery, useQueryCache } from 'react-query'
 
 const Todo = styled.div<{ isDone: boolean, isError: boolean }>`
@@ -83,8 +83,25 @@ export function useUpdateTodo() {
   
       return () => queryCache.setQueryData('todos', previousTodos)
     },
-    // If the mutation fails, use the rollback function we returned above
-    // onError: (err, newTodo, rollback) => rollback(),
+    onError: (err, newTodo, rollback: () => void) => rollback(),
+    onSettled: () => {
+      queryCache.invalidateQueries('todos')
+    },
+  })
+}
+
+export function useRemoveTodo() {
+  const queryCache = useQueryCache()
+
+  return useMutation(removeTodo, {
+    onMutate: newTodo => {
+      queryCache.cancelQueries('todos')
+      const previousTodos = queryCache.getQueryData('todos')
+      queryCache.setQueryData('todos', (oldQuery: Todo[]) => oldQuery.filter(query => query._id !== newTodo._id))
+  
+      return () => queryCache.setQueryData('todos', previousTodos)
+    },
+    onError: (err, newTodo, rollback: () => void) => rollback(),
     onSettled: () => {
       queryCache.invalidateQueries('todos')
     },
@@ -99,6 +116,7 @@ const Todos = () => {
 
 
   const [editMutate] = useUpdateTodo()
+  const [removeMutate] = useRemoveTodo()
 
 
   const onEdit = ({ _id, isDone }: { _id: string, isDone: boolean }) => {
@@ -107,13 +125,14 @@ const Todos = () => {
   }
 
 
-  const { addTodoRequested, removeTodoRequested } = todoActions
+  const { addTodoRequested } = todoActions
   const { asyncStatus } = useSelector((state: AppState) => state.todos.present)
   // const { getAll, add, toggle, remove } = asyncStatus
   const dispatch = useAppDispatch()
   const onAddNewTodo = (todo: NewTodo) => { dispatch(addTodoRequested(todo)) }
   const onRemoveTodo = (_id: string, todoName: string) => {
-    dispatch(removeTodoRequested({ _id }))
+    // dispatch(removeTodoRequested({ _id }))
+    removeMutate({ _id })
     dispatch(toastActions.addToast({ prefix: 'task removed', message: todoName }))
   }
 

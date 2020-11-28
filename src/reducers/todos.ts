@@ -60,16 +60,16 @@ export const { reducer, actions } = createSlice({
     addTodoFailed(state, { payload }) {
       state.asyncStatus.add['new-todo'] = asyncStatusFail(payload.error)
     },
-    removeTodoRequested(state, { payload }: PayloadAction<{ _id: string }>): void {
-      state.asyncStatus.remove[payload._id] = asyncStatusRequested
-    },
-    removeTodoSucceeded(state, { payload }) {
-      state.todos = state.todos.filter(x => x._id !== payload._id)
-      state.asyncStatus.remove[payload._id] = asyncStatusSuccess
-    },
-    removeTodoFailed(state, { payload }) {
-      state.asyncStatus.remove[payload._id] = asyncStatusFail(payload.error)
-    },
+    // removeTodoRequested(state, { payload }: PayloadAction<{ _id: string }>): void {
+    //   state.asyncStatus.remove[payload._id] = asyncStatusRequested
+    // },
+    // removeTodoSucceeded(state, { payload }) {
+    //   state.todos = state.todos.filter(x => x._id !== payload._id)
+    //   state.asyncStatus.remove[payload._id] = asyncStatusSuccess
+    // },
+    // removeTodoFailed(state, { payload }) {
+    //   state.asyncStatus.remove[payload._id] = asyncStatusFail(payload.error)
+    // },
     // toggleTodoRequested(state, { payload }: PayloadAction<{ _id: string; isDone: boolean }>): void {
     //   const todo = state.todos.find(x => x._id === payload._id)
     //   todo.isDone = payload.isDone
