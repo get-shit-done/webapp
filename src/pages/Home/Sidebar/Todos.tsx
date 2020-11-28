@@ -13,8 +13,8 @@ import { determineAsyncStatus } from '../../../utils'
 import { TextError } from '../../../components/error'
 import { AsyncSvgButton } from '../../../components/Button'
 import axios from 'axios'
-import { API_TODOS } from '../../../api'
-import { useQuery } from 'react-query'
+import { API_TODOS, API_TODOS_BY_ID, getTodos, updateTodo } from '../../../api'
+import { useMutation, useQuery, useQueryCache } from 'react-query'
 
 const Todo = styled.div<{ isDone: boolean, isError: boolean }>`
   position: relative;
@@ -62,16 +62,52 @@ const TodosSpinner = styled(SpinnerLoader)`
 export function useTodos() {
   return useQuery<Todo[], Error>(
     'todos',
-    () => axios.get(API_TODOS).then(res => res.data.data)
+    getTodos
   )
+}
+
+export function useUpdateTodo() {
+  const queryCache = useQueryCache()
+
+  return useMutation(updateTodo, {
+    onMutate: newTodo => {
+      queryCache.cancelQueries('todos')
+      const previousTodos = queryCache.getQueryData('todos')
+      queryCache.setQueryData('todos', (oldQuery: Todo[]) => oldQuery.map(query => {
+        if (query._id !== newTodo._id) return query
+        return {
+          ...query,
+          ...newTodo,
+        }
+      }))
+  
+      return () => queryCache.setQueryData('todos', previousTodos)
+    },
+    // If the mutation fails, use the rollback function we returned above
+    // onError: (err, newTodo, rollback) => rollback(),
+    onSettled: () => {
+      queryCache.invalidateQueries('todos')
+    },
+  })
 }
 
 const Todos = () => {
   const { isLoading, isError, data: todos = [], error } = useTodos()
-  console.log('datatat', todos)
+  // const [mutate] = useMutation(updateTodo, {
+  //  onSuccess: (data, variables) => queryCache.setQueryData(['todos', { _id: variables._id, isDone: variables.isDone }], data),
+  // })
 
 
-  const { addTodoRequested, removeTodoRequested, toggleTodoRequested } = todoActions
+  const [editMutate] = useUpdateTodo()
+
+
+  const onEdit = ({ _id, isDone }: { _id: string, isDone: boolean }) => {
+    console.log(_id, isDone)
+    editMutate({ _id, isDone })
+  }
+
+
+  const { addTodoRequested, removeTodoRequested } = todoActions
   const { asyncStatus } = useSelector((state: AppState) => state.todos.present)
   // const { getAll, add, toggle, remove } = asyncStatus
   const dispatch = useAppDispatch()
@@ -83,8 +119,8 @@ const Todos = () => {
 
   return (
     <>
-      {isLoading && <div>LOADING:ADINGLOADING</div>}
-      {isError && <div>Error: {error.message}</div>}
+      {/* {isLoading && <div>LOADING:ADINGLOADING</div>}
+      {isError && <div>Error: {error.message}</div>} */}
       <AddNewTodo addNewTodo={onAddNewTodo} />
       {/* <TodosSpinner size={4} asyncStatus={getAll} />
       <TextError asyncStatus={getAll} /> */}
@@ -94,7 +130,8 @@ const Todos = () => {
 
         return (
           <Todo isDone={isDone} isError={isError} key={_id}>
-            <Name onClick={() => dispatch(toggleTodoRequested({ _id, isDone: !isDone }))}>{todoName}</Name>
+            {/* <Name onClick={() => dispatch(toggleTodoRequested({ _id, isDone: !isDone }))}>{todoName}</Name> */}
+            <Name onClick={() => onEdit({ _id, isDone: !isDone })}>{todoName}</Name>
             <Actions>
               {/* <AsyncSvgButton asyncStatus={asyncStatusList}> */}
                 <Remove theme="light" svg={binSvg} onClick={() => onRemoveTodo(_id, todoName)} />

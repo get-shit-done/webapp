@@ -70,17 +70,17 @@ export const { reducer, actions } = createSlice({
     removeTodoFailed(state, { payload }) {
       state.asyncStatus.remove[payload._id] = asyncStatusFail(payload.error)
     },
-    toggleTodoRequested(state, { payload }: PayloadAction<{ _id: string; isDone: boolean }>): void {
-      const todo = state.todos.find(x => x._id === payload._id)
-      todo.isDone = payload.isDone
-      state.asyncStatus.toggle[payload._id] = asyncStatusRequested
-    },
-    toggleTodoSucceeded(state, { payload }) {
-      state.asyncStatus.toggle[payload._id] = asyncStatusSuccess
-    },
-    toggleTodoFailed(state, { payload }) {
-      state.asyncStatus.toggle[payload._id] = asyncStatusFail(payload.error)
-    },
+    // toggleTodoRequested(state, { payload }: PayloadAction<{ _id: string; isDone: boolean }>): void {
+    //   const todo = state.todos.find(x => x._id === payload._id)
+    //   todo.isDone = payload.isDone
+    //   state.asyncStatus.toggle[payload._id] = asyncStatusRequested
+    // },
+    // toggleTodoSucceeded(state, { payload }) {
+    //   state.asyncStatus.toggle[payload._id] = asyncStatusSuccess
+    // },
+    // toggleTodoFailed(state, { payload }) {
+    //   state.asyncStatus.toggle[payload._id] = asyncStatusFail(payload.error)
+    // },
     // getTodosRequested(state) {
     //   state.asyncStatus.getAll = asyncStatusRequested
     // },

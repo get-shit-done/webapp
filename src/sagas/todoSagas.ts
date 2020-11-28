@@ -34,20 +34,20 @@ function* removeTodo({ payload }: any) {
     })
   }
 }
-function* toggleTodo({ payload }: any) {
-  try {
-    const response = yield call(axios.patch, API_TODOS_BY_ID(payload._id), payload)
-    yield put({ type: actions.toggleTodoSucceeded.toString(), payload: response.data.data })
-  } catch (error) {
-    yield put({
-      type: actions.toggleTodoFailed.toString(),
-      payload: payloadError({ _id: payload._id, error: error.message }),
-    })
-  }
-}
+// function* toggleTodo({ payload }: any) {
+//   try {
+//     const response = yield call(axios.patch, API_TODOS_BY_ID(payload._id), payload)
+//     yield put({ type: actions.toggleTodoSucceeded.toString(), payload: response.data.data })
+//   } catch (error) {
+//     yield put({
+//       type: actions.toggleTodoFailed.toString(),
+//       payload: payloadError({ _id: payload._id, error: error.message }),
+//     })
+//   }
+// }
 export function* todoSagas() {
   // yield takeLatest(actions.getTodosRequested.toString(), getTodos),
     yield takeLatest(actions.addTodoRequested.toString(), addTodo),
-    yield takeEvery(actions.removeTodoRequested.toString(), removeTodo),
-    yield takeEvery(actions.toggleTodoRequested.toString(), toggleTodo)
+    yield takeEvery(actions.removeTodoRequested.toString(), removeTodo)
+    // yield takeEvery(actions.toggleTodoRequested.toString(), toggleTodo)
 }
