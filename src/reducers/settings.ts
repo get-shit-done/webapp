@@ -112,14 +112,14 @@ export const { reducer, actions } = createSlice({
       state.themeValues = themes[theme]
       state.themeName = theme
     },
-    getGroupsRequested(): void {},
-    getGroupsSucceeded(state, { payload }: PayloadAction<IGroup[]>): void {
-      // console.log('grt groups succeded', payload)
-      state.groups = payload
-    },
-    getGroupsFailed() {
-      console.log('failed to get groups')
-    },
+    // getGroupsRequested(): void {},
+    // getGroupsSucceeded(state, { payload }: PayloadAction<IGroup[]>): void {
+    //   // console.log('grt groups succeded', payload)
+    //   state.groups = payload
+    // },
+    // getGroupsFailed() {
+    //   console.log('failed to get groups')
+    // },
     updateGroupRequested(
       state,
       { payload: { groupId, colorId } }: PayloadAction<{ groupId: string; colorId: string }>,

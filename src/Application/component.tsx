@@ -10,7 +10,7 @@ import Home from '../pages/Home/Home'
 import SWUpdate from '../components/SWUpdate/component'
 import UseServiceWorker from '../hooks/useServiceWorker'
 import { actions as actionsCalendar } from '../reducers/calendar'
-import { actions as actionsSettings } from '../reducers/settings'
+// import { actions as actionsSettings } from '../reducers/settings'
 // import { actions as actionsTodos } from '../reducers/todos'
 import { useSelector } from 'react-redux'
 import { AppState } from './Root'
@@ -42,7 +42,7 @@ const Application = () => {
 
   useEffect(() => {
     dispatch(actionsCalendar.getTasksRequested({ date: new Date() }))
-    dispatch(actionsSettings.getGroupsRequested())
+    // dispatch(actionsSettings.getGroupsRequested())
     // dispatch(actionsTodos.getTodosRequested())
   }, [])
 

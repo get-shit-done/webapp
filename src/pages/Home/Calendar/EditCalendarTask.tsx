@@ -10,6 +10,7 @@ import { AppState, useAppDispatch } from '../../../Application/Root'
 import { ModalFooter } from '../../../components/Modal'
 import { CalendarFormValues } from './shared'
 import { AsyncButton, AsyncSvgButton } from '../../../components/Button'
+import { IGroup } from '../../../reducers/settings'
 
 const Form = styled.form``
 
@@ -20,12 +21,17 @@ const RemoveSvg = styled(Svg)`
   ${styleDangerHover};
 `
 
+interface IProps {
+  groups: IGroup[]
+}
+
 // TODO: timestamp should come from taskBeingEdited
-const EditCalendarTask: FC = () => {
+const EditCalendarTask: FC<IProps> = ({ groups }) => {
   // console.log('COMP: Edit form')
   const dispatch = useAppDispatch()
   const { taskBeingEdited, asyncStatus } = useSelector((state: AppState) => state.calendar)
-  const { groups, colors } = useSelector((state: AppState) => state.settings)
+  // const { groups, colors } = useSelector((state: AppState) => state.settings)
+  const { colors } = useSelector((state: AppState) => state.settings)
   const [selectedGroup, setSelectedGroup] = useState(groups.find(x => x.name === taskBeingEdited.group))
   const { _id, time, name, group } = taskBeingEdited
   const accentColor = selectedGroup ? colors[selectedGroup.colorId] : undefined
@@ -80,6 +86,7 @@ const EditCalendarTask: FC = () => {
         theme="light"
         label="select group"
         activeGroup={selectedGroup}
+        groups={groups}
         onSelect={group => setSelectedGroup(group)}
         inputRef={register({ required: true, maxLength: 80 })}
       />

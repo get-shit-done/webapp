@@ -3,14 +3,14 @@ import axios from 'axios'
 import { actions } from '../reducers/settings'
 import { API_GROUPS, API_GROUPS_BY_ID } from '../api'
 
-function* getGroups() {
-  try {
-    const response = yield axios.get(API_GROUPS)
-    yield put({ type: actions.getGroupsSucceeded.toString(), payload: response.data.data })
-  } catch (error) {
-    yield put({ type: actions.getGroupsFailed.toString, payload: error.message })
-  }
-}
+// function* getGroups() {
+//   try {
+//     const response = yield axios.get(API_GROUPS)
+//     yield put({ type: actions.getGroupsSucceeded.toString(), payload: response.data.data })
+//   } catch (error) {
+//     yield put({ type: actions.getGroupsFailed.toString, payload: error.message })
+//   }
+// }
 
 function* updateGroup(data: any) {
   try {
@@ -22,7 +22,7 @@ function* updateGroup(data: any) {
 }
 
 function* groupSagas() {
-  yield takeLatest(actions.getGroupsRequested.toString(), getGroups),
+  // yield takeLatest(actions.getGroupsRequested.toString(), getGroups),
     yield takeLatest(actions.updateGroupRequested.toString(), updateGroup)
 }
 

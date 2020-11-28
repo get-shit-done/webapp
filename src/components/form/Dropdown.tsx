@@ -53,13 +53,15 @@ interface IProps {
   isInForm?: boolean
   activeGroup?: any
   label: string
+  groups: IGroup[]
   onSelect(item: any): void
   inputRef(instance: HTMLInputElement): void
 }
 
 // TODO: rename this into group dd
-const Dropdown: FC<IProps> = ({ theme, isInForm, activeGroup = {}, label, onSelect, inputRef }) => {
-  const { groups, colors } = useSelector((state: AppState) => state.settings)
+const Dropdown: FC<IProps> = ({ theme, isInForm, activeGroup = {}, label, groups, onSelect, inputRef }) => {
+  // const { groups, colors } = useSelector((state: AppState) => state.settings)
+  const { colors } = useSelector((state: AppState) => state.settings)
   const [isOpen, setIsOpen] = useState(false)
   const accentColor = activeGroup.colorId ? colors[activeGroup.colorId] : undefined
 

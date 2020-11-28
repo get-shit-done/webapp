@@ -7,6 +7,7 @@ import { actions, TaskWithMeta } from '../../../reducers/calendar'
 import { AppState, useAppDispatch } from '../../../Application/Root'
 import { taskShadow, taskShadowBeingEdited, CN_COLUMN, CN_TASK_GAP } from './shared'
 import { makeHoursAxis } from '../../../selectors'
+import { IGroup } from '../../../reducers/settings'
 
 
 interface ICell {
@@ -65,13 +66,15 @@ const CellGap = styled.div<{ flex: number }>`
 interface IProps {
   task: TaskWithMeta
   isBeingEdited: boolean
+  groups: IGroup[]
 }
 const Task: FC<IProps> = ({
   task: { _id, group, timestamp, name, gapBefore, gapAfter, heightInFlex },
+  groups,
   isBeingEdited,
 }) => {
   const hoursAxis = useSelector(makeHoursAxis)
-  const groups = useSelector((state: AppState) => state.settings.groups)
+  // const groups = useSelector((state: AppState) => state.settings.groups)
   const colors = useSelector((state: AppState) => state.settings.colors)
   const dispatch = useAppDispatch()
   const { colorId } = (groups.find(x => x.name === group) || {})
