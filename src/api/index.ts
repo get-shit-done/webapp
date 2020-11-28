@@ -1,3 +1,5 @@
+import axios from "axios"
+
 const URL = 'http://localhost:3005/api/v1'
 
 export const API_TASKS = `${URL}/tasks`
@@ -8,3 +10,7 @@ export const API_GROUPS_BY_ID = (id: string) => `${URL}/groups/${id}`
 
 export const API_TODOS = `${URL}/todos`
 export const API_TODOS_BY_ID = (id: string) => `${URL}/todos/${id}`
+
+
+export const getTodos = () => axios.get(API_TODOS).then(res => res.data.data)
+export const updateTodo = ({ _id, isDone }: { _id: string, isDone: boolean }) => axios.patch(API_TODOS_BY_ID(_id), { _id, isDone })
