@@ -1,6 +1,6 @@
 import React from 'react'
 import styled from 'styled-components'
-import { NewTodo, Todo } from '../../../reducers/todos'
+import { NewTodo, Todo } from '../../../types'
 import { actions as toastActions } from '../../../components/Toast/reducer'
 import binSvg from '../../../assets/svg/bin.svg'
 import Svg, { styleDangerHover } from '../../../components/Svg/component'
