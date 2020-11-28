@@ -15,5 +15,6 @@ export const API_TODOS_BY_ID = (id: string) => `${URL}/todos/${id}`
 export const getTodos = () => axios.get(API_TODOS).then(res => res.data.data)
 export const updateTodo = ({ _id, isDone }: { _id: string, isDone: boolean }) => axios.patch(API_TODOS_BY_ID(_id), { _id, isDone })
 export const removeTodo = ({ _id }: { _id: string }) => axios.delete(API_TODOS_BY_ID(_id))
+export const addTodo = (payload: { todoName: string }) => axios.post(API_TODOS, payload)
 
-// axios.delete, API_TODOS_BY_ID(payload._id), payload
+// axios.post, API_TODOS, payload

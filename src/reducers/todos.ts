@@ -44,22 +44,22 @@ export const { reducer, actions } = createSlice({
   name: 'todos',
   initialState,
   reducers: {
-    addTodoRequested(state, { payload: { todoName } }: PayloadAction<NewTodo>): void {
-      state.todos.push({
-        _id: 'new-todo',
-        isDone: false,
-        todoName,
-      })
-      state.asyncStatus.add['new-todo'] = asyncStatusRequested
-    },
-    addTodoSucceeded(state, { payload }: PayloadAction<{ _id: string }>): void {
-      const newTodo = state.todos.find(x => x._id === 'new-todo')
-      newTodo._id = payload._id
-      state.asyncStatus.add['new-todo'] = asyncStatusSuccess
-    },
-    addTodoFailed(state, { payload }) {
-      state.asyncStatus.add['new-todo'] = asyncStatusFail(payload.error)
-    },
+    // addTodoRequested(state, { payload: { todoName } }: PayloadAction<NewTodo>): void {
+    //   state.todos.push({
+    //     _id: 'new-todo',
+    //     isDone: false,
+    //     todoName,
+    //   })
+    //   state.asyncStatus.add['new-todo'] = asyncStatusRequested
+    // },
+    // addTodoSucceeded(state, { payload }: PayloadAction<{ _id: string }>): void {
+    //   const newTodo = state.todos.find(x => x._id === 'new-todo')
+    //   newTodo._id = payload._id
+    //   state.asyncStatus.add['new-todo'] = asyncStatusSuccess
+    // },
+    // addTodoFailed(state, { payload }) {
+    //   state.asyncStatus.add['new-todo'] = asyncStatusFail(payload.error)
+    // },
     // removeTodoRequested(state, { payload }: PayloadAction<{ _id: string }>): void {
     //   state.asyncStatus.remove[payload._id] = asyncStatusRequested
     // },
