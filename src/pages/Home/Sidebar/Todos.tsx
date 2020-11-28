@@ -1,19 +1,16 @@
 import React from 'react'
 import styled from 'styled-components'
-import { useSelector } from 'react-redux'
-import { actions as todoActions, NewTodo, Todo } from '../../../reducers/todos'
+import { NewTodo, Todo } from '../../../reducers/todos'
 import { actions as toastActions } from '../../../components/Toast/reducer'
 import binSvg from '../../../assets/svg/bin.svg'
 import Svg, { styleDangerHover } from '../../../components/Svg/component'
-import { AppState, useAppDispatch } from '../../../Application/Root'
+import { useAppDispatch } from '../../../Application/Root'
 
 import AddNewTodo from './AddNewTodo'
 import { SpinnerLoader } from '../../../components/Loader'
-import { determineAsyncStatus } from '../../../utils'
 import { TextError } from '../../../components/error'
 import { AsyncSvgButton } from '../../../components/Button'
-import axios from 'axios'
-import { API_TODOS, API_TODOS_BY_ID, getTodos, updateTodo, removeTodo, addTodo } from '../../../api'
+import { getTodos, updateTodo, removeTodo, addTodo } from '../../../api'
 import { useMutation, useQuery, useQueryCache } from 'react-query'
 
 const Todo = styled.div<{ isDone: boolean, isError: boolean }>`
@@ -128,11 +125,6 @@ export function useAddTodo() {
 
 const Todos = () => {
   const { isLoading, isError, data: todos = [], error } = useTodos()
-  // const [mutate] = useMutation(updateTodo, {
-  //  onSuccess: (data, variables) => queryCache.setQueryData(['todos', { _id: variables._id, isDone: variables.isDone }], data),
-  // })
-
-
   const [editMutate] = useUpdateTodo()
   const [removeMutate] = useRemoveTodo()
   const [addMutate] = useAddTodo()
@@ -144,21 +136,15 @@ const Todos = () => {
   }
 
 
-  // const { addTodoRequested } = todoActions
-  const { asyncStatus } = useSelector((state: AppState) => state.todos.present)
-  // const { getAll, add, toggle, remove } = asyncStatus
   const dispatch = useAppDispatch()
   const onAddNewTodo = (todo: NewTodo) => { addMutate(todo) }
   const onRemoveTodo = (_id: string, todoName: string) => {
-    // dispatch(removeTodoRequested({ _id }))
     removeMutate({ _id })
     dispatch(toastActions.addToast({ prefix: 'task removed', message: todoName }))
   }
 
   return (
     <>
-      {/* {isLoading && <div>LOADING:ADINGLOADING</div>}
-      {isError && <div>Error: {error.message}</div>} */}
       <AddNewTodo addNewTodo={onAddNewTodo} />
       {/* <TodosSpinner size={4} asyncStatus={getAll} />
       <TextError asyncStatus={getAll} /> */}
