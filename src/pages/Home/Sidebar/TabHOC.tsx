@@ -10,13 +10,13 @@ const Title = styled.div`
   margin-bottom: 3.4rem;
 `
 
-const TabHOC = (Component: any) => ({ isActive, title }: { isActive: boolean, title: string }) => {
+const TabHOC = (Component: any) => ({ isActive, title, customProps = {} }: { isActive: boolean, title: string, customProps: object }) => {
 
   return (
     <Wrap isActive={isActive}>
       <Title>{title}</Title>
 
-      <Component />
+      <Component customProps={customProps} />
     </Wrap>
   )
 }

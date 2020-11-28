@@ -70,7 +70,7 @@ const Home = () => {
         <Toast />
       </Wrap>
 
-      <Sidebar isOpen={isOpen} setIsOpen={onSidebarToggle} />
+      <Sidebar isOpen={isOpen} groups={groups} setIsOpen={onSidebarToggle} />
     </PageWrap>
   )
 }

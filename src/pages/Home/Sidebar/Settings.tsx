@@ -7,8 +7,9 @@ import binSvg from '../../../assets/svg/bin.svg'
 import Svg, { styleDangerHover } from '../../../components/Svg/component'
 import { useAppDispatch, AppState } from '../../../Application/Root'
 import { useSelector } from 'react-redux'
-import { actions } from '../../../reducers/settings'
+import { actions, IGroup } from '../../../reducers/settings'
 import Colorpicker from '../../../components/Colorpicker/component'
+import { useUpdateGroup } from '../hooks/useHome'
 
 const Form = styled.form`
   margin-bottom: var(--size-md);
@@ -38,9 +39,14 @@ const Remove = styled(Svg)`
   ${styleDangerHover};
 `
 
-const Settings: FC = () => {
+interface IProps {
+  customProps: { groups: IGroup[] }
+}
+
+const Settings: FC<IProps> = ({ customProps: { groups = [] } }) => {
+  const [editMutate] = useUpdateGroup()
   const dispatch = useAppDispatch()
-  const { defaultHoursFrom, defaultHoursTo, colors, groups } = useSelector((state: AppState) => state.settings)
+  const { defaultHoursFrom, defaultHoursTo, colors } = useSelector((state: AppState) => state.settings)
   const { register, handleSubmit, errors } = useForm()
 
   const onSubmit = (data: any) => {
@@ -56,7 +62,8 @@ const Settings: FC = () => {
   }
 
   const onColorSelect = ({ selectedColor: { colorId }, _id }: { selectedColor: { colorId: string }, _id: string }) => {
-    dispatch(actions.updateGroupRequested({ groupId: _id, colorId }))
+    // dispatch(actions.updateGroupRequested({ groupId: _id, colorId }))
+    editMutate({ groupId: _id, colorId })
   }
 
   return (

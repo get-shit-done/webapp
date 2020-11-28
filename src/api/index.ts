@@ -12,6 +12,7 @@ export const API_TODOS = `${URL}/todos`
 export const API_TODOS_BY_ID = (id: string) => `${URL}/todos/${id}`
 
 export const getGroups = () => axios.get(API_GROUPS).then(res => res.data.data)
+export const updateGroup = ({ groupId, colorId }: { groupId: string, colorId: string }) => axios.patch(API_GROUPS_BY_ID(groupId), { colorId })
 
 
 export const getTodos = () => axios.get(API_TODOS).then(res => res.data.data)

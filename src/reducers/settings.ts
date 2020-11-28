@@ -120,15 +120,15 @@ export const { reducer, actions } = createSlice({
     // getGroupsFailed() {
     //   console.log('failed to get groups')
     // },
-    updateGroupRequested(
-      state,
-      { payload: { groupId, colorId } }: PayloadAction<{ groupId: string; colorId: string }>,
-    ): void {
-      const groupToUpdate = state.groups.find(x => x._id === groupId)
-      groupToUpdate.colorId = colorId
-    },
-    updateGroupSucceeded(): void {},
-    updateGroupFailed(): void {},
+    // updateGroupRequested(
+    //   state,
+    //   { payload: { groupId, colorId } }: PayloadAction<{ groupId: string; colorId: string }>,
+    // ): void {
+    //   const groupToUpdate = state.groups.find(x => x._id === groupId)
+    //   groupToUpdate.colorId = colorId
+    // },
+    // updateGroupSucceeded(): void {},
+    // updateGroupFailed(): void {},
     removeGroup(state, { payload: { _id } }: PayloadAction<{ _id: string }>): void {
       state.groups = state.groups.filter(x => x._id !== _id)
     },
