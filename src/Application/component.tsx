@@ -14,6 +14,7 @@ import { actions as actionsSettings } from '../reducers/settings'
 // import { actions as actionsTodos } from '../reducers/todos'
 import { useSelector } from 'react-redux'
 import { AppState } from './Root'
+import { QueryCache, ReactQueryCacheProvider } from 'react-query'
 
 const GlobalStyle = createGlobalStyle`
   ${reset};
@@ -25,7 +26,14 @@ const PageWrap = styled.div`
   height: 100vh;
 `
 // refetchOnMount, refetchOnWindowFocus
-
+const queryCache = new QueryCache({
+  defaultConfig: {
+    queries: {
+      refetchOnWindowFocus: false,
+      refetchOnMount: false,
+    },
+  },
+})
 
 const Application = () => {
   const [isUpdateAvailable] = UseServiceWorker(false)
@@ -40,17 +48,19 @@ const Application = () => {
 
   return (
     <div>
-      <ReactQueryDevtools initialIsOpen />
-      <GlobalStyle />
-      <ThemeProvider theme={themeValues}>
-        <PageWrap>
-          <Switch>
-            <Route exact path={homePath()} component={Home} />
-            <Redirect to={homePath()} />
-          </Switch>
-          <SWUpdate isUpdateAvailable={isUpdateAvailable} />
-        </PageWrap>
-      </ThemeProvider>
+      <ReactQueryCacheProvider queryCache={queryCache}>
+        <ReactQueryDevtools initialIsOpen />
+        <GlobalStyle />
+        <ThemeProvider theme={themeValues}>
+          <PageWrap>
+            <Switch>
+              <Route exact path={homePath()} component={Home} />
+              <Redirect to={homePath()} />
+            </Switch>
+            <SWUpdate isUpdateAvailable={isUpdateAvailable} />
+          </PageWrap>
+        </ThemeProvider>
+      </ReactQueryCacheProvider>
     </div>
   )
 }
