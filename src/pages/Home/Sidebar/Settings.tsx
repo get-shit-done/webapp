@@ -9,7 +9,7 @@ import { useAppDispatch, AppState } from '../../../Application/Root'
 import { useSelector } from 'react-redux'
 import { actions, IGroup } from '../../../reducers/settings'
 import Colorpicker from '../../../components/Colorpicker/component'
-import { useUpdateGroup } from '../hooks/useHome'
+import { useRemoveGroup, useUpdateGroup } from '../hooks/useHome'
 
 const Form = styled.form`
   margin-bottom: var(--size-md);
@@ -45,6 +45,7 @@ interface IProps {
 
 const Settings: FC<IProps> = ({ customProps: { groups = [] } }) => {
   const [editMutate] = useUpdateGroup()
+  const [removeMutate] = useRemoveGroup()
   const dispatch = useAppDispatch()
   const { defaultHoursFrom, defaultHoursTo, colors } = useSelector((state: AppState) => state.settings)
   const { register, handleSubmit, errors } = useForm()
@@ -58,11 +59,10 @@ const Settings: FC<IProps> = ({ customProps: { groups = [] } }) => {
   }
 
   const onRemoveGroup = (_id: string) => {
-    dispatch(actions.removeGroup({ _id }))
+    removeMutate({ _id })
   }
 
   const onColorSelect = ({ selectedColor: { colorId }, _id }: { selectedColor: { colorId: string }, _id: string }) => {
-    // dispatch(actions.updateGroupRequested({ groupId: _id, colorId }))
     editMutate({ groupId: _id, colorId })
   }
 
