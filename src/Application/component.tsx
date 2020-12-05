@@ -1,17 +1,13 @@
-import React, { useEffect } from 'react'
+import React from 'react'
 import { Route, Switch, Redirect } from 'react-router-dom'
 import { ReactQueryDevtools } from 'react-query-devtools'
 import styled, { createGlobalStyle, ThemeProvider } from 'styled-components'
-import { useAppDispatch } from './Root/store'
 import { reset } from '../styles'
 
 import { homePath } from './paths'
 import Home from '../pages/Home/Home'
 import SWUpdate from '../components/SWUpdate/component'
 import UseServiceWorker from '../hooks/useServiceWorker'
-import { actions as actionsCalendar } from '../reducers/calendar'
-// import { actions as actionsSettings } from '../reducers/settings'
-// import { actions as actionsTodos } from '../reducers/todos'
 import { useSelector } from 'react-redux'
 import { AppState } from './Root'
 import { QueryCache, ReactQueryCacheProvider } from 'react-query'
@@ -38,13 +34,6 @@ const queryCache = new QueryCache({
 const Application = () => {
   const [isUpdateAvailable] = UseServiceWorker(false)
   const { themeValues } = useSelector((state: AppState) => state.settings)
-  const dispatch = useAppDispatch()
-
-  useEffect(() => {
-    dispatch(actionsCalendar.getTasksRequested({ date: new Date() }))
-    // dispatch(actionsSettings.getGroupsRequested())
-    // dispatch(actionsTodos.getTodosRequested())
-  }, [])
 
   return (
     <div>
