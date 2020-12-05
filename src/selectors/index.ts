@@ -1,5 +1,5 @@
 import { createSelector } from '@reduxjs/toolkit'
-import { SavedTask } from '../reducers/calendar'
+import { SavedTask, IAllTasksByDay as IAllTasksByDayFromReducer } from '../reducers/calendar'
 import { AppState } from '../Application/Root'
 
 export interface IAllTasksByDay {
@@ -7,14 +7,14 @@ export interface IAllTasksByDay {
 }
 
 export const makeAllTasksByDayMapped = createSelector(
-  (state: AppState) => state.calendar.allTasksByDay,
-  (state: any, hoursAxis: number[]) => hoursAxis,
-  (allTasksByDay, hoursAxis) => {
+  ({ hoursAxis }: { hoursAxis: number[] }) => hoursAxis,
+  ({ allTasksByDay }: { allTasksByDay: IAllTasksByDayFromReducer }) => allTasksByDay,
+  (hoursAxis, allTasksByDay) => {
+    console.log('SELECTOR: all tasks by day mapped', hoursAxis, allTasksByDay)
     const mapped: IAllTasksByDay = {}
     if (Object.values(allTasksByDay).length === 0) {
       return {}
     }
-    // console.log('SELECTOR: all tasks by day mapped')
 
     Object.entries(allTasksByDay).forEach(([datestring, value]) => {
       mapped[datestring] = value.tasks.map((task: SavedTask, taskIndex: number) => {

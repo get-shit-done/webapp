@@ -1,6 +1,15 @@
 import { useMutation, useQuery, useQueryCache } from 'react-query'
-import { getGroups, removeGroup, updateGroup } from '../../../api'
+import { getTasks, getGroups, removeGroup, updateGroup } from '../../../api'
 import { IGroup } from '../../../reducers/settings'
+import { IAllTasksByDay } from '../../../reducers/calendar'
+
+export function useGetTasks() {
+  console.log('get tasks')
+  return useQuery<IAllTasksByDay, Error>(
+    'tasks',
+    getTasks
+  )
+}
 
 export function useGroups() {
   return useQuery<IGroup[], Error>(
@@ -8,6 +17,7 @@ export function useGroups() {
     getGroups
   )
 }
+
 export function useUpdateGroup() {
   const queryCache = useQueryCache()
 
@@ -52,8 +62,9 @@ export function useRemoveGroup() {
 
 export const useHome = () => {
   const { data: groups } = useGroups()
-
+  const { data: allTasksByDay = {} } = useGetTasks()
   return {
+    allTasksByDay,
     groups
   } as const
 }

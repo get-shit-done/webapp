@@ -5,18 +5,18 @@ import { API_TASKS, API_TASKS_BY_ID } from "../api";
 import { actions } from "../reducers/calendar";
 import { payloadError } from "../utils";
 
-function* fetchTasks({ payload }: any) {
-  try {
-    const formattedMonth = format(payload.date, "MMM");
-    const response = yield call(axios.get, `${API_TASKS}?month=${formattedMonth}`);
-    yield put({
-      type: actions.getTasksSuccess.toString(),
-      payload: { response: response.data.data, date: payload.date },
-    });
-  } catch (error) {
-    yield put({ type: actions.getTasksFail.toString(), payload: payloadError({ error: error.message }) });
-  }
-}
+// function* fetchTasks({ payload }: any) {
+//   try {
+//     const formattedMonth = format(payload.date, "MMM");
+//     const response = yield call(axios.get, `${API_TASKS}?month=${formattedMonth}`);
+//     yield put({
+//       type: actions.getTasksSuccess.toString(),
+//       payload: { response: response.data.data, date: payload.date },
+//     });
+//   } catch (error) {
+//     yield put({ type: actions.getTasksFail.toString(), payload: payloadError({ error: error.message }) });
+//   }
+// }
 
 function* addTask({ payload }: any) {
   try {
@@ -62,7 +62,7 @@ function* removeTask({ payload }: any) {
 }
 
 function* taskSagas() {
-  yield takeLatest(actions.getTasksRequested.toString(), fetchTasks),
+  // yield takeLatest(actions.getTasksRequested.toString(), fetchTasks),
     yield takeLatest(actions.addTaskRequested.toString(), addTask),
     yield takeLatest(actions.saveTaskRequested.toString(), saveTask),
     yield takeLatest(actions.removeTaskRequested.toString(), removeTask);
