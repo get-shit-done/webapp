@@ -9,6 +9,7 @@ import { AppState, useAppDispatch } from '../../../Application/Root'
 import { ModalFooter } from '../../../components/Modal'
 import { CalendarFormValues } from './shared'
 import { IGroup } from '../../../reducers/settings'
+import { useAddTask } from '../hooks/useHome'
 
 const Form = styled.form``
 
@@ -16,6 +17,7 @@ interface IProps {
   groups: IGroup[]
 }
 const AddNewCalendarTask: FC<IProps> = ({ groups }) => {
+  const [addNewTask] = useAddTask()
   const dispatch = useAppDispatch()
   const { taskBeingPrepared, asyncStatus } = useSelector((state: AppState) => state.calendar)
   const { timestamp, time } = taskBeingPrepared
@@ -25,15 +27,13 @@ const AddNewCalendarTask: FC<IProps> = ({ groups }) => {
   const { register, handleSubmit, errors, watch } = useForm<CalendarFormValues>()
   const onSubmit = (data: any) => {
     const { name, from, to } = data
-    dispatch(
-      actions.addTaskRequested({
-        name,
-        time: [Number(from), Number(to)],
-        timestamp,
-        group: selectedGroup.name,
-      }),
-    )
-  }
+    addNewTask({
+      name,
+      time: [Number(from), Number(to)],
+      timestamp,
+      group: selectedGroup.name,
+    })
+  };
   const watchedFields = watch()
   const accentColor = selectedGroup ? colors[selectedGroup.colorId] : undefined
 

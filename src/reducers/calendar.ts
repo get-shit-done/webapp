@@ -130,20 +130,20 @@ export const { reducer, actions } = createSlice({
     saveTaskFailed(state, { payload }: PayloadAction<{ error: string }>) {
       state.asyncStatus.saveTask = asyncStatusFail(payload.error);
     },
-    addTaskRequested(state, action: PayloadAction<NewTask>): void {
-      state.asyncStatus.addTask = asyncStatusRequestedInherit(state.asyncStatus.addTask);
-    },
-    addTaskSuccess(state, { payload }: PayloadAction<SavedTask>): void {
-      const affectedDay = state.allTasksByDay[payload.timestamp] || { tasks: [] };
-      affectedDay.tasks.push(payload);
-      state.allTasksByDay[payload.timestamp] = affectedDay;
+    // addTaskRequested(state, action: PayloadAction<NewTask>): void {
+    //   state.asyncStatus.addTask = asyncStatusRequestedInherit(state.asyncStatus.addTask);
+    // },
+    // addTaskSuccess(state, { payload }: PayloadAction<SavedTask>): void {
+    //   const affectedDay = state.allTasksByDay[payload.timestamp] || { tasks: [] };
+    //   affectedDay.tasks.push(payload);
+    //   state.allTasksByDay[payload.timestamp] = affectedDay;
 
-      state.taskBeingEdited = undefined;
-      state.asyncStatus.addTask = asyncStatusSuccess;
-    },
-    addTaskFailed(state, { payload }: PayloadAction<{ error: string }>) {
-      state.asyncStatus.addTask = asyncStatusFail(payload.error);
-    },
+    //   state.taskBeingEdited = undefined;
+    //   state.asyncStatus.addTask = asyncStatusSuccess;
+    // },
+    // addTaskFailed(state, { payload }: PayloadAction<{ error: string }>) {
+    //   state.asyncStatus.addTask = asyncStatusFail(payload.error);
+    // },
     getTasksRequested(state, { payload }: PayloadAction<{ date: Date }>) {
       state.asyncStatus.getTasks = asyncStatusRequested;
     },

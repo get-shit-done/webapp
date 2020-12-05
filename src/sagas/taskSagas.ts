@@ -1,6 +1,6 @@
 import { call, put, takeLatest } from "redux-saga/effects";
 import axios from "axios";
-import format from "date-fns/format";
+// import format from "date-fns/format";
 import { API_TASKS, API_TASKS_BY_ID } from "../api";
 import { actions } from "../reducers/calendar";
 import { payloadError } from "../utils";
@@ -18,20 +18,20 @@ import { payloadError } from "../utils";
 //   }
 // }
 
-function* addTask({ payload }: any) {
-  try {
-    // const response = yield call(axios.post, 'sdsd', payload)
-    const response = yield call(axios.post, API_TASKS, payload);
-    yield put({ type: actions.removePreparedTask.toString() });
-    yield put({ type: actions.addTaskSuccess.toString(), payload: response.data.data });
-    yield put({ type: actions.sortTasks.toString(), payload });
-  } catch (error) {
-    yield put({
-      type: actions.addTaskFailed.toString(),
-      payload: payloadError({ _id: payload._id, error: error.message }),
-    });
-  }
-}
+// function* addTask({ payload }: any) {
+//   try {
+//     // const response = yield call(axios.post, 'sdsd', payload)
+//     const response = yield call(axios.post, API_TASKS, payload);
+//     yield put({ type: actions.removePreparedTask.toString() });
+//     yield put({ type: actions.addTaskSuccess.toString(), payload: response.data.data });
+//     yield put({ type: actions.sortTasks.toString(), payload });
+//   } catch (error) {
+//     yield put({
+//       type: actions.addTaskFailed.toString(),
+//       payload: payloadError({ _id: payload._id, error: error.message }),
+//     });
+//   }
+// }
 
 function* saveTask({ payload }: any) {
   try {
@@ -63,7 +63,7 @@ function* removeTask({ payload }: any) {
 
 function* taskSagas() {
   // yield takeLatest(actions.getTasksRequested.toString(), fetchTasks),
-    yield takeLatest(actions.addTaskRequested.toString(), addTask),
+    // yield takeLatest(actions.addTaskRequested.toString(), addTask),
     yield takeLatest(actions.saveTaskRequested.toString(), saveTask),
     yield takeLatest(actions.removeTaskRequested.toString(), removeTask);
 }
