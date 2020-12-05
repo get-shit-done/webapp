@@ -11,6 +11,7 @@ import { ModalFooter } from '../../../components/Modal'
 import { CalendarFormValues } from './shared'
 import { AsyncButton, AsyncSvgButton } from '../../../components/Button'
 import { IGroup } from '../../../reducers/settings'
+import { useSaveTask } from '../hooks/useHome'
 
 const Form = styled.form``
 
@@ -27,6 +28,7 @@ interface IProps {
 
 // TODO: timestamp should come from taskBeingEdited
 const EditCalendarTask: FC<IProps> = ({ groups }) => {
+  const [updateTask] = useSaveTask()
   // console.log('COMP: Edit form')
   const dispatch = useAppDispatch()
   const { taskBeingEdited, asyncStatus } = useSelector((state: AppState) => state.calendar)
@@ -41,16 +43,13 @@ const EditCalendarTask: FC<IProps> = ({ groups }) => {
 
   const onSubmit: SubmitHandler<CalendarFormValues> = (data): any => {
     const { name, from, to } = data
-    return dispatch(
-      // TODO: name being redeclared but linter not complaining. FIX LINTING
-      actions.saveTaskRequested({
-        _id,
-        name,
-        group: selectedGroup.name,
-        time: [Number(from), Number(to)],
-        timestamp,
-      }),
-    )
+    return updateTask({
+      _id,
+      name,
+      group: selectedGroup.name,
+      time: [Number(from), Number(to)],
+      timestamp,
+    })
   }
   const { register, handleSubmit, watch, errors } = useForm<CalendarFormValues>()
   const watchedFields = watch()

@@ -1,7 +1,7 @@
 import { useMutation, useQuery, useQueryCache } from 'react-query'
-import { getTasks, getGroups, removeGroup, updateGroup, addTask } from '../../../api'
+import { getTasks, getGroups, removeGroup, updateGroup, addTask, saveTask } from '../../../api'
 import { IGroup } from '../../../reducers/settings'
-import { IAllTasksByDay } from '../../../reducers/calendar'
+import { IAllTasksByDay, SavedTask } from '../../../reducers/calendar'
 
 // tasks
 export function useGetTasks() {
@@ -26,12 +26,12 @@ export function useAddTask() {
       queryCache.cancelQueries('tasks')
       const previousTasks = queryCache.getQueryData('tasks')
       queryCache.setQueryData('tasks', (oldTasks: IAllTasksByDay) => {
-        const test = { ...oldTasks }
-        const affectedDay = test[newTask.timestamp] || { tasks: [] };
+        const updatedTasks = { ...oldTasks }
+        const affectedDay = updatedTasks[newTask.timestamp] || { tasks: [] };
         affectedDay.tasks.push(newTask);
-        test[newTask.timestamp] = affectedDay;
+        updatedTasks[newTask.timestamp] = affectedDay;
 
-        return test
+        return updatedTasks
       })
   
       return () => queryCache.setQueryData('tasks', previousTasks)
@@ -42,6 +42,39 @@ export function useAddTask() {
     },
   })
 }
+
+export function useSaveTask() {
+  const queryCache = useQueryCache()
+
+    //   const { _id, timestamp } = payload;
+    //   const task: SavedTask = state.allTasksByDay[timestamp].tasks.find(x => x._id === _id);
+    //   for (const x in task) {
+    //     task[x] = payload[x];
+    //   }
+    //   state.taskBeingEdited = undefined;
+  return useMutation(saveTask, {
+    onMutate: updatedTask => {
+      queryCache.cancelQueries('tasks')
+      const previousTasks = queryCache.getQueryData('tasks')
+      queryCache.setQueryData('tasks', (oldTasks: IAllTasksByDay) => {
+        const updatedTasks = { ...oldTasks }
+        const { _id, timestamp } = updatedTask;
+        const task: SavedTask = oldTasks[timestamp].tasks.find(x => x._id === _id);
+        for (const x in task) {
+          task[x] = updatedTask[x];
+        }
+        return updatedTasks
+      })
+  
+      return () => queryCache.setQueryData('tasks', previousTasks)
+    },
+    onError: (err, newTodo, rollback: () => void) => rollback(),
+    onSettled: () => {
+      queryCache.invalidateQueries('tasks')
+    },
+  })
+}
+
 
 // groups
 export function useGroups() {

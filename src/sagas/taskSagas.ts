@@ -33,19 +33,18 @@ import { payloadError } from "../utils";
 //   }
 // }
 
-function* saveTask({ payload }: any) {
-  try {
-    // const response = yield call(axios.patch, API_TASKS_BY_ID('sdsds'), payload)
-    const response = yield call(axios.patch, API_TASKS_BY_ID(payload._id), payload);
-    yield put({ type: actions.saveTaskSuccess.toString(), payload: response.data.data });
-    yield put({ type: actions.sortTasks.toString(), payload: payload });
-  } catch (error) {
-    yield put({
-      type: actions.saveTaskFailed.toString(),
-      payload: payloadError({ _id: payload._id, error: error.message }),
-    });
-  }
-}
+// function* saveTask({ payload }: any) {
+//   try {
+//     const response = yield call(axios.patch, API_TASKS_BY_ID(payload._id), payload);
+//     yield put({ type: actions.saveTaskSuccess.toString(), payload: response.data.data });
+//     yield put({ type: actions.sortTasks.toString(), payload: payload });
+//   } catch (error) {
+//     yield put({
+//       type: actions.saveTaskFailed.toString(),
+//       payload: payloadError({ _id: payload._id, error: error.message }),
+//     });
+//   }
+// }
 
 function* removeTask({ payload }: any) {
   try {
@@ -64,7 +63,7 @@ function* removeTask({ payload }: any) {
 function* taskSagas() {
   // yield takeLatest(actions.getTasksRequested.toString(), fetchTasks),
     // yield takeLatest(actions.addTaskRequested.toString(), addTask),
-    yield takeLatest(actions.saveTaskRequested.toString(), saveTask),
+    // yield takeLatest(actions.saveTaskRequested.toString(), saveTask),
     yield takeLatest(actions.removeTaskRequested.toString(), removeTask);
 }
 

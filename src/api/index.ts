@@ -20,6 +20,7 @@ export const getTasks = () => {
   return axios.get(`${API_TASKS}?month=${formattedMonth}`).then(res => res.data.data)
 }
 export const addTask = (payload: any) => axios.post(API_TASKS, payload)
+export const saveTask = (payload: any) => axios.patch(API_TASKS_BY_ID(payload._id), payload)
 
 // groups
 export const getGroups = () => axios.get(API_GROUPS).then(res => res.data.data)
