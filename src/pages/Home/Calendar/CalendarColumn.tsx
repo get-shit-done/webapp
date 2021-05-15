@@ -9,6 +9,7 @@ import { AppState } from '../../../Application/Root'
 import { determineTimeFromY, CN_COLUMN, CN_HOUR_SLOTS, taskShadow, CN_TASK_GAP } from './shared'
 import Task from './Task'
 import { makeHoursAxis } from '../../../selectors'
+import { IGroup } from '../../../reducers/settings'
 
 interface IWrap {
   theme: { columnBorder: string },
@@ -61,9 +62,11 @@ interface Props {
   isCurrentDay: boolean
   tasksFiltered: TaskWithMeta[]
   placeholderHeight: number
+  groups: IGroup[]
 }
 
-const CalendarColumn: FC<Props> = ({ timestamp, isCurrentDay, tasksFiltered = [], placeholderHeight }) => {
+const CalendarColumn: FC<Props> = ({ timestamp, isCurrentDay, tasksFiltered = [], placeholderHeight, groups }) => {
+  // console.log('tasksFilteredtasksFiltered', tasksFiltered)
   const hoursAxis = useSelector(makeHoursAxis)
   const taskBeingEdited = useSelector((state: AppState) => state.calendar.taskBeingEdited)
   const taskBeingPrepared = useSelector((state: AppState) => state.calendar.taskBeingPrepared)
@@ -108,7 +111,7 @@ const CalendarColumn: FC<Props> = ({ timestamp, isCurrentDay, tasksFiltered = []
         className={CN_HOUR_SLOTS}
       >
         {tasksFiltered.map(task => (
-          <Task key={task._id} task={task} isBeingEdited={taskBeingEdited?._id === task._id} />
+          <Task key={task._id} task={task} isBeingEdited={taskBeingEdited?._id === task._id} groups={groups} />
         ))}
         {(showPlaceholder || isPlaceholderBeingEdited) && (
           <PlaceholderTask
@@ -118,6 +121,7 @@ const CalendarColumn: FC<Props> = ({ timestamp, isCurrentDay, tasksFiltered = []
             y={y}
             timeFromY={timeFromY}
             placeholderHeight={placeholderHeight}
+            groups={groups}
           />
         )}
       </HourSlots>

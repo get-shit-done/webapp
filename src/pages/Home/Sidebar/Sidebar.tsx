@@ -14,8 +14,9 @@ import UseFullscreenToggle from '../../../hooks/useFullscreenToggle'
 import TabHOC from './TabHOC'
 import { useAppDispatch, AppState } from '../../../Application/Root'
 import { useSelector } from 'react-redux'
-import { actions as settingsActions } from '../../../reducers/settings'
+import { actions as settingsActions, IGroup } from '../../../reducers/settings'
 import { actions as calendarActions } from '../../../reducers/calendar'
+// import { onGetTasks } from '../hooks/onGetTasks'
 import { ENUM_THEMES } from '../../../enums'
 
 const Todos = React.lazy(() => import('./Todos'))
@@ -108,10 +109,12 @@ const Content = styled.div<{ isOpen: boolean }>`
 
 interface Props {
   isOpen: boolean
+  groups: IGroup[]
   setIsOpen: any
+
 }
 
-const Sidebar: FC<Props> = ({ isOpen, setIsOpen }) => {
+const Sidebar: FC<Props> = ({ isOpen, groups, setIsOpen }) => {
   const dispatch = useAppDispatch()
   const { themeName } = useSelector((state: AppState) => state.settings)
   const [isFullscreen, setIsFullscreen] = UseFullscreenToggle(false)
@@ -127,6 +130,7 @@ const Sidebar: FC<Props> = ({ isOpen, setIsOpen }) => {
       id: 'settings',
       Component: TabHOC(Settings),
       svg: cogSvg,
+      customProps: { groups },
     }
   ]
   const handleTabClick = (id: string) => {
@@ -136,7 +140,8 @@ const Sidebar: FC<Props> = ({ isOpen, setIsOpen }) => {
   }
   const handleMonthClick = () => {
     const updatedDate = sub(new Date, { months: 1 })
-    dispatch(calendarActions.getTasksRequested({ date: updatedDate }))
+    // TODO: add mutate to get tasks
+    // onGetTasks(updatedDate)
   }
 
   return (
@@ -160,7 +165,7 @@ const Sidebar: FC<Props> = ({ isOpen, setIsOpen }) => {
           ))}
         </InnerWrap>
         <Content isOpen={isOpen}>
-          {tabs.map(({ id, Component }) => <Component key={id} isActive={id === activeTabId} title={id} />)}
+          {tabs.map(({ id, Component, customProps }) => <Component key={id} isActive={id === activeTabId} title={id} customProps={customProps} />)}
         </Content>
       </Suspense>
     </Wrap>

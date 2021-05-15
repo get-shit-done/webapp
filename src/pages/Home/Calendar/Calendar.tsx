@@ -1,17 +1,18 @@
-import React, { FC, useRef, useCallback, useState } from 'react'
+import React, { FC, useRef, useCallback } from 'react'
 import styled from 'styled-components'
 import isToday from 'date-fns/isToday'
 
-import { useSelector, shallowEqual } from 'react-redux'
+import { useSelector } from 'react-redux'
 import CalendarColumn from './CalendarColumn'
 import { AppState, useAppDispatch } from '../../../Application/Root'
 import { makeDaysAxis, makeHoursAxis, makeAllTasksByDayMapped } from '../../../selectors'
 import { determinePlaceholderHeight } from '../../../utils'
 import { Modal } from '../../../components/Modal'
 import EditCalendarTask from './EditCalendarTask'
-import { actions, SavedTask } from '../../../reducers/calendar'
+import { actions, IAllTasksByDay } from '../../../reducers/calendar'
 import AddNewCalendarTask from './AddNewCalendarTask'
 import { SpinnerLoader, LoaderSvg } from '../../../components/Loader'
+import { IGroup } from '../../../reducers/settings'
 
 const Wrap = styled.div<{ scale: { x: number, y: number, duration: number } }>`
   position: relative;
@@ -30,20 +31,17 @@ const CalendarLoader = styled(SpinnerLoader)`
   };
 `
 
-interface Props {
-  scale: {
-    x: number
-    y: number
-    duration: number,
-  },
+interface PropsColumn {
+  wrapRef: React.MutableRefObject<any>
+  groups: IGroup[]
+  allTasksByDay: IAllTasksByDay
 }
-
-const CalendarColumns: FC<{ wrapRef: React.MutableRefObject<any> }> = ({ wrapRef }) => {
+const CalendarColumns: FC<PropsColumn> = ({ wrapRef, allTasksByDay, groups }) => {
   const daysAxis = useSelector(makeDaysAxis)
   const hoursAxis = useSelector(makeHoursAxis)
-  const allTasksByDayMapped = useSelector(state => makeAllTasksByDayMapped(state, hoursAxis))
+  const allTasksByDayMapped = useSelector((state) => makeAllTasksByDayMapped({ state, hoursAxis, allTasksByDay }))
   const placeholderHeight = determinePlaceholderHeight({ wrapRef, hoursAxis })
-  console.log('COMP: Calendar columns')
+  // console.log('COMP: CalendarColumns', allTasksByDayMapped)
 
   return (
     <>
@@ -54,13 +52,24 @@ const CalendarColumns: FC<{ wrapRef: React.MutableRefObject<any> }> = ({ wrapRef
           timestamp={timestamp}
           tasksFiltered={allTasksByDayMapped[timestamp]}
           placeholderHeight={placeholderHeight}
+          groups={groups}
         />
       ))}
     </>
   )
 }
 
-const Calendar: FC<Props> = ({ scale }) => {
+interface Props {
+  scale: {
+    x: number
+    y: number
+    duration: number,
+  },
+  allTasksByDay: IAllTasksByDay
+  groups: IGroup[]
+}
+
+const Calendar: FC<Props> = ({ scale, allTasksByDay, groups }) => {
   const wrapRef = useRef(null)
   const dispatch = useAppDispatch()
   const { getTasks } = useSelector((state: AppState) => state.calendar.asyncStatus)
@@ -75,22 +84,22 @@ const Calendar: FC<Props> = ({ scale }) => {
     dispatch(actions.editTaskCancel())
     dispatch(actions.resetAsyncStatus())
   }, [])
-  console.log('COMP: Calendar')
+  // console.log('COMP: Calendar', allTasksByDay)
 
   return (
     <Wrap scale={scale} ref={wrapRef}>
       <CalendarLoader size={10} asyncStatus={getTasks} />
-      <CalendarColumns wrapRef={wrapRef} />
+      <CalendarColumns wrapRef={wrapRef} allTasksByDay={allTasksByDay} groups={groups} />
 
       {taskBeingEdited && (
         <Modal title="task details" width={17} onOverlayToggle={onEditTaskCancel}>
-          <EditCalendarTask />
+          <EditCalendarTask groups={groups} />
         </Modal>
       )}
 
       {taskBeingPrepared && (
         <Modal title="task details" width={17} onOverlayToggle={onRemovePreparedTask}>
-          <AddNewCalendarTask />
+          <AddNewCalendarTask groups={groups} />
         </Modal>
       )}
     </Wrap>

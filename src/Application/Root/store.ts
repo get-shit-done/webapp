@@ -18,9 +18,8 @@ if (process.env.NODE_ENV !== 'production' && (module as any).hot) {
   (module as any).hot.accept('./reducers', () => store.replaceReducer(reducers))
 }
 
-type AppDispatch = typeof store.dispatch
-export const useAppDispatch = () => useDispatch<AppDispatch>()
-
+export type AppDispatch = typeof store.dispatch
+export type RootState = ReturnType<typeof store.getState>
 
 export default store
 

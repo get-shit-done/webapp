@@ -5,11 +5,14 @@ import styled from 'styled-components'
 import { TextField, Dropdown } from '../../../components/form'
 import binSvg from '../../../assets/svg/bin.svg'
 import Svg, { styleDangerHover } from '../../../components/Svg/component'
-import { actions } from '../../../reducers/calendar'
+import { actions, IAllTasksByDay, SavedTask } from '../../../reducers/calendar'
 import { AppState, useAppDispatch } from '../../../Application/Root'
 import { ModalFooter } from '../../../components/Modal'
 import { CalendarFormValues } from './shared'
 import { AsyncButton, AsyncSvgButton } from '../../../components/Button'
+import { IGroup } from '../../../reducers/settings'
+import { useSaveTask } from '../hooks/useSaveTask'
+import { useQueryCache } from 'react-query'
 
 const Form = styled.form``
 
@@ -20,12 +23,28 @@ const RemoveSvg = styled(Svg)`
   ${styleDangerHover};
 `
 
+interface IProps {
+  groups: IGroup[]
+}
+
+const updateTaskValues = (formfieldsMapped: SavedTask) => (oldTasks: IAllTasksByDay) => {
+  const updatedTasks = { ...oldTasks }
+  const { timestamp, _id } = formfieldsMapped
+  const task: SavedTask = oldTasks[timestamp].tasks.find(x => x._id === _id);
+  for (const x in task) {
+    task[x] = formfieldsMapped[x];
+  }
+  return updatedTasks
+}
+
 // TODO: timestamp should come from taskBeingEdited
-const EditCalendarTask: FC = () => {
-  // console.log('COMP: Edit form')
-  const dispatch = useAppDispatch()
+const EditCalendarTask: FC<IProps> = ({ groups }) => {
+  const queryCache = useQueryCache()
+  const [updateTask] = useSaveTask()
   const { taskBeingEdited, asyncStatus } = useSelector((state: AppState) => state.calendar)
-  const { groups, colors } = useSelector((state: AppState) => state.settings)
+  const dispatch = useAppDispatch()
+  // const { groups, colors } = useSelector((state: AppState) => state.settings)
+  const { colors } = useSelector((state: AppState) => state.settings)
   const [selectedGroup, setSelectedGroup] = useState(groups.find(x => x.name === taskBeingEdited.group))
   const { _id, time, name, group } = taskBeingEdited
   const accentColor = selectedGroup ? colors[selectedGroup.colorId] : undefined
@@ -35,32 +54,32 @@ const EditCalendarTask: FC = () => {
 
   const onSubmit: SubmitHandler<CalendarFormValues> = (data): any => {
     const { name, from, to } = data
-    return dispatch(
-      // TODO: name being redeclared but linter not complaining. FIX LINTING
-      actions.saveTaskRequested({
-        _id,
-        name,
-        group: selectedGroup.name,
-        time: [Number(from), Number(to)],
-        timestamp,
-      }),
-    )
+    return updateTask({
+      _id,
+      name,
+      group: selectedGroup.name,
+      time: [Number(from), Number(to)],
+      timestamp,
+    })
   }
   const { register, handleSubmit, watch, errors } = useForm<CalendarFormValues>()
   const watchedFields = watch()
+  // console.log('errors', errors)
   const hasValidationErrors = Object.entries(errors).length > 0
 
   useEffect(() => {
     if (Object.values(watchedFields).every(x => !x)) return
 
-    const formfieldsMapped = {
+    const formfieldsMapped: SavedTask = {
       _id,
       timestamp,
       name: watchedFields.name,
       group: selectedGroup.name,
       time: [Number(watchedFields.from), Number(watchedFields.to)]
     }
-    dispatch(actions.editTaskReplaceValues(formfieldsMapped))
+
+    queryCache.setQueryData('tasks', updateTaskValues(formfieldsMapped))
+    dispatch(actions.updateEditedTask(formfieldsMapped))
   }, [watchedFields.name, watchedFields.from, selectedGroup.name, watchedFields.to])
 
   return (
@@ -80,6 +99,7 @@ const EditCalendarTask: FC = () => {
         theme="light"
         label="select group"
         activeGroup={selectedGroup}
+        groups={groups}
         onSelect={group => setSelectedGroup(group)}
         inputRef={register({ required: true, maxLength: 80 })}
       />

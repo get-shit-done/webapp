@@ -13,6 +13,7 @@ import {
 } from "../constants";
 import { taskSort } from "../utils";
 import { shallowEqual } from "react-redux";
+import { eventChannel } from "redux-saga";
 
 export interface TaskBeingPrepared {
   timestamp?: string;
@@ -96,15 +97,14 @@ export const { reducer, actions } = createSlice({
     removePreparedTask(state) {
       state.taskBeingPrepared = undefined;
     },
-    editTaskPrepare(state, { payload: { _id, timestamp } }: PayloadAction<{ _id: string; timestamp: string }>): void {
-      state.taskBeingEdited = state.allTasksByDay[timestamp].tasks.find(x => x._id === _id);
+    removeEditedTask(state) {
+      state.taskBeingEdited = undefined;
     },
-    editTaskReplaceValues(state, { payload }: PayloadAction<SavedTask>): void {
-      const { _id, timestamp } = payload;
-      const task = state.allTasksByDay[timestamp].tasks.find(x => x._id === _id);
-      for (const x in task) {
-        task[x] = payload[x] ?? task[x];
-      }
+    editTaskPrepare(state, { payload: task }: PayloadAction<SavedTask>): void {
+      state.taskBeingEdited = task;
+    },
+    updateEditedTask(state, { payload }: PayloadAction<SavedTask>): void {
+      state.taskBeingEdited = payload
     },
     editTaskCancel(state): void {
       const { _id, timestamp } = state.taskBeingEdited;
@@ -115,46 +115,46 @@ export const { reducer, actions } = createSlice({
       }
       state.taskBeingEdited = undefined;
     },
-    saveTaskRequested(state, action: any) {
-      state.asyncStatus.saveTask = asyncStatusRequestedInherit(state.asyncStatus.saveTask);
-    },
-    saveTaskSuccess(state, { payload }: PayloadAction<SavedTask>): void {
-      const { _id, timestamp } = payload;
-      const task: SavedTask = state.allTasksByDay[timestamp].tasks.find(x => x._id === _id);
-      for (const x in task) {
-        task[x] = payload[x];
-      }
-      state.taskBeingEdited = undefined;
-      state.asyncStatus.saveTask = asyncStatusSuccess;
-    },
-    saveTaskFailed(state, { payload }: PayloadAction<{ error: string }>) {
-      state.asyncStatus.saveTask = asyncStatusFail(payload.error);
-    },
-    addTaskRequested(state, action: PayloadAction<NewTask>): void {
-      state.asyncStatus.addTask = asyncStatusRequestedInherit(state.asyncStatus.addTask);
-    },
-    addTaskSuccess(state, { payload }: PayloadAction<SavedTask>): void {
-      const affectedDay = state.allTasksByDay[payload.timestamp] || { tasks: [] };
-      affectedDay.tasks.push(payload);
-      state.allTasksByDay[payload.timestamp] = affectedDay;
+    // saveTaskRequested(state, action: any) {
+    //   state.asyncStatus.saveTask = asyncStatusRequestedInherit(state.asyncStatus.saveTask);
+    // },
+    // saveTaskSuccess(state, { payload }: PayloadAction<SavedTask>): void {
+    //   const { _id, timestamp } = payload;
+    //   const task: SavedTask = state.allTasksByDay[timestamp].tasks.find(x => x._id === _id);
+    //   for (const x in task) {
+    //     task[x] = payload[x];
+    //   }
+    //   state.taskBeingEdited = undefined;
+    //   state.asyncStatus.saveTask = asyncStatusSuccess;
+    // },
+    // saveTaskFailed(state, { payload }: PayloadAction<{ error: string }>) {
+    //   state.asyncStatus.saveTask = asyncStatusFail(payload.error);
+    // },
+    // addTaskRequested(state, action: PayloadAction<NewTask>): void {
+    //   state.asyncStatus.addTask = asyncStatusRequestedInherit(state.asyncStatus.addTask);
+    // },
+    // addTaskSuccess(state, { payload }: PayloadAction<SavedTask>): void {
+    //   const affectedDay = state.allTasksByDay[payload.timestamp] || { tasks: [] };
+    //   affectedDay.tasks.push(payload);
+    //   state.allTasksByDay[payload.timestamp] = affectedDay;
 
-      state.taskBeingEdited = undefined;
-      state.asyncStatus.addTask = asyncStatusSuccess;
-    },
-    addTaskFailed(state, { payload }: PayloadAction<{ error: string }>) {
-      state.asyncStatus.addTask = asyncStatusFail(payload.error);
-    },
-    getTasksRequested(state, { payload }: PayloadAction<{ date: Date }>) {
-      state.asyncStatus.getTasks = asyncStatusRequested;
-    },
-    getTasksSuccess(state, { payload: { response, date } }: PayloadAction<{ response: IAllTasksByDay; date: Date }>) {
-      state.allTasksByDay = response;
-      state.asyncStatus.getTasks = asyncStatusSuccess;
-      state.daysAxis = MONTH_DAYS_STRING(date);
-    },
-    getTasksFail(state, { payload }: PayloadAction<{ error: string }>) {
-      state.asyncStatus.getTasks = asyncStatusFail(payload.error);
-    },
+    //   state.taskBeingEdited = undefined;
+    //   state.asyncStatus.addTask = asyncStatusSuccess;
+    // },
+    // addTaskFailed(state, { payload }: PayloadAction<{ error: string }>) {
+    //   state.asyncStatus.addTask = asyncStatusFail(payload.error);
+    // },
+    // getTasksRequested(state, { payload }: PayloadAction<{ date: Date }>) {
+    //   state.asyncStatus.getTasks = asyncStatusRequested;
+    // },
+    // getTasksSuccess(state, { payload: { response, date } }: PayloadAction<{ response: IAllTasksByDay; date: Date }>) {
+    //   state.allTasksByDay = response;
+    //   state.asyncStatus.getTasks = asyncStatusSuccess;
+    //   state.daysAxis = MONTH_DAYS_STRING(date);
+    // },
+    // getTasksFail(state, { payload }: PayloadAction<{ error: string }>) {
+    //   state.asyncStatus.getTasks = asyncStatusFail(payload.error);
+    // },
     removeTaskRequested(state, action): void {
       state.asyncStatus.removeTask = asyncStatusRequestedInherit(state.asyncStatus.removeTask);
     },

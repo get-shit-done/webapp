@@ -5,6 +5,7 @@ import { actions } from '../../../reducers/calendar'
 import { rgbAdjust, ellipsis } from '../../../styles'
 import { AppState, useAppDispatch } from '../../../Application/Root'
 import { determineTimeFromY, taskShadow, placeholderShadow } from './shared'
+import { IGroup } from '../../../reducers/settings'
 
 const PlaceholderTaskWrap = styled.div<{
   theme: { bg: string, columnHoverBg: string, placeholderBorder: string },
@@ -66,8 +67,9 @@ interface Props {
   timestamp: string
   hourSlotsRef: any
   y: number
-  timeFromY: number,
+  timeFromY: number
   placeholderHeight: number
+  groups: IGroup[]
 }
 
 const PlaceholderTask: FC<Props> = ({
@@ -77,11 +79,13 @@ const PlaceholderTask: FC<Props> = ({
   y,
   timeFromY,
   placeholderHeight,
+  groups,
 }) => {
   // console.log('COMP: placeholder Task', taskBeingPrepared)
   const dispatch = useAppDispatch()
   const { hoursAxis, taskBeingPrepared } = useSelector((state: AppState) => state.calendar)
-  const { groups, colors } = useSelector((state: AppState) => state.settings)
+  // const { groups, colors } = useSelector((state: AppState) => state.settings)
+  const { colors } = useSelector((state: AppState) => state.settings)
   const [{ yFromTime, heightFromTime }, setYAndHeight] = useState({ yFromTime: y, heightFromTime: placeholderHeight })
 
   const colorId = taskBeingPrepared ? groups.find(x => x.name === taskBeingPrepared.group)?.colorId : undefined

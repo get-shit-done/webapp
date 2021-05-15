@@ -9,6 +9,7 @@ import HourLabels from './Axis/HourLabels'
 import DayLabels from './Axis/DayLabels'
 import Calendar from './Calendar/Calendar'
 import useScaleForTransition from '../../hooks/useScaleForTransition'
+import { useHome } from './hooks/useHome'
 
 const PageWrap = styled.div`
   display: flex;
@@ -43,6 +44,7 @@ const CalendarWrap = styled.div<{ theme: { bg: string } }>`
 `
 
 const Home = () => {
+  const { groups, allTasksByDay } = useHome()
   const [isOpen, setIsOpen] = useState(false)
   const [{ scale: wrapScale, updateScale: setWrapScale }] = useScaleForTransition()
   const [{ scale: calendarScale, updateScale: setCalendarScale }] = useScaleForTransition()
@@ -63,12 +65,12 @@ const Home = () => {
         <HourLabels onHover={onSetCalendarScale} />
         <CalendarWrap ref={calendarRef}>
           <DayLabels onHover={onSetCalendarScale} />
-          <Calendar scale={calendarScale} />
+          <Calendar scale={calendarScale} allTasksByDay={allTasksByDay} groups={groups} />
         </CalendarWrap>
         <Toast />
       </Wrap>
 
-      <Sidebar isOpen={isOpen} setIsOpen={onSidebarToggle} />
+      <Sidebar isOpen={isOpen} groups={groups} setIsOpen={onSidebarToggle} />
     </PageWrap>
   )
 }
