@@ -7,10 +7,11 @@ export interface IAllTasksByDay {
 }
 
 export const makeAllTasksByDayMapped = createSelector(
+  ({ state }: { state: any }) => state.calendar.taskBeingEdited,
   ({ hoursAxis }: { hoursAxis: number[] }) => hoursAxis,
   ({ allTasksByDay }: { allTasksByDay: IAllTasksByDayFromReducer }) => allTasksByDay,
-  (hoursAxis, allTasksByDay) => {
-    console.log('SELECTOR: all tasks by day mapped', hoursAxis, allTasksByDay)
+  (taskBeingEdited, hoursAxis, allTasksByDay) => {
+    // console.log('SELECTOR: all tasks by day mapped', taskBeingEdited, hoursAxis, allTasksByDay)
     const mapped: IAllTasksByDay = {}
     if (Object.values(allTasksByDay).length === 0) {
       return {}
@@ -20,6 +21,7 @@ export const makeAllTasksByDayMapped = createSelector(
       mapped[datestring] = value.tasks.map((task: SavedTask, taskIndex: number) => {
         const tasks = value.tasks || []
         const { _id, time, ...rest } = task
+        // console.log('task', task)
 
         const from = time[0]
         const to = time[1]
@@ -43,6 +45,7 @@ export const makeAllTasksByDayMapped = createSelector(
         }
       })
     })
+    // console.log('selector', mapped)
     return mapped
   },
 )

@@ -1,2 +1,2 @@
 export { AppState } from './reducers'
-export { useAppDispatch } from './store'
+export { useAppDispatch, useAppSelector } from './storeHooks'

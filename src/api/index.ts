@@ -15,11 +15,14 @@ export const API_TODOS_BY_ID = (id: string) => `${URL}/todos/${id}`
 // tasks
 export const getTasks = () => {
   // const formattedMonth = format(date, "MMM");
-  const formattedMonth = 'Dec'
-  console.log(formattedMonth)
+  const formattedMonth = 'May'
+  // console.log(formattedMonth)
   return axios.get(`${API_TASKS}?month=${formattedMonth}`).then(res => res.data.data)
 }
-export const addTask = (payload: any) => axios.post(API_TASKS, payload)
+export const addTask = (payload: any) => {
+  console.log('sadasdsadsadsad', payload )
+  return axios.post(API_TASKS, payload)
+}
 export const saveTask = (payload: any) => axios.patch(API_TASKS_BY_ID(payload._id), payload)
 
 // groups

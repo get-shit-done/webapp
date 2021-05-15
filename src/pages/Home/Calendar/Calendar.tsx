@@ -39,8 +39,9 @@ interface PropsColumn {
 const CalendarColumns: FC<PropsColumn> = ({ wrapRef, allTasksByDay, groups }) => {
   const daysAxis = useSelector(makeDaysAxis)
   const hoursAxis = useSelector(makeHoursAxis)
-  const allTasksByDayMapped = useSelector(() => makeAllTasksByDayMapped({ hoursAxis, allTasksByDay }))
+  const allTasksByDayMapped = useSelector((state) => makeAllTasksByDayMapped({ state, hoursAxis, allTasksByDay }))
   const placeholderHeight = determinePlaceholderHeight({ wrapRef, hoursAxis })
+  // console.log('COMP: CalendarColumns', allTasksByDayMapped)
 
   return (
     <>
@@ -83,7 +84,7 @@ const Calendar: FC<Props> = ({ scale, allTasksByDay, groups }) => {
     dispatch(actions.editTaskCancel())
     dispatch(actions.resetAsyncStatus())
   }, [])
-  console.log('COMP: Calendar')
+  // console.log('COMP: Calendar', allTasksByDay)
 
   return (
     <Wrap scale={scale} ref={wrapRef}>

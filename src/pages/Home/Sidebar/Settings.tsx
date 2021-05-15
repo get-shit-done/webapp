@@ -9,7 +9,8 @@ import { useAppDispatch, AppState } from '../../../Application/Root'
 import { useSelector } from 'react-redux'
 import { actions, IGroup } from '../../../reducers/settings'
 import Colorpicker from '../../../components/Colorpicker/component'
-import { useRemoveGroup, useUpdateGroup } from '../hooks/useHome'
+import { useRemoveGroup } from '../hooks/useRemoveGroup'
+import { useUpdateGroup } from '../hooks/useUpdateGroup'
 
 const Form = styled.form`
   margin-bottom: var(--size-md);

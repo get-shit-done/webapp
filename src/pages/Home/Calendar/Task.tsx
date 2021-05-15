@@ -69,17 +69,18 @@ interface IProps {
   groups: IGroup[]
 }
 const Task: FC<IProps> = ({
-  task: { _id, group, timestamp, name, gapBefore, gapAfter, heightInFlex },
+  task,
   groups,
   isBeingEdited,
 }) => {
+  const { _id, group, timestamp, name, gapBefore, gapAfter, heightInFlex } = task
   const hoursAxis = useSelector(makeHoursAxis)
   // const groups = useSelector((state: AppState) => state.settings.groups)
   const colors = useSelector((state: AppState) => state.settings.colors)
   const dispatch = useAppDispatch()
   const { colorId } = (groups.find(x => x.name === group) || {})
 
-  const onEditTask = () => { dispatch(actions.editTaskPrepare({ _id, timestamp })) }
+  const onEditTask = () => { dispatch(actions.editTaskPrepare(task)) }
 
   return (
     <>

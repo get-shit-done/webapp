@@ -131,7 +131,7 @@ const Todos = () => {
 
 
   const onEdit = ({ _id, isDone }: { _id: string, isDone: boolean }) => {
-    console.log(_id, isDone)
+    // console.log(_id, isDone)
     editMutate({ _id, isDone })
   }
 

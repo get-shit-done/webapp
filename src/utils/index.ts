@@ -16,7 +16,7 @@ export const determineAsyncStatus = (params?: AsyncStatus | AsyncStatus[]) => {
     const filtered = params.filter((x: AsyncStatus) => x !== undefined)
     if (filtered.length > 0) {
       filtered.forEach(test => {
-        console.log('test', test)
+        // console.log('test', test)
         const { isInitial, isBusy, isDone, isError, errorMessage } = test
         async.isInitial = async.isInitial || isInitial
         async.isBusy = async.isBusy || isBusy

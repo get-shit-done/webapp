@@ -9,7 +9,7 @@ import { AppState, useAppDispatch } from '../../../Application/Root'
 import { ModalFooter } from '../../../components/Modal'
 import { CalendarFormValues } from './shared'
 import { IGroup } from '../../../reducers/settings'
-import { useAddTask } from '../hooks/useHome'
+import { useAddTask } from '../hooks/useAddTask'
 
 const Form = styled.form``
 
@@ -17,7 +17,7 @@ interface IProps {
   groups: IGroup[]
 }
 const AddNewCalendarTask: FC<IProps> = ({ groups }) => {
-  const [addNewTask] = useAddTask()
+  const { addNewTask } = useAddTask()
   const dispatch = useAppDispatch()
   const { taskBeingPrepared, asyncStatus } = useSelector((state: AppState) => state.calendar)
   const { timestamp, time } = taskBeingPrepared
