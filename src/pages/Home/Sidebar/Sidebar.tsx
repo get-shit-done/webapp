@@ -16,6 +16,7 @@ import { useAppDispatch, AppState } from '../../../Application/Root'
 import { useSelector } from 'react-redux'
 import { actions as settingsActions, IGroup } from '../../../reducers/settings'
 import { actions as calendarActions } from '../../../reducers/calendar'
+// import { onGetTasks } from '../hooks/onGetTasks'
 import { ENUM_THEMES } from '../../../enums'
 
 const Todos = React.lazy(() => import('./Todos'))
@@ -110,6 +111,7 @@ interface Props {
   isOpen: boolean
   groups: IGroup[]
   setIsOpen: any
+
 }
 
 const Sidebar: FC<Props> = ({ isOpen, groups, setIsOpen }) => {
@@ -138,7 +140,8 @@ const Sidebar: FC<Props> = ({ isOpen, groups, setIsOpen }) => {
   }
   const handleMonthClick = () => {
     const updatedDate = sub(new Date, { months: 1 })
-    dispatch(calendarActions.getTasksRequested({ date: updatedDate }))
+    // TODO: add mutate to get tasks
+    // onGetTasks(updatedDate)
   }
 
   return (

@@ -13,8 +13,8 @@ export const API_TODOS = `${URL}/todos`
 export const API_TODOS_BY_ID = (id: string) => `${URL}/todos/${id}`
 
 // tasks
-export const getTasks = () => {
-  // const formattedMonth = format(date, "MMM");
+export const getTasks = (dateOfTasks?: Date) => {
+  // const formattedMonth = format(dateOfTasks || new Date(), "MMM");
   const formattedMonth = 'May'
   // console.log(formattedMonth)
   return axios.get(`${API_TASKS}?month=${formattedMonth}`).then(res => res.data.data)

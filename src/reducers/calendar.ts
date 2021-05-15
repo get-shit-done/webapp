@@ -144,17 +144,17 @@ export const { reducer, actions } = createSlice({
     // addTaskFailed(state, { payload }: PayloadAction<{ error: string }>) {
     //   state.asyncStatus.addTask = asyncStatusFail(payload.error);
     // },
-    getTasksRequested(state, { payload }: PayloadAction<{ date: Date }>) {
-      state.asyncStatus.getTasks = asyncStatusRequested;
-    },
-    getTasksSuccess(state, { payload: { response, date } }: PayloadAction<{ response: IAllTasksByDay; date: Date }>) {
-      state.allTasksByDay = response;
-      state.asyncStatus.getTasks = asyncStatusSuccess;
-      state.daysAxis = MONTH_DAYS_STRING(date);
-    },
-    getTasksFail(state, { payload }: PayloadAction<{ error: string }>) {
-      state.asyncStatus.getTasks = asyncStatusFail(payload.error);
-    },
+    // getTasksRequested(state, { payload }: PayloadAction<{ date: Date }>) {
+    //   state.asyncStatus.getTasks = asyncStatusRequested;
+    // },
+    // getTasksSuccess(state, { payload: { response, date } }: PayloadAction<{ response: IAllTasksByDay; date: Date }>) {
+    //   state.allTasksByDay = response;
+    //   state.asyncStatus.getTasks = asyncStatusSuccess;
+    //   state.daysAxis = MONTH_DAYS_STRING(date);
+    // },
+    // getTasksFail(state, { payload }: PayloadAction<{ error: string }>) {
+    //   state.asyncStatus.getTasks = asyncStatusFail(payload.error);
+    // },
     removeTaskRequested(state, action): void {
       state.asyncStatus.removeTask = asyncStatusRequestedInherit(state.asyncStatus.removeTask);
     },
