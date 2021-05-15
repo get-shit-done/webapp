@@ -1,25 +1,34 @@
-import { configureStore, applyMiddleware } from '@reduxjs/toolkit'
-import createSagaMiddleware from 'redux-saga'
-import { useDispatch } from 'react-redux'
+import { configureStore, applyMiddleware } from "@reduxjs/toolkit";
+import createSagaMiddleware from "redux-saga";
+import { useDispatch } from "react-redux";
 
-import reducers from './reducers'
-import { rootSagas } from './sagas'
+import { reducer as settings } from '../../reducers/settings'
+import { reducer as calendar } from '../../reducers/calendar'
+import { reducer as toast } from '../../components/Toast/reducer'
 
-const sagaMiddleware = createSagaMiddleware()
+import reducers from "./reducers";
+import { rootSagas } from "./sagas";
+import { tasksApi } from "../../api";
+
+const sagaMiddleware = createSagaMiddleware();
 
 const store = configureStore({
-  reducer: reducers,
-  middleware: getDefaultMiddleware => getDefaultMiddleware().concat(sagaMiddleware)
-})
+  reducer: {
+    settings,
+    calendar,
+    toast,
+    [tasksApi.reducerPath]: tasksApi.reducer,
+  },
+  middleware: getDefaultMiddleware => getDefaultMiddleware().concat(tasksApi.middleware).concat(sagaMiddleware),
+});
 
-sagaMiddleware.run(rootSagas)
+sagaMiddleware.run(rootSagas);
 
-if (process.env.NODE_ENV !== 'production' && (module as any).hot) {
-  (module as any).hot.accept('./reducers', () => store.replaceReducer(reducers))
-}
+// if (process.env.NODE_ENV !== 'production' && (module as any).hot) {
+//   (module as any).hot.accept('./reducers', () => store.replaceReducer(reducers))
+// }
 
-export type AppDispatch = typeof store.dispatch
-export type RootState = ReturnType<typeof store.getState>
+export type AppDispatch = typeof store.dispatch;
+export type RootState = ReturnType<typeof store.getState>;
 
-export default store
-
+export default store;

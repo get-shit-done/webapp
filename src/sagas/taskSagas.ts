@@ -49,7 +49,7 @@ import { payloadError } from "../utils";
 function* removeTask({ payload }: any) {
   try {
     // const response = yield call(axios.delete, API_TASKS_BY_ID('sds'))
-    const response = yield call(axios.delete, API_TASKS_BY_ID(payload._id));
+    yield call(axios.delete, API_TASKS_BY_ID(payload._id));
     yield put({ type: actions.removeTaskSucceeded.toString(), payload });
     yield put({ type: actions.sortTasks.toString(), payload });
   } catch (error) {

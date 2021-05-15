@@ -76,7 +76,7 @@ const Dropdown: FC<IProps> = ({ theme, isInForm, activeGroup = {}, label, groups
           {label}
         </Placeholder>
         <Input as="div">{activeGroup.name}</Input>
-        {name && <InputHidden name={name} type="text" ref={inputRef} value={activeGroup.name || ''} />}
+        {/* {name && <InputHidden name={name} type="text" ref={inputRef} value={activeGroup.name || ''} />} */}
         <SvgStyled theme="light" svg={chevronDownSvg} />
       </Header>
       <List isOpen={isOpen}>
