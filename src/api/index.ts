@@ -65,10 +65,23 @@ export const tasksApi = createApi({
           })
         ).inversePatches;
         dispatch({ type: actions.removePreparedTask.toString() });
+        dispatch({ type: actions.sortTasks.toString() });
       },
     }),
     saveTask: builder.mutation({
       query: (payload: any) => ({ url: API_TASKS_BY_ID(payload._id), method: "PATCH", body: payload }),
+      onStart: (payload: any, { dispatch, context }) => {
+        context.undoPost = dispatch(
+          tasksApi.util.updateQueryResult("getTasks", undefined, draft => {
+            const { _id, timestamp } = payload;
+            const task = draft[timestamp].tasks.find((x: any) => x._id === _id);
+            for (const x in task) {
+              task[x] = payload[x];
+            }
+          })
+        ).inversePatches;
+        dispatch({ type: actions.removeEditedTask.toString() });
+      },
     }),
     getGroups: builder.query({
       query: () => API_GROUPS,
