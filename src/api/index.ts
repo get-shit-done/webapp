@@ -65,7 +65,7 @@ export const tasksApi = createApi({
           })
         ).inversePatches;
         dispatch({ type: actions.removePreparedTask.toString() });
-        dispatch({ type: actions.sortTasks.toString() });
+        // dispatch({ type: actions.sortTasks.toString() });
       },
     }),
     saveTask: builder.mutation({
@@ -81,6 +81,20 @@ export const tasksApi = createApi({
           })
         ).inversePatches;
         dispatch({ type: actions.removeEditedTask.toString() });
+      },
+    }),
+    removeTask: builder.mutation({
+      query: (payload: any) => ({ url: API_TASKS_BY_ID(payload._id), method: "DELETE" }),
+      onStart: (payload: any, { dispatch, context }) => {
+        context.undoPost = dispatch(
+          tasksApi.util.updateQueryResult("getTasks", undefined, draft => {
+            console.log(payload)
+            const { _id, timestamp } = payload;
+            draft[timestamp].tasks = draft[timestamp].tasks.filter((x: any) => x._id !== _id);
+          })
+        ).inversePatches;
+        dispatch({ type: actions.removeEditedTask.toString() });
+        // dispatch({ type: actions.sortTasks.toString() });
       },
     }),
     getGroups: builder.query({
@@ -138,6 +152,7 @@ export const {
   useGetTasksQuery,
   useAddTaskMutation,
   useSaveTaskMutation,
+  useRemoveTaskMutation,
   useGetGroupsQuery,
   useUpdateGroupMutation,
   useRemoveGroupMutation,

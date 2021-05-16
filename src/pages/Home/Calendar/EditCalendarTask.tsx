@@ -11,7 +11,7 @@ import { ModalFooter } from "../../../components/Modal";
 import { CalendarFormValues } from "./shared";
 import { AsyncButton, AsyncSvgButton } from "../../../components/Button";
 import { IGroup } from "../../../reducers/settings";
-import { useSaveTaskMutation, tasksApi } from "../../../api";
+import { useSaveTaskMutation, useRemoveTaskMutation, tasksApi } from "../../../api";
 import { useQueryCache } from "react-query";
 
 const Form = styled.form``;
@@ -29,8 +29,8 @@ interface IProps {
 
 // TODO: timestamp should come from taskBeingEdited
 const EditCalendarTask: FC<IProps> = ({ groups }) => {
-  const queryCache = useQueryCache();
   const [updateTask] = useSaveTaskMutation();
+  const [removeTask] = useRemoveTaskMutation()
   const { taskBeingEdited, asyncStatus } = useSelector((state: AppState) => state.calendar);
   const dispatch = useAppDispatch();
   // const { groups, colors } = useSelector((state: AppState) => state.settings)
@@ -39,8 +39,6 @@ const EditCalendarTask: FC<IProps> = ({ groups }) => {
   const { _id, time, name, group } = taskBeingEdited;
   const accentColor = selectedGroup ? colors[selectedGroup.colorId] : undefined;
   const timestamp = taskBeingEdited?.timestamp;
-
-  const onRemoveTask = () => dispatch(actions.removeTaskRequested({ _id, timestamp }));
 
   const onSubmit: SubmitHandler<CalendarFormValues> = (data): any => {
     const { name, from, to } = data;
@@ -125,7 +123,7 @@ const EditCalendarTask: FC<IProps> = ({ groups }) => {
         </AsyncButton>
 
         <RemoveButton tooltipPosition='right' asyncStatus={asyncStatus.removeTask}>
-          <RemoveSvg theme='light' svg={binSvg} onClick={onRemoveTask} />
+          <RemoveSvg theme='light' svg={binSvg} onClick={() => removeTask(taskBeingEdited)} />
         </RemoveButton>
       </ModalFooter>
     </Form>

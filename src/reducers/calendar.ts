@@ -13,7 +13,6 @@ import {
 } from "../constants";
 import { taskSort } from "../utils";
 import { shallowEqual } from "react-redux";
-import { eventChannel } from "redux-saga";
 
 export interface TaskBeingPrepared {
   timestamp?: string;
@@ -104,7 +103,7 @@ export const { reducer, actions } = createSlice({
       state.taskBeingEdited = task;
     },
     updateEditedTask(state, { payload }: PayloadAction<SavedTask>): void {
-      state.taskBeingEdited = payload
+      state.taskBeingEdited = payload;
     },
     editTaskCancel(state): void {
       const { _id, timestamp } = state.taskBeingEdited;
@@ -155,17 +154,17 @@ export const { reducer, actions } = createSlice({
     // getTasksFail(state, { payload }: PayloadAction<{ error: string }>) {
     //   state.asyncStatus.getTasks = asyncStatusFail(payload.error);
     // },
-    removeTaskRequested(state, action): void {
-      state.asyncStatus.removeTask = asyncStatusRequestedInherit(state.asyncStatus.removeTask);
-    },
-    removeTaskSucceeded(state, { payload: { _id, timestamp } }: PayloadAction<SavedTask>) {
-      state.allTasksByDay[timestamp].tasks = state.allTasksByDay[timestamp].tasks.filter(x => x._id !== _id);
-      state.taskBeingEdited = undefined;
-      state.asyncStatus.removeTask = asyncStatusSuccess;
-    },
-    removeTaskFailed(state, { payload }: PayloadAction<{ error: string }>) {
-      state.asyncStatus.removeTask = asyncStatusFail(payload.error);
-    },
+    // removeTaskRequested(state, action): void {
+    //   state.asyncStatus.removeTask = asyncStatusRequestedInherit(state.asyncStatus.removeTask);
+    // },
+    // removeTaskSucceeded(state, { payload: { _id, timestamp } }: PayloadAction<SavedTask>) {
+    // state.allTasksByDay[timestamp].tasks = state.allTasksByDay[timestamp].tasks.filter(x => x._id !== _id);
+    // state.taskBeingEdited = undefined;
+    // state.asyncStatus.removeTask = asyncStatusSuccess;
+    // },
+    // removeTaskFailed(state, { payload }: PayloadAction<{ error: string }>) {
+    //   state.asyncStatus.removeTask = asyncStatusFail(payload.error);
+    // },
     sortTasks(state, { payload: { timestamp } }): void {
       state.allTasksByDay[timestamp].tasks.sort(taskSort);
     },
