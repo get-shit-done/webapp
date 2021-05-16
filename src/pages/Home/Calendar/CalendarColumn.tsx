@@ -66,7 +66,6 @@ interface Props {
 }
 
 const CalendarColumn: FC<Props> = ({ timestamp, isCurrentDay, tasksFiltered = [], placeholderHeight, groups }) => {
-  // console.log('tasksFilteredtasksFiltered', tasksFiltered)
   const hoursAxis = useSelector(makeHoursAxis)
   const taskBeingEdited = useSelector((state: AppState) => state.calendar.taskBeingEdited)
   const taskBeingPrepared = useSelector((state: AppState) => state.calendar.taskBeingPrepared)

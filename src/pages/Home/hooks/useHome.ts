@@ -1,9 +1,8 @@
-import { useGetGroups } from "./useGetGroups";
-import { useGetTasks } from "./useGetTasks";
+import { useGetGroupsQuery, useGetTasksQuery } from "../../../api";
 
 export const useHome = () => {
-  const { data: groups } = useGetGroups();
-  const { allTasksByDay = {} } = useGetTasks();
+  const { data: groups } = useGetGroupsQuery(undefined);
+  const { data: allTasksByDay = {} } = useGetTasksQuery(undefined);
 
   return {
     allTasksByDay,
