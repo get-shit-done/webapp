@@ -93,9 +93,24 @@ export const tasksApi = createApi({
         body: { colorId },
         method: "PATCH",
       }),
+      onStart: (payload: any, { dispatch, context }) => {
+        context.undoPost = dispatch(
+          tasksApi.util.updateQueryResult("getGroups", undefined, draft => {
+            const groupToUpdate = draft.find((x: any) => x._id === payload.groupId);
+            groupToUpdate.colorId = payload.colorId;
+          })
+        ).inversePatches;
+      },
     }),
     removeGroup: builder.mutation({
       query: ({ _id }: { _id: string }) => ({ url: API_GROUPS_BY_ID(_id), method: "DELETE" }),
+      onStart: (payload: any, { dispatch, context }) => {
+        context.undoPost = dispatch(
+          tasksApi.util.updateQueryResult("getGroups", undefined, draft => {
+            return draft.filter((x: any) => x._id !== payload._id);
+          })
+        );
+      },
     }),
     getTodos: builder.query({
       query: () => API_GROUPS,
