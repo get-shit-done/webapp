@@ -4,6 +4,8 @@ import { AsyncStatus } from '../../../constants'
 import { determineAsyncStatus } from '../../../utils'
 import infoSvg from '../../../assets/svg/error-api.svg'
 import Svg, { styleDanger } from '../../Svg/component'
+import { FetchBaseQueryError } from '@rtk-incubator/rtk-query/dist'
+import { SerializedError } from '@reduxjs/toolkit'
 
 const Wrap = styled.div`
   display: flex;
@@ -16,13 +18,14 @@ const ErrorSvg = styled(Svg)`
   fill: var(--sunset-orange);
 `
 interface IProps {
-  asyncStatus: AsyncStatus
+  asyncStatus?: AsyncStatus;
+  errorMessage?: FetchBaseQueryError | SerializedError;
 }
 
-export default function TextError({ asyncStatus }: IProps) {
-  const { isError, errorMessage } = determineAsyncStatus(asyncStatus)
+export default function TextError({ asyncStatus, errorMessage }: IProps) {
+  // const { isError, errorMessage } = determineAsyncStatus(asyncStatus)
 
-  if (!isError) return null
+  if (!errorMessage) return null
   return (
     <Wrap>
       <ErrorSvg svg={infoSvg}></ErrorSvg>

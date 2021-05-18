@@ -8,18 +8,20 @@ import { SvgButtonWrap, AsyncButtonContent } from './shared'
 interface Props {
   tooltipPosition?: 'left' | 'right'
   children: React.ReactNode
-  asyncStatus: AsyncStatus | AsyncStatus[]
+  asyncStatus?: AsyncStatus | AsyncStatus[]
+  errorMessage?: string;
+  isLoading?: boolean;
   className?: string
 }
 
-const AsyncSvgButton: FC<Props> = ({ tooltipPosition, children, asyncStatus, className }) => {
-  const { isBusy, isError, errorMessage } = determineAsyncStatus(asyncStatus)
+const AsyncSvgButton: FC<Props> = ({ tooltipPosition, children, asyncStatus, className, errorMessage, isLoading }) => {
+  // const { isBusy, isError, errorMessage } = determineAsyncStatus(asyncStatus)
 
   return (
-    <SvgButtonWrap isError={isError} type="button" className={className}>
-      <SpinnerLoader size={1.6} asyncStatus={asyncStatus} />
+    <SvgButtonWrap isError={!!errorMessage} type="button" className={className}>
+      <SpinnerLoader size={1.6} isLoading={isLoading} />
       <Tooltip isVisible tooltipPosition={tooltipPosition} tooltipText={errorMessage}>
-        <AsyncButtonContent isShow={!isBusy}>
+        <AsyncButtonContent isShow={!isLoading}>
           {children}
         </AsyncButtonContent>
       </Tooltip>
