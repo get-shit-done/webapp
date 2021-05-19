@@ -1,5 +1,7 @@
 import { SavedTask } from '../reducers/calendar'
 import { AsyncStatus, asyncStatusInitial } from '../constants'
+import { FetchBaseQueryError } from '@rtk-incubator/rtk-query/dist'
+import { SerializedError } from '@reduxjs/toolkit'
 
 export const taskSort = (a: SavedTask, b: SavedTask) => a.time[0] - b.time[0]
 
@@ -30,3 +32,13 @@ export const determineAsyncStatus = (params?: AsyncStatus | AsyncStatus[]) => {
 }
 
 export const payloadError = ({ _id, error }: { _id?: string; error: string }) => ({ _id, error })
+
+export function getAsyncStatus(
+  queries: { isLoading: boolean; isError: boolean; error?: FetchBaseQueryError | SerializedError }[]
+) {
+  return {
+    isLoading: queries.some(x => x.isLoading),
+    isError: queries.some(x => x.isError),
+    error: queries.find(x => x.error || {}).error,
+  };
+}
