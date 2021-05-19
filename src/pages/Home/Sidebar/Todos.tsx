@@ -59,22 +59,24 @@ const TodosSpinner = styled(SpinnerLoader)``;
 const Todos = () => {
   const getTodosStatus = useGetTodosQuery(undefined);
   const [updateTodo, updateTodoStatus] = useUpdateTodoMutation();
+  const { endpointName, originalArgs, data } = updateTodoStatus;
+  console.log(endpointName, originalArgs, data);
   const [removeTodo, removeTodoStatus] = useRemoveTodoMutation();
   const [addTodo, addTodoStatus] = useAddTodoMutation();
 
-  const { isError, isLoading, error } = getAsyncStatus([updateTodoStatus, removeTodoStatus, addTodoStatus]);
+  const { getIsLoading, getIsError, getError } = getAsyncStatus([updateTodoStatus, removeTodoStatus, addTodoStatus]);
 
   return (
     <>
-      <AddNewTodo addNewTodo={(todo) => addTodo(todo)} />
+      <AddNewTodo addNewTodo={todo => addTodo(todo)} />
       <TodosSpinner size={4} isLoading={getTodosStatus.isLoading} />
-      <TextError errorMessage={error} />
+      <TextError errorMessage={getError(getTodosStatus.data?._id)} />
       {getTodosStatus.data?.map(({ _id, todoName, isDone }: Todo) => {
         return (
-          <Todo isDone={isDone} isError={isError} key={_id}>
+          <Todo isDone={isDone} isError={getIsError(_id)} key={_id}>
             <Name onClick={() => updateTodo({ _id, isDone: !isDone })}>{todoName}</Name>
             <Actions>
-              <AsyncSvgButton errorMessage={error} isLoading={isLoading}>
+              <AsyncSvgButton isLoading={getIsLoading(_id)}>
                 <Remove theme='light' svg={binSvg} onClick={() => removeTodo({ _id })} />
               </AsyncSvgButton>
             </Actions>

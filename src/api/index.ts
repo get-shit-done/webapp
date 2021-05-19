@@ -146,7 +146,7 @@ export const tasksApi = createApi({
     }),
     removeTodo: builder.mutation({
       query: ({ _id }: { _id: string }) => ({ url: API_TODOS_BY_ID(_id), method: "DELETE" }),
-      onStart: (payload: any, { dispatch, context }) => {
+      onSuccess: (payload: any, { dispatch, context }) => {
         context.undoPost = dispatch(
           tasksApi.util.updateQueryResult("getTodos", undefined, draft => {
             return draft.filter((x: any) => x._id !== payload._id);
