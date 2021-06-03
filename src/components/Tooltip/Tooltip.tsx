@@ -1,5 +1,5 @@
-import React, { memo, FC } from 'react'
-import styled from 'styled-components'
+import React, { memo, FC } from "react";
+import styled from "styled-components";
 // import useToggle from '../../hooks/useBooleanToggle'
 
 const Wrap = styled.div`
@@ -8,8 +8,8 @@ const Wrap = styled.div`
   /* right: 0; */
   align-items: center;
   cursor: pointer;
-`
-const TooltipText = styled.div<{ isError: boolean, tooltipPosition: 'left' | 'right' }>`
+`;
+const TooltipText = styled.div<{ isError: boolean; tooltipPosition: "left" | "right" }>`
   visibility: hidden;
   position: absolute;
   padding: 1rem var(--size-lg);
@@ -30,14 +30,16 @@ const TooltipText = styled.div<{ isError: boolean, tooltipPosition: 'left' | 'ri
     height: 0;
     border-width: 6px;
     border-color: transparent;
-  };
+  }
 
   ${Wrap}:hover & {
     visibility: visible;
     transition: margin 0.2s ease-out, visibility 0.4s ease-out;
-  };
+  }
 
-  ${p => p.tooltipPosition === 'left' && `
+  ${p =>
+    p.tooltipPosition === "left" &&
+    `
     right: 100%;
     border-right: 2px solid var(--sunset-orange);
     margin-right: var(--size-md);
@@ -53,7 +55,9 @@ const TooltipText = styled.div<{ isError: boolean, tooltipPosition: 'left' | 'ri
     };
   `};
 
-  ${p => p.tooltipPosition === 'right' && `
+  ${p =>
+    p.tooltipPosition === "right" &&
+    `
     left: 100%;
     border-left: 2px solid var(--sunset-orange);
     margin-left: var(--size-md);
@@ -68,29 +72,28 @@ const TooltipText = styled.div<{ isError: boolean, tooltipPosition: 'left' | 'ri
       border-right-color: var(--sunset-orange);
     };
   `};
-`
-const Content = styled.div`
-`
+`;
+const Content = styled.div``;
 
 interface IProps {
-  isVisible: boolean
-  tooltipPosition?: 'left' | 'right'
-  tooltipText: string
-  children: any
-  className?: string
+  isVisible: boolean;
+  tooltipPosition?: "left" | "right";
+  tooltipText: string;
+  children: any;
+  className?: string;
 }
-const Tooltip: FC<IProps> = ({ isVisible, tooltipPosition = 'left', tooltipText, children, className }) => {
+const Tooltip: FC<IProps> = ({ isVisible, tooltipPosition = "left", tooltipText, children, className }) => {
   // TODO: see if isVisible needs to be passed in
-  return (
-    !isVisible ? null : (
-      <Wrap className={className}>
-        {tooltipText && <TooltipText isError={false} tooltipPosition={tooltipPosition}>{tooltipText}</TooltipText>}
-        <Content>
-          {children}
-        </Content>
-      </Wrap>
-    )
-  )
-}
+  return !isVisible ? null : (
+    <Wrap className={className}>
+      {tooltipText && (
+        <TooltipText isError={false} tooltipPosition={tooltipPosition}>
+          {tooltipText}
+        </TooltipText>
+      )}
+      <Content>{children}</Content>
+    </Wrap>
+  );
+};
 
-export default memo(Tooltip)
+export default memo(Tooltip);

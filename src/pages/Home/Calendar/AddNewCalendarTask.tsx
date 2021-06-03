@@ -1,5 +1,5 @@
 import React, { useState, useEffect, memo, FC } from "react";
-import { useSelector, useDispatch } from "react-redux";
+import { useSelector } from "react-redux";
 import { useForm } from "react-hook-form";
 import styled from "styled-components";
 import { AsyncButton } from "../../../components/Button";
@@ -17,9 +17,9 @@ interface IProps {
   groups: IGroup[];
 }
 const AddNewCalendarTask: FC<IProps> = ({ groups }) => {
-  const [addNewTask] = useAddTaskMutation();
+  const [addNewTask, asyncStatusAdd] = useAddTaskMutation();
   const dispatch = useAppDispatch();
-  const { taskBeingPrepared, asyncStatus } = useSelector((state: AppState) => state.calendar);
+  const { taskBeingPrepared } = useSelector((state: AppState) => state.calendar);
   const { timestamp, time } = taskBeingPrepared;
   // const { groups, colors } = useSelector((state: AppState) => state.settings)
   const { colors } = useSelector((state: AppState) => state.settings);
@@ -95,7 +95,7 @@ const AddNewCalendarTask: FC<IProps> = ({ groups }) => {
           isDisabled={Object.entries(errors).length > 0}
           accentColor={accentColor}
           type='submit'
-          asyncStatus={asyncStatus.addTask}>
+          asyncStatuses={[asyncStatusAdd]}>
           Add new task
         </AsyncButton>
       </ModalFooter>

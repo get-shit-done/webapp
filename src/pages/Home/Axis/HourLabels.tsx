@@ -1,13 +1,13 @@
-import React, { FC } from 'react'
-import styled from 'styled-components'
-import { useSelector } from 'react-redux'
+import React, { FC } from "react";
+import styled from "styled-components";
+import { useSelector } from "react-redux";
 
-import UseFilterRange from '../../../hooks/useFilterRange'
-import UseHighlightFilteredRange from '../../../hooks/useHighlightFIlteredRange'
-import { actions } from '../../../reducers/calendar'
-import { AppState } from '../../../Application/Root'
+import UseFilterRange from "../../../hooks/useFilterRange";
+import UseHighlightFilteredRange from "../../../hooks/useHighlightFIlteredRange";
+import { actions } from "../../../reducers/calendar";
+import { AppState } from "../../../Application/Root";
 
-const Wrap = styled.div<{ theme: { axisBg: string }, isBeingFiltered: boolean }>`
+const Wrap = styled.div<{ theme: { axisBg: string }; isBeingFiltered: boolean }>`
   z-index: 2;
   display: flex;
   position: absolute;
@@ -33,9 +33,9 @@ const Wrap = styled.div<{ theme: { axisBg: string }, isBeingFiltered: boolean }>
     padding-left: 0;
     width: 50px;
   }
-`
+`;
 const HourLabel = styled.div<{
-  theme: { axisBg: string, axisBorder: string };
+  theme: { axisBg: string; axisBorder: string };
   isFiltered: boolean;
   isActive: boolean;
   isBeingFiltered: boolean;
@@ -51,8 +51,8 @@ const HourLabel = styled.div<{
   color: var(--pastel-gray);
 
   &:hover {
-    background-color: ${p => (p.isFiltered ? 'inherit' : 'var(--arsenic)')};
-    cursor: ${p => (p.isFiltered ? 'inherit' : 'pointer')};
+    background-color: ${p => (p.isFiltered ? "inherit" : "var(--arsenic)")};
+    cursor: ${p => (p.isFiltered ? "inherit" : "pointer")};
   }
 
   ${p =>
@@ -64,7 +64,7 @@ const HourLabel = styled.div<{
 
   &::before {
     display: block;
-    content: '';
+    content: "";
     position: absolute;
     right: -4px;
     width: 6px;
@@ -90,23 +90,26 @@ const HourLabel = styled.div<{
       display: none;
     }
   }
-`
+`;
 
 interface Props {
-  onHover({ }: { axis: string; isReset?: boolean }): void
+  onHover({}: { axis: string; isReset?: boolean }): void;
 }
 
 const HourLabels: FC<Props> = ({ onHover }) => {
-  const { hoursAxis } = useSelector((state: AppState) => state.calendar)
-  const [{ isFiltered, isBeingFiltered, from }, onFilter] = UseFilterRange({ from: 0, to: 23, cb: actions.filterHours })
-  const [filteredRange, highlightFilteredRange] = UseHighlightFilteredRange({ isBeingFiltered, isFiltered, from })
+  const { hoursAxis } = useSelector((state: AppState) => state.calendar);
+  const [{ isFiltered, isBeingFiltered, from }, onFilter] = UseFilterRange({
+    from: 0,
+    to: 23,
+    cb: actions.filterHours,
+  });
+  const [filteredRange, highlightFilteredRange] = UseHighlightFilteredRange({ isBeingFiltered, isFiltered, from });
 
   return (
     <Wrap
       isBeingFiltered={isBeingFiltered}
-      onMouseEnter={() => onHover({ axis: 'x' })}
-      onMouseLeave={() => onHover({ isReset: !isBeingFiltered, axis: 'x' })}
-    >
+      onMouseEnter={() => onHover({ axis: "x" })}
+      onMouseLeave={() => onHover({ isReset: !isBeingFiltered, axis: "x" })}>
       {hoursAxis.map(hour => (
         <HourLabel
           isBeingFiltered={isBeingFiltered}
@@ -114,13 +117,12 @@ const HourLabels: FC<Props> = ({ onHover }) => {
           isActive={filteredRange.includes(hour)}
           key={hour}
           onMouseEnter={() => highlightFilteredRange(hour)}
-          onClick={() => onFilter(hour)}
-        >
+          onClick={() => onFilter(hour)}>
           {hour}
         </HourLabel>
       ))}
     </Wrap>
-  )
-}
+  );
+};
 
-export default HourLabels
+export default HourLabels;

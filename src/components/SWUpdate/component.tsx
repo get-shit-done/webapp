@@ -1,5 +1,5 @@
-import React, { useState, FC } from 'react'
-import styled from 'styled-components'
+import React, { useState, FC } from "react";
+import styled from "styled-components";
 
 const Wrap = styled.div`
   z-index: 1;
@@ -9,7 +9,7 @@ const Wrap = styled.div`
   display: flex;
   align-items: center;
   cursor: pointer;
-`
+`;
 const InnerWrap = styled.div`
   padding: var(--size-xlg);
   padding-right: 10rem;
@@ -25,12 +25,12 @@ const InnerWrap = styled.div`
   &:hover {
     opacity: 0.8;
   }
-`
+`;
 const Message = styled.div`
   text-overflow: ellipsis;
   white-space: nowrap;
   overflow: hidden;
-`
+`;
 const Undo = styled.div`
   position: absolute;
   right: var(--size-lg);
@@ -41,14 +41,14 @@ const Undo = styled.div`
   background-color: var(--white);
   font-size: 10px;
   border-radius: 21px;
-`
+`;
 
 const SWUpdate: FC<{ isUpdateAvailable: boolean }> = ({ isUpdateAvailable }) => {
-  const [doNotUpdate, setDoNotUpdate] = useState(false)
-  const onReload = () => window.location.reload(true)
+  const [doNotUpdate, setDoNotUpdate] = useState(false);
+  const onReload = () => window.location.reload(true);
   const onRemove = () => {
-    setDoNotUpdate(true)
-  }
+    setDoNotUpdate(true);
+  };
 
   return !isUpdateAvailable || doNotUpdate ? null : (
     <Wrap>
@@ -57,7 +57,7 @@ const SWUpdate: FC<{ isUpdateAvailable: boolean }> = ({ isUpdateAvailable }) => 
       </InnerWrap>
       <Undo onClick={onReload}>Update</Undo>
     </Wrap>
-  )
-}
+  );
+};
 
-export default React.memo(SWUpdate)
+export default React.memo(SWUpdate);

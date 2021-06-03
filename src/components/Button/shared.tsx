@@ -1,34 +1,36 @@
 import styled from "styled-components";
 import { rgbAdjust } from "../../styles";
 import { styleDanger } from "../Svg/component";
-import { AsyncStatus } from "../../constants";
-
+import { AsyncStatusNew } from "../../constants";
 
 export interface IDumbButtonProps {
-  isDisabled?: boolean
-  accentColor?: string
-  type: 'submit' | 'button' | 'reset'
-  children: React.ReactNode
-  onClick?: (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => void
-  className?: string
+  isDisabled?: boolean;
+  accentColor?: string;
+  type: "submit" | "button" | "reset";
+  children: React.ReactNode;
+  onClick?: (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => void;
+  className?: string;
 }
 
 export interface IAsyncButtonProps extends IDumbButtonProps {
-  tooltipPosition?: 'left' | 'right'
-  asyncStatus: AsyncStatus | AsyncStatus[]
+  tooltipPosition?: "left" | "right";
+  asyncStatuses: AsyncStatusNew[];
+  asyncStatusId?: string;
 }
 
 export const SvgButtonWrap = styled.button<{ isError?: boolean }>`
   position: relative;
   cursor: pointer;
-  ${p => p.isError && `
+  ${p =>
+    p.isError &&
+    `
     * {
       ${styleDanger};
     };
   `};
-`
+`;
 
-export const ButtonStyledWrap = styled.button<{ isError?: boolean, accentColor: string }>`
+export const ButtonStyledWrap = styled.button<{ isError?: boolean; accentColor: string }>`
   display: flex;
   position: relative;
   justify-content: center;
@@ -45,9 +47,11 @@ export const ButtonStyledWrap = styled.button<{ isError?: boolean, accentColor: 
   &:hover {
     background-color: #58cbff;
     color: var(--white);
-  };
+  }
 
-  ${p => p.accentColor && `
+  ${p =>
+    p.accentColor &&
+    `
     background-color: ${p.accentColor};
     color: ${rgbAdjust(p.accentColor, -100)};
 
@@ -57,7 +61,9 @@ export const ButtonStyledWrap = styled.button<{ isError?: boolean, accentColor: 
     };
   `};
 
-  ${p => p.isError && `
+  ${p =>
+    p.isError &&
+    `
     background-color: var(--sunset-orange);
     color: var(--charcoal);
 
@@ -71,10 +77,10 @@ export const ButtonStyledWrap = styled.button<{ isError?: boolean, accentColor: 
     pointer-events: none;
     background-color: var(--independence);
     color: var(--lavender);
-  };
-`
+  }
+`;
 
 export const AsyncButtonContent = styled.div<{ isShow: boolean }>`
-  opacity: ${p => p.isShow ? 1 : 0};
-  visibility: ${p => p.isShow ? 'visible' : 'hidden'};
-`
+  opacity: ${p => (p.isShow ? 1 : 0)};
+  visibility: ${p => (p.isShow ? "visible" : "hidden")};
+`;

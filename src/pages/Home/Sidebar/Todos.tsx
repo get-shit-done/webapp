@@ -59,12 +59,10 @@ const TodosSpinner = styled(SpinnerLoader)``;
 const Todos = () => {
   const getTodosStatus = useGetTodosQuery(undefined);
   const [updateTodo, updateTodoStatus] = useUpdateTodoMutation();
-  // const { endpointName, originalArgs, data } = updateTodoStatus;
-  // console.log("updateTodoStatus", updateTodoStatus);
   const [removeTodo, removeTodoStatus] = useRemoveTodoMutation();
   const [addTodo, addTodoStatus] = useAddTodoMutation();
 
-  const { getIsLoading, getIsError, getError } = getAsyncStatus([updateTodoStatus, removeTodoStatus, addTodoStatus]);
+  const { getIsError, getError } = getAsyncStatus([updateTodoStatus, removeTodoStatus, addTodoStatus]);
 
   return (
     <>
