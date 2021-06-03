@@ -1,16 +1,6 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import format from "date-fns/format";
-import {
-  MONTH_DAYS,
-  MONTH_DAYS_STRING,
-  HOURS_IN_DAY,
-  asyncStatusInitial,
-  AsyncStatus,
-  asyncStatusRequested,
-  asyncStatusSuccess,
-  asyncStatusFail,
-  asyncStatusRequestedInherit,
-} from "../constants";
+import { MONTH_DAYS, MONTH_DAYS_STRING, HOURS_IN_DAY } from "../constants";
 import { taskSort } from "../utils";
 import { shallowEqual } from "react-redux";
 
@@ -48,12 +38,6 @@ interface IInitialState {
   allTasksByDay: IAllTasksByDay;
   hoursAxis: number[];
   daysAxis: string[];
-  asyncStatus: {
-    getTasks: AsyncStatus;
-    saveTask: AsyncStatus;
-    removeTask: AsyncStatus;
-    addTask: AsyncStatus;
-  };
 }
 const initialState: IInitialState = {
   focusedTimestamp: undefined,
@@ -62,12 +46,6 @@ const initialState: IInitialState = {
   allTasksByDay: {},
   hoursAxis: HOURS_IN_DAY,
   daysAxis: MONTH_DAYS_STRING(),
-  asyncStatus: {
-    getTasks: asyncStatusInitial,
-    saveTask: asyncStatusInitial,
-    removeTask: asyncStatusInitial,
-    addTask: asyncStatusInitial,
-  },
 };
 
 export const { reducer, actions } = createSlice({
@@ -81,11 +59,6 @@ export const { reducer, actions } = createSlice({
       state.daysAxis = MONTH_DAYS()
         .filter(day => format(day, "d") >= from && format(day, "d") <= to)
         .map(day => day.toString());
-    },
-    resetAsyncStatus(state) {
-      state.asyncStatus.removeTask = asyncStatusInitial;
-      state.asyncStatus.addTask = asyncStatusInitial;
-      state.asyncStatus.saveTask = asyncStatusInitial;
     },
     saveFocusedTimestamp(state, { payload }: PayloadAction<{ timestamp: string }>): void {
       state.focusedTimestamp = payload.timestamp;

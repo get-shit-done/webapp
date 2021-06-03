@@ -79,11 +79,9 @@ const Calendar: FC<Props> = ({ scale, allTasksByDay, groups }) => {
 
   const onRemovePreparedTask = useCallback(() => {
     dispatch(actions.removePreparedTask());
-    dispatch(actions.resetAsyncStatus());
   }, []);
   const onEditTaskCancel = useCallback(() => {
     dispatch(actions.editTaskCancel());
-    dispatch(actions.resetAsyncStatus());
   }, []);
 
   return (
