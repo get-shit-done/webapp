@@ -51,7 +51,7 @@ export const tasksApi = createApi({
   baseQuery: fetchBaseQuery({ baseUrl: "http://localhost:3005/api/v1" }),
   endpoints: builder => ({
     getTasks: builder.query({
-      query: (monthOfTasks?: Date) => `${API_TASKS}?month=May`,
+      query: (monthOfTasks?: Date) => `${API_TASKS}?month=Jun`,
       transformResponse: (response: any) => response.data,
     }),
     addTask: builder.mutation({
@@ -66,6 +66,13 @@ export const tasksApi = createApi({
         ).inversePatches;
         dispatch({ type: actions.removePreparedTask.toString() });
         // dispatch({ type: actions.sortTasks.toString() });
+      },
+      onSuccess: (payload: any, { dispatch, context }, response) => {
+        context.undoPost = dispatch(
+          tasksApi.util.updateQueryResult("getTasks", undefined, draft => {
+            draft[payload.timestamp].tasks.find(task => !task._id)._id = response.data._id;
+          })
+        ).inversePatches;
       },
     }),
     saveTask: builder.mutation({
