@@ -1,7 +1,7 @@
 import axios from "axios";
 import { format } from "date-fns";
 
-import { useAppDispatch } from "../Application/Root";
+import { actions as toastActions } from "../components/Toast/reducer";
 
 const URL = "http://localhost:3005/api/v1";
 
@@ -88,7 +88,6 @@ export const tasksApi = createApi({
       onStart: (payload: any, { dispatch, context }) => {
         context.undoPost = dispatch(
           tasksApi.util.updateQueryResult("getTasks", undefined, draft => {
-            console.log(payload)
             const { _id, timestamp } = payload;
             draft[timestamp].tasks = draft[timestamp].tasks.filter((x: any) => x._id !== _id);
           })
@@ -127,7 +126,7 @@ export const tasksApi = createApi({
       },
     }),
     getTodos: builder.query({
-      query: () => API_GROUPS,
+      query: () => API_TODOS,
       transformResponse: (response: any) => response.data,
     }),
     updateTodo: builder.mutation({
@@ -136,12 +135,35 @@ export const tasksApi = createApi({
         body: { _id, isDone },
         method: "PATCH",
       }),
+      onStart: (payload: any, { dispatch, context }) => {
+        context.undoPost = dispatch(
+          tasksApi.util.updateQueryResult("getTodos", undefined, draft => {
+            const todoIndexToUpdate = draft.findIndex((x: any) => x._id === payload._id);
+            draft[todoIndexToUpdate].isDone = payload.isDone;
+          })
+        );
+      },
     }),
     removeTodo: builder.mutation({
       query: ({ _id }: { _id: string }) => ({ url: API_TODOS_BY_ID(_id), method: "DELETE" }),
+      onSuccess: (payload: any, { dispatch, context }) => {
+        context.undoPost = dispatch(
+          tasksApi.util.updateQueryResult("getTodos", undefined, draft => {
+            return draft.filter((x: any) => x._id !== payload._id);
+          })
+        ).inversePatches;
+        dispatch(toastActions.addToast({ prefix: "task removed", message: payload.todoName }));
+      },
     }),
     addTodo: builder.mutation({
       query: (payload: { todoName: string }) => ({ url: API_TODOS, body: payload, method: "POST" }),
+      onStart: (payload: any, { dispatch, context }) => {
+        context.undoPost = dispatch(
+          tasksApi.util.updateQueryResult("getTodos", undefined, draft => {
+            draft.unshift(payload);
+          })
+        );
+      },
     }),
   }),
 });
