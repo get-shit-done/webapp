@@ -12,7 +12,6 @@ import { CalendarFormValues } from "./shared";
 import { AsyncButton, AsyncSvgButton } from "../../../components/Button";
 import { IGroup } from "../../../reducers/settings";
 import { useSaveTaskMutation, useRemoveTaskMutation, tasksApi } from "../../../api";
-import { useQueryCache } from "react-query";
 
 const Form = styled.form``;
 
