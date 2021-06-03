@@ -1,34 +1,32 @@
-import React, { FC } from 'react'
-import { AsyncStatus } from '../../constants'
-import { SpinnerLoader } from '../Loader'
-import { determineAsyncStatus } from '../../utils'
-import Tooltip from '../Tooltip/Tooltip'
-import { SvgButtonWrap, AsyncButtonContent } from './shared'
-import { FetchBaseQueryError } from '@rtk-incubator/rtk-query/dist'
-import { SerializedError } from '@reduxjs/toolkit'
+import React, { FC } from "react";
+import { AsyncStatusNew } from "../../constants";
+import { SpinnerLoader } from "../Loader";
+import { getAsyncStatus } from "../../utils";
+import Tooltip from "../Tooltip/Tooltip";
+import { SvgButtonWrap, AsyncButtonContent } from "./shared";
 
 interface Props {
-  tooltipPosition?: 'left' | 'right'
-  children: React.ReactNode
-  asyncStatus?: AsyncStatus | AsyncStatus[]
-  errorMessage?: FetchBaseQueryError | SerializedError;
-  isLoading?: boolean;
-  className?: string
+  tooltipPosition?: "left" | "right";
+  children: React.ReactNode;
+  asyncStatuses?: AsyncStatusNew[];
+  asyncStatusId?: string;
+  className?: string;
 }
 
-const AsyncSvgButton: FC<Props> = ({ tooltipPosition, children, asyncStatus, className, errorMessage, isLoading }) => {
-  // const { isBusy, isError, errorMessage } = determineAsyncStatus(asyncStatus)
+const AsyncSvgButton: FC<Props> = ({ tooltipPosition, children, asyncStatuses, asyncStatusId, className }) => {
+  const { getIsLoading, getIsError, getError } = getAsyncStatus(asyncStatuses);
+  const isError = getIsError(asyncStatusId);
+  const error = getError(asyncStatusId);
+  const isLoading = getIsLoading(asyncStatusId);
 
   return (
-    <SvgButtonWrap isError={!!errorMessage} type="button" className={className}>
+    <SvgButtonWrap isError={isError} type='button' className={className}>
       <SpinnerLoader size={1.6} isLoading={isLoading} />
-      <Tooltip isVisible tooltipPosition={tooltipPosition} tooltipText={errorMessage as string}>
-        <AsyncButtonContent isShow={!isLoading}>
-          {children}
-        </AsyncButtonContent>
+      <Tooltip isVisible tooltipPosition={tooltipPosition} tooltipText={error as string}>
+        <AsyncButtonContent isShow={!isLoading}>{children}</AsyncButtonContent>
       </Tooltip>
     </SvgButtonWrap>
-  )
-}
+  );
+};
 
-export default AsyncSvgButton
+export default AsyncSvgButton;

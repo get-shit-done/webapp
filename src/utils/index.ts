@@ -43,8 +43,8 @@ export function getAsyncStatus(
 
   // TODO: convert to hook, save below id to state [0] if it exists in above array
   return {
-    getIsLoading: (_id: string) => ids[0] === _id && isLoading,
-    getIsError: (_id: string) => ids[0] === _id && isError,
-    getError: (_id: string) => (ids[0] === _id && error ? error : undefined),
+    getIsLoading: (_id: string = ids[0]) => ids[0] === _id && isLoading,
+    getIsError: (_id: string = ids[0]) => ids[0] === _id && isError,
+    getError: (_id: string = ids[0]) => (ids[0] === _id && error ? error : undefined),
   };
 }

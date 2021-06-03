@@ -29,7 +29,7 @@ interface IProps {
 // TODO: timestamp should come from taskBeingEdited
 const EditCalendarTask: FC<IProps> = ({ groups }) => {
   const [updateTask] = useSaveTaskMutation();
-  const [removeTask] = useRemoveTaskMutation()
+  const [removeTask, removeTaskStatus] = useRemoveTaskMutation()
   const { taskBeingEdited, asyncStatus } = useSelector((state: AppState) => state.calendar);
   const dispatch = useAppDispatch();
   // const { groups, colors } = useSelector((state: AppState) => state.settings)
@@ -121,7 +121,7 @@ const EditCalendarTask: FC<IProps> = ({ groups }) => {
           Save task
         </AsyncButton>
 
-        <RemoveButton tooltipPosition='right' asyncStatus={asyncStatus.removeTask}>
+        <RemoveButton tooltipPosition='right' asyncStatuses={[removeTaskStatus]}>
           <RemoveSvg theme='light' svg={binSvg} onClick={() => removeTask(taskBeingEdited)} />
         </RemoveButton>
       </ModalFooter>

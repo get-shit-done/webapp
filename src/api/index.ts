@@ -1,4 +1,7 @@
 import { format } from "date-fns";
+// Need to use the React-specific entry point to import createApi
+import { createApi, fetchBaseQuery } from "@rtk-incubator/rtk-query/react";
+import { actions } from "../reducers/calendar";
 
 import { actions as toastActions } from "../components/Toast/reducer";
 
@@ -13,16 +16,10 @@ export const API_GROUPS_BY_ID = (id: string) => `${URL}/groups/${id}`;
 export const API_TODOS = `${URL}/todos`;
 export const API_TODOS_BY_ID = (id: string) => `${URL}/todos/${id}`;
 
-// Need to use the React-specific entry point to import createApi
-import { createApi, fetchBaseQuery } from "@rtk-incubator/rtk-query/react";
-import { actions } from "../reducers/calendar";
-
-// const dispatch = useAppDispatch();
-
 // Define a service using a base URL and expected endpoints
 export const tasksApi = createApi({
   reducerPath: "tasksApi",
-  baseQuery: fetchBaseQuery({ baseUrl: "http://localhost:3005/api/v1" }),
+  baseQuery: fetchBaseQuery({ baseUrl: URL }),
   endpoints: builder => ({
     getTasks: builder.query({
       query: (monthOfTasks?: Date) => `${API_TASKS}?month=Jun`,

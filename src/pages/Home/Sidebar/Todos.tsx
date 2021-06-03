@@ -59,8 +59,8 @@ const TodosSpinner = styled(SpinnerLoader)``;
 const Todos = () => {
   const getTodosStatus = useGetTodosQuery(undefined);
   const [updateTodo, updateTodoStatus] = useUpdateTodoMutation();
-  const { endpointName, originalArgs, data } = updateTodoStatus;
-  console.log(endpointName, originalArgs, data);
+  // const { endpointName, originalArgs, data } = updateTodoStatus;
+  // console.log("updateTodoStatus", updateTodoStatus);
   const [removeTodo, removeTodoStatus] = useRemoveTodoMutation();
   const [addTodo, addTodoStatus] = useAddTodoMutation();
 
@@ -76,7 +76,7 @@ const Todos = () => {
           <Todo isDone={isDone} isError={getIsError(_id)} key={_id}>
             <Name onClick={() => updateTodo({ _id, isDone: !isDone })}>{todoName}</Name>
             <Actions>
-              <AsyncSvgButton isLoading={getIsLoading(_id)}>
+              <AsyncSvgButton asyncStatuses={[updateTodoStatus, removeTodoStatus, addTodoStatus]} asyncStatusId={_id}>
                 <Remove theme='light' svg={binSvg} onClick={() => removeTodo({ _id })} />
               </AsyncSvgButton>
             </Actions>
