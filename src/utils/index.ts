@@ -18,6 +18,7 @@ export function getAsyncStatus(
   const error = queries.find(x => x.error || {}).error;
 
   // TODO: convert to hook, save below id to state [0] if it exists in above array
+  // export boolean values alongside methods
   return {
     getIsLoading: (_id: string = ids[0]) => ids[0] === _id && isLoading,
     getIsError: (_id: string = ids[0]) => ids[0] === _id && isError,
