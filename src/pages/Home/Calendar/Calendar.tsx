@@ -13,7 +13,7 @@ import { actions, IAllTasksByDay } from "../../../reducers/calendar";
 import AddNewCalendarTask from "./AddNewCalendarTask";
 import { SpinnerLoader, LoaderSvg } from "../../../components/Loader";
 import { IGroup } from "../../../reducers/settings";
-import { useGetTasksQuery } from "../../../api";
+import { tasksApi, useGetTasksQuery } from "../../../api";
 
 const Wrap = styled.div<{ scale: { x: number; y: number; duration: number } }>`
   position: relative;
@@ -75,6 +75,7 @@ const Calendar: FC<Props> = ({ scale, allTasksByDay, groups }) => {
   const dispatch = useAppDispatch();
   const { isLoading } = useGetTasksQuery(undefined);
   const taskBeingEdited = useSelector((state: AppState) => state.calendar.taskBeingEdited);
+  const taskBeingEditedClone = useSelector((state: AppState) => state.calendar.taskBeingEditedClone);
   const taskBeingPrepared = useSelector((state: AppState) => state.calendar.taskBeingPrepared);
 
   const onRemovePreparedTask = useCallback(() => {
@@ -82,7 +83,18 @@ const Calendar: FC<Props> = ({ scale, allTasksByDay, groups }) => {
   }, []);
   const onEditTaskCancel = useCallback(() => {
     dispatch(actions.editTaskCancel());
-  }, []);
+
+    dispatch(
+      tasksApi.util.updateQueryResult("getTasks", undefined, draft => {
+        const taskToUpdate = draft[taskBeingEditedClone.timestamp].tasks.find(
+          (x: any) => x._id === taskBeingEditedClone._id
+        );
+        for (const x in taskToUpdate) {
+          taskToUpdate[x] = taskBeingEditedClone[x];
+        }
+      })
+    );
+  }, [taskBeingEditedClone]);
 
   return (
     <Wrap scale={scale} ref={wrapRef}>
