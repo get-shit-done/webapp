@@ -1,2 +1,2 @@
-export { default as Modal } from './component'
-export { ModalFooter } from './shared'
+export { default as Modal } from "./component";
+export { ModalFooter } from "./shared";

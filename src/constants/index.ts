@@ -2,6 +2,8 @@ import getDaysInMonth from "date-fns/getDaysInMonth";
 import eachDayOfInterval from "date-fns/eachDayOfInterval";
 import lastDayOfMonth from "date-fns/lastDayOfMonth";
 import sub from "date-fns/sub";
+import { FetchBaseQueryError } from "@rtk-incubator/rtk-query/dist";
+import { SerializedError } from "@reduxjs/toolkit";
 
 export const HOURS_IN_DAY = Array(24)
   .fill(null)
@@ -14,42 +16,9 @@ export const MONTH_DAYS = (date: Date = new Date()) =>
 export const MONTH_DAYS_STRING = (date: Date = new Date()) => MONTH_DAYS(date).map(date => date.toString());
 
 export interface AsyncStatus {
-  isInitial: boolean;
-  isBusy: boolean;
-  isDone: boolean;
+  isUninitialized: boolean;
+  isLoading: boolean;
   isError: boolean;
-  errorMessage?: string;
+  isSuccess: boolean;
+  error?: FetchBaseQueryError | SerializedError;
 }
-
-export const asyncStatusInitial: AsyncStatus = {
-  isInitial: true,
-  isBusy: false,
-  isDone: false,
-  isError: false,
-};
-export const asyncStatusRequested = {
-  isInitial: false,
-  isBusy: true,
-  isDone: false,
-  isError: false,
-};
-export const asyncStatusRequestedInherit = ({ isError, errorMessage }: AsyncStatus) => ({
-  isInitial: false,
-  isBusy: true,
-  isDone: false,
-  isError,
-  errorMessage,
-});
-export const asyncStatusSuccess = {
-  isInitial: false,
-  isBusy: false,
-  isDone: true,
-  isError: false,
-};
-export const asyncStatusFail = (errorMessage: string) => ({
-  isInitial: false,
-  isBusy: false,
-  isDone: false,
-  isError: true,
-  errorMessage,
-});

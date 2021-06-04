@@ -1,15 +1,15 @@
-import { createSlice, nanoid } from '@reduxjs/toolkit'
+import { createSlice, nanoid } from "@reduxjs/toolkit";
 
 const initialState = {
   toast: {
     id: nanoid(),
-    message: '',
-    messagePrefix: '',
-  }
-}
+    message: "",
+    messagePrefix: "",
+  },
+};
 
 export const { reducer, actions } = createSlice({
-  name: 'toastMessages',
+  name: "toastMessages",
   initialState: initialState,
   reducers: {
     addToast(state, { payload }) {
@@ -17,11 +17,10 @@ export const { reducer, actions } = createSlice({
         id: nanoid(),
         message: payload.message,
         messagePrefix: payload.prefix,
-      }
+      };
     },
     removeToast(state) {
-      state = initialState
+      state = initialState;
     },
-  }
-})
-
+  },
+});

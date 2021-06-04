@@ -1,9 +1,9 @@
-import React, { useEffect, memo, useState, useRef } from 'react'
-import styled from 'styled-components'
-import { useSelector } from 'react-redux'
+import React, { useEffect, memo, useState, useRef } from "react";
+import styled from "styled-components";
+import { useSelector } from "react-redux";
 
-import { actions } from './reducer'
-import { AppState, useAppDispatch } from '../../Application/Root'
+import { actions } from "./reducer";
+import { AppState, useAppDispatch } from "../../Application/Root";
 
 const Wrap = styled.div`
   z-index: 1;
@@ -13,7 +13,7 @@ const Wrap = styled.div`
   display: flex;
   align-items: center;
   cursor: pointer;
-`
+`;
 const InnerWrap = styled.div`
   padding: var(--size-xlg);
   padding-right: 10rem;
@@ -29,19 +29,19 @@ const InnerWrap = styled.div`
   &:hover {
     opacity: 0.8;
   }
-`
+`;
 const Prefix = styled.span`
   margin-right: var(--size-sm);
   border-right: 1px solid #ffffff5e;
   padding-right: var(--size-sm);
   font-size: 14px;
   font-weight: bold;
-`
+`;
 const Message = styled.div`
   text-overflow: ellipsis;
   white-space: nowrap;
   overflow: hidden;
-`
+`;
 const Undo = styled.div`
   position: absolute;
   right: var(--size-lg);
@@ -51,44 +51,44 @@ const Undo = styled.div`
   text-transform: uppercase;
   background-color: var(--white);
   border-radius: 21px;
-`
+`;
 const TimeRemaining = styled.span`
   margin-left: var(--size-xsm);
   font-weight: bold;
-`
+`;
 
 function Toast() {
-  const timeoutIdRef = useRef(null)
-  const timeRemainingRef = useRef(null)
-  const [timeRemaining, setTimeRemaining] = useState(5)
-  const { message, messagePrefix } = useSelector((state: AppState) => state.toast.toast)
-  const dispatch = useAppDispatch()
-  timeRemainingRef.current = timeRemaining
+  const timeoutIdRef = useRef(null);
+  const timeRemainingRef = useRef(null);
+  const [timeRemaining, setTimeRemaining] = useState(5);
+  const { message, messagePrefix } = useSelector((state: AppState) => state.toast.toast);
+  const dispatch = useAppDispatch();
+  timeRemainingRef.current = timeRemaining;
 
   const onRemove = () => {
-    dispatch(actions.removeToast())
-  }
+    dispatch(actions.removeToast());
+  };
   const onUndo = () => {
-    dispatch({ type: 'UNDO' })
-    onRemove()
-  }
+    dispatch({ type: "UNDO" });
+    onRemove();
+  };
   const onUpdateTimer = () => {
-    setTimeRemaining(t => t - 1)
+    setTimeRemaining(t => t - 1);
     if (timeRemainingRef.current === 0) {
-      onRemove()
+      onRemove();
     }
-  }
+  };
 
   useEffect(() => {
     if (message) {
-      timeoutIdRef.current = setInterval(() => onUpdateTimer(), 1000)
+      timeoutIdRef.current = setInterval(() => onUpdateTimer(), 1000);
     }
 
     return () => {
-      clearTimeout(timeoutIdRef.current)
-      setTimeRemaining(5)
-    }
-  }, [message])
+      clearTimeout(timeoutIdRef.current);
+      setTimeRemaining(5);
+    };
+  }, [message]);
 
   return !message ? null : (
     <Wrap>
@@ -103,7 +103,7 @@ function Toast() {
         <TimeRemaining>{timeRemaining}</TimeRemaining>
       </Undo>
     </Wrap>
-  )
+  );
 }
 
-export default React.memo(Toast)
+export default React.memo(Toast);

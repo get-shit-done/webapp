@@ -28,11 +28,10 @@ interface IProps {
 
 // TODO: timestamp should come from taskBeingEdited
 const EditCalendarTask: FC<IProps> = ({ groups }) => {
-  const [updateTask] = useSaveTaskMutation();
-  const [removeTask] = useRemoveTaskMutation()
-  const { taskBeingEdited, asyncStatus } = useSelector((state: AppState) => state.calendar);
+  const [updateTask, asyncStatusUpdate] = useSaveTaskMutation();
+  const [removeTask, removeTaskStatus] = useRemoveTaskMutation()
+  const { taskBeingEdited } = useSelector((state: AppState) => state.calendar);
   const dispatch = useAppDispatch();
-  // const { groups, colors } = useSelector((state: AppState) => state.settings)
   const { colors } = useSelector((state: AppState) => state.settings);
   const [selectedGroup, setSelectedGroup] = useState(groups.find(x => x.name === taskBeingEdited.group));
   const { _id, time, name, group } = taskBeingEdited;
@@ -117,11 +116,11 @@ const EditCalendarTask: FC<IProps> = ({ groups }) => {
           isDisabled={hasValidationErrors}
           accentColor={accentColor}
           type='submit'
-          asyncStatus={asyncStatus.saveTask}>
+          asyncStatuses={[asyncStatusUpdate]}>
           Save task
         </AsyncButton>
 
-        <RemoveButton tooltipPosition='right' asyncStatus={asyncStatus.removeTask}>
+        <RemoveButton tooltipPosition='right' asyncStatuses={[removeTaskStatus]}>
           <RemoveSvg theme='light' svg={binSvg} onClick={() => removeTask(taskBeingEdited)} />
         </RemoveButton>
       </ModalFooter>

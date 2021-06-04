@@ -70,10 +70,10 @@ interface IProps {
 }
 const Task: FC<IProps> = ({
   task,
-  groups,
+  groups = [],
   isBeingEdited,
 }) => {
-  const { _id, group, timestamp, name, gapBefore, gapAfter, heightInFlex } = task
+  const { group, name, gapBefore, gapAfter, heightInFlex } = task
   const hoursAxis = useSelector(makeHoursAxis)
   // const groups = useSelector((state: AppState) => state.settings.groups)
   const colors = useSelector((state: AppState) => state.settings.colors)
