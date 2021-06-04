@@ -1,5 +1,5 @@
 import React, { FC } from "react";
-import { AsyncStatusNew } from "../../constants";
+import { AsyncStatus } from "../../constants";
 import { SpinnerLoader } from "../Loader";
 import { getAsyncStatus } from "../../utils";
 import Tooltip from "../Tooltip/Tooltip";
@@ -8,7 +8,7 @@ import { SvgButtonWrap, AsyncButtonContent } from "./shared";
 interface Props {
   tooltipPosition?: "left" | "right";
   children: React.ReactNode;
-  asyncStatuses?: AsyncStatusNew[];
+  asyncStatuses?: AsyncStatus[];
   asyncStatusId?: string;
   className?: string;
 }

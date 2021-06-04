@@ -1,7 +1,7 @@
 import styled from "styled-components";
 import { rgbAdjust } from "../../styles";
 import { styleDanger } from "../Svg/component";
-import { AsyncStatusNew } from "../../constants";
+import { AsyncStatus } from "../../constants";
 
 export interface IDumbButtonProps {
   isDisabled?: boolean;
@@ -14,7 +14,7 @@ export interface IDumbButtonProps {
 
 export interface IAsyncButtonProps extends IDumbButtonProps {
   tooltipPosition?: "left" | "right";
-  asyncStatuses: AsyncStatusNew[];
+  asyncStatuses: AsyncStatus[];
   asyncStatusId?: string;
 }
 

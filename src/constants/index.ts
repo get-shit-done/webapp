@@ -15,7 +15,7 @@ export const MONTH_DAYS = (date: Date = new Date()) =>
   });
 export const MONTH_DAYS_STRING = (date: Date = new Date()) => MONTH_DAYS(date).map(date => date.toString());
 
-export interface AsyncStatusNew {
+export interface AsyncStatus {
   isUninitialized: boolean;
   isLoading: boolean;
   isError: boolean;
