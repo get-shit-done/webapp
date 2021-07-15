@@ -14,10 +14,10 @@
   "author": "Vincent Bollaert <vincentbollaert@gmail.com>",
   "license": "MIT",
   "scripts": {
-    "develop": "webpack-dev-server --config webpack.dev.js --progress",
+    "start": "webpack-dev-server --config webpack.dev.js --progress",
     "test": "echo \"Error: no test specified\" --passWithNoTests",
-    "production": "rm public -rf && webpack --config webpack.prod.js",
-    "production:preview": "http-server public"
+    "build": "rm public -rf && webpack --config webpack.prod.js",
+    "build:preview": "http-server public"
   },
   "dependencies": {
     "@reduxjs/toolkit": "^1.5.1",
