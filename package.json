@@ -15,6 +15,7 @@
   "license": "MIT",
   "scripts": {
     "develop": "webpack-dev-server --config webpack.dev.js --progress",
+    "test": "echo \"Error: no test specified\" --passWithNoTests",
     "production": "rm public -rf && webpack --config webpack.prod.js",
     "production:preview": "http-server public"
   },
