@@ -25,7 +25,7 @@ export const tasksApi = createApi({
   baseQuery: fetchBaseQuery({ baseUrl: URL }),
   endpoints: builder => ({
     getTasks: builder.query({
-      query: (monthOfTasks?: Date) => `${API_TASKS}?month=Jun`,
+      query: (monthOfTasks?: Date) => `${API_TASKS}?month=Jul`,
       transformResponse: (response: any) => response.data,
     }),
     addTask: builder.mutation({
